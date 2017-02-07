@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Adobe RoboHelp 9" />
+<title>Trust an Application</title>
+<link rel="StyleSheet" href="RHStyleMapping.css" type="text/css" />
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+        origWidth = innerWidth;
+        origHeight = innerHeight;
+        onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+/*<![CDATA[*/
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+-->
+/*]]>*/
+</style>
+
+<script type="text/javascript" language="javascript1.2" src="whmsg.js">
+</script>
+<script type="text/javascript" language="javascript" src="whver.js">
+</script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js">
+</script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js">
+</script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js">
+</script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js">
+</script>
+</head>
+<body>
+<script type="text/javascript" language="javascript1.2">
+//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+        var strUrl = document.location.href;
+        var bc = 0;
+        var n = strUrl.toLowerCase().indexOf("bc-");
+        if(n != -1)
+        {
+                document.location.href = strUrl.substring(0, n);
+                bc = strUrl.substring(n+3);
+        }
+
+        if (window.addTocInfo)
+        {
+        addTocInfo("Local Discovery Server\nCertificate Management\nTrust an Application");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+        }
+        if (window.writeBtnStyle)
+                writeBtnStyle();
+
+        if (window.writeIntopicBar)
+                writeIntopicBar(1);
+
+        
+        document.write("<p style=\"text-align:right\"> ");
+AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "Overview.htm");
+document.write("<a href=\"Overview.htm\">Local Discovery Server<\/a> &gt; <a href=\"OverviewCertificates.htm\">Certificate Management<\/a> &gt; Trust an Application<\/p>");
+
+
+        if (window.setRelStartPage)
+        {
+        setRelStartPage("index.htm");
+
+                autoSync(0);
+                sendSyncInfo();
+                sendAveInfoOut();
+        }
+}
+else
+        if (window.gbIE4)
+                document.location.reload();
+
+//-->
+//]]>
+</script><script type="text/javascript" language="JavaScript1.2" src="./ehlpdhtm.js">
+</script>
+<div style="width: 100%; position: relative; margin-bottom: 2em;" id="header">
+<p style="text-align: right; margin-top: 0pt; margin-bottom: 6em;"><a title="Launch the OPC Foundation website" href="http://www.opcfoundation.org" target="_blank" style="color: #0000ff; text-decoration: underline;"><img src="OPCFoundation.jpg" alt="OPCFoundation.jpg" title="OPC Foundation logo" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;" width="221" height="80" align="left" border="0" /></a> <span style="font-weight: bold; font-family: Calibri, sans-serif; font-size: 14pt;"><font size="4" style="font-size:14pt;"><b>OPC UA Local Discovery Server 1.02</b></font></span></p>
+</div>
+<h1>Trusting a UA Application</h1>
+<p>The LDS must <a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot8150" name="HotSpot8150">trust</a><script type="text/javascript" language="JavaScript1.2">
+//<![CDATA[
+TextPopupInit('HotSpot8150', 'POPUP8150');
+//]]>
+</script> <span class="glosstext" id="POPUP8150" style="display: none;">The need for an application to trust another application. Trust is established via PKI Certificates. Applications that do not trust each other can reject connections to each other depending upon the security methods used.</span> an application (UA Server or Client) before it can be used.<br />
+Trusting an application in the LDS is a simple process, you can either:</p>
+<ol type="1">
+<li>
+<p>Manually copy the UA server <a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot22561" name="HotSpot22561">certificate</a><script type="text/javascript" language="JavaScript1.2">
+//<![CDATA[
+TextPopupInit('HotSpot22561', 'POPUP22561');
+//]]>
+</script> <span class="glosstext" id="POPUP22561" style="display: none;">A PKI certificate for unique identification. These kinds of certificates are common on Websites, but can also be used to identify applications and people.</span> to the trusted repository to trust the application.</p>
+</li>
+<li>
+<p>Try to connect (which will fail) and then look in the <a href="Certificate_Repository.htm">Rejected certificate repository</a> and MOVE the applicable certificate file to the <a href="Certificate_Repository.htm">Trusted repository</a>.</p>
+</li>
+</ol>
+<h1>Normal Behavior, After Configuration</h1>
+<p style="mso-ansi-language: EN-CA;"><span lang="EN-CA" xml:lang="EN-CA">UA Servers should automatically register with the Local Discovery Server at start up and periodically re-register. The first time a Server registers with the LDS it will likely fail because it is not trusted; in this case execute step #2 above.</span></p>
+<p style="mso-ansi-language: EN-CA;"><span lang="EN-CA" xml:lang="EN-CA">Once a certificate is trusted it will remain trusted until the administrator removes the trust. This means that the configuration will remain in-tact even after a reboot.</span></p>
+<p>See also:</p>
+<ul type="disc">
+<li>
+<p><a href="Certificate_Details.htm">Certificate Details</a></p>
+</li>
+<li>
+<p><a href="Trusting_the_LDS.htm">Trusting the LDS</a></p>
+</li>
+</ul>
+<div style="width: 100%; position: relative;" id="footer">
+<p style="font-size: 10pt; background-color: #ccc;">© OPC Foundation, 1995-2012<br />
+16101 N. 82nd St, Suite 3B, Scottsdale AZ 85260 USA<br />
+Tel: +1 (480)-483-6644 | Fax: +1 (480)-483-7202 | <a href="mailto:webmaster@opcfoundation.org">webmaster@opcfoundation.org</a>.</p>
+</div>
+<script type="text/javascript" language="javascript1.2">
+//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+        writeIntopicBar(0);
+
+
+highlightSearch();
+//-->
+//]]>
+</script>
+</body>
+</html>

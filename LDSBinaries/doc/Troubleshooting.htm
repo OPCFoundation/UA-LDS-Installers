@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Adobe RoboHelp 9" />
+<title>Troubleshooting</title>
+<link rel="StyleSheet" href="RHStyleMapping.css" type="text/css" />
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+        origWidth = innerWidth;
+        origHeight = innerHeight;
+        onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+/*<![CDATA[*/
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+-->
+/*]]>*/
+</style>
+
+<script type="text/javascript" language="javascript1.2" src="whmsg.js">
+</script>
+<script type="text/javascript" language="javascript" src="whver.js">
+</script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js">
+</script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js">
+</script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js">
+</script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js">
+</script>
+</head>
+<body>
+<a name="bc-1" id="bc-1"></a><script type="text/javascript" language="javascript1.2">
+//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+        var strUrl = document.location.href;
+        var bc = 0;
+        var n = strUrl.toLowerCase().indexOf("bc-");
+        if(n != -1)
+        {
+                document.location.href = strUrl.substring(0, n);
+                bc = strUrl.substring(n+3);
+        }
+
+        if (window.addTocInfo)
+        {
+        addTocInfo("Local Discovery Server\nTroubleshooting");
+addTocInfo("Local Discovery Server\nTroubleshooting\nOverview");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+        }
+        if (window.writeBtnStyle)
+                writeBtnStyle();
+
+        if (window.writeIntopicBar)
+                writeIntopicBar(1);
+
+        
+        if(bc == 1)
+{
+        document.write("<p style=\"text-align:right\"> ");
+AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "Overview.htm");
+document.write("<a href=\"Overview.htm\">Local Discovery Server<\/a> &gt; <a href=\"Troubleshooting.htm\">Troubleshooting<\/a> &gt; Overview<\/p>");
+}
+else{
+        document.write("<p style=\"text-align:right\"> ");
+AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "Overview.htm");
+document.write("<a href=\"Overview.htm\">Local Discovery Server<\/a> &gt; Troubleshooting<\/p>");
+}
+
+
+
+        if (window.setRelStartPage)
+        {
+        setRelStartPage("index.htm");
+
+                autoSync(0);
+                sendSyncInfo();
+                sendAveInfoOut();
+        }
+}
+else
+        if (window.gbIE4)
+                document.location.reload();
+
+//-->
+//]]>
+</script>
+<div style="width: 100%; position: relative; margin-bottom: 2em;" id="header">
+<p style="text-align: right; margin-top: 0pt; margin-bottom: 6em;"><a title="Launch the OPC Foundation website" href="http://www.opcfoundation.org" target="_blank" style="color: #0000ff; text-decoration: underline;"><img src="OPCFoundation.jpg" alt="OPCFoundation.jpg" title="OPC Foundation logo" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;" width="221" height="80" align="left" border="0" /></a> <span style="font-weight: bold; font-family: Calibri, sans-serif; font-size: 14pt;"><font size="4" style="font-size:14pt;"><b>OPC UA Local Discovery Server 1.02</b></font></span></p>
+</div>
+<h1>LDS Troubleshooting</h1>
+<p>In times of difficulty you may need to troubleshoot unexpected/unpredictable behavior with the LDS. This section outlines some typical situations that you might encounter, and how to use the tools available to diagnose.</p>
+<p>Here are some general questions that you should investigate:</p>
+<ul type="disc">
+<li>
+<p>Is the LDS service running?</p>
+</li>
+<li>
+<p>Are there any Firewall(s) that might be blocking traffic to the LDS?</p>
+</li>
+<li>
+<p>Are there any Firewall(s) that might be blocking traffic from the LDS to the UA applications?</p>
+</li>
+<li>
+<p>Is the UA application (Client and/or Server) trusted by the LDS?</p>
+</li>
+<li>
+<p>Is the LDS trusted by the UA application (Client and/or Server)?</p>
+</li>
+</ul>
+<p>See also:</p>
+<ul type="disc">
+<li>
+<p><a href="Log_File.htm">Log File</a></p>
+</li>
+<li>
+<p><a href="FAQs.htm">Frequently Asked Questions</a></p>
+</li>
+</ul>
+<div style="width: 100%; position: relative;" id="footer">
+<p style="font-size: 10pt; background-color: #ccc;">© OPC Foundation, 1995-2012<br />
+16101 N. 82nd St, Suite 3B, Scottsdale AZ 85260 USA<br />
+Tel: +1 (480)-483-6644 | Fax: +1 (480)-483-7202 | <a href="mailto:webmaster@opcfoundation.org">webmaster@opcfoundation.org</a>.</p>
+</div>
+<script type="text/javascript" language="javascript1.2">
+//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+        writeIntopicBar(0);
+
+
+highlightSearch();
+//-->
+//]]>
+</script>
+</body>
+</html>
