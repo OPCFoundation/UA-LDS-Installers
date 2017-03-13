@@ -34,7 +34,7 @@ function delayReload()
 var gsToolbarOrder = "toc|idx|fts|glo|blankblock";
 var gsMinibarOrder = "blankblock|hide2|";
 
-var gsTopic = "Overview.htm";
+var gsTopic = "overview.htm";
 var PANE_OPT_SEARCH = 1;
 var PANE_OPT_BROWSESEQ = 2;
 var gnOpts=-1;

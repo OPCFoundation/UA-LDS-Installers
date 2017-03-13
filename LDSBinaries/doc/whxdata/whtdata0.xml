@@ -1,30 +1,31 @@
 ﻿<?xml version='1.0' encoding='utf-8' ?>
 <tocdata>
-<book name="Local Discovery Server" url="Overview.htm" >
-  <item name="Overview" url="Overview.htm#bc-1" />
-  <book name="Configuration" url="Configuration.htm" >
-    <item name="Overview" url="Configuration.htm#bc-1" />
-    <item name="Configuration File Sample - Windows" url="Configuration_File_Sample_-_Windows.htm" />
-    <item name="Configuration File Sample - Linux" url="Configuration_File_Sample_-_Linux.htm" />
-    <item name="Firewall Requirements" url="Firewall_Requirements.htm" />
+<book name="Local Discovery Server" url="overview.htm" >
+  <item name="Overview" url="overview.htm#bc-1" />
+  <item name="File Structure" url="file_structure.htm" />
+  <book name="Configuration" url="configuration.htm" >
+    <item name="Overview" url="configuration.htm#bc-1" />
+    <item name="Configuration File Sample - Windows" url="configuration_file_sample_-_windows.htm" />
+    <item name="Configuration File Sample - Linux" url="configuration_file_sample_-_linux.htm" />
+    <item name="Firewall Requirements" url="firewall_requirements.htm" />
   </book>
-  <book name="Certificate Management" url="OverviewCertificates.htm" >
-    <item name="Overview" url="OverviewCertificates.htm#bc-1" />
-    <item name="Certificate Repository" url="Certificate_Repository.htm" />
-    <item name="Trust an Application" url="Trust_an_Application.htm" />
-    <item name="Trusting the LDS" url="Trusting_the_LDS.htm" />
-    <item name="Removing Application Trust" url="Removing_Application_Trust.htm" />
-    <item name="Certificate Details" url="Certificate_Details.htm" />
+  <book name="Certificate Management" url="overviewcertificates.htm" >
+    <item name="Overview" url="overviewcertificates.htm#bc-1" />
+    <item name="Certificate Repository" url="certificate_repository.htm" />
+    <item name="Trust an Application" url="trust_an_application.htm" />
+    <item name="Trusting the LDS" url="trusting_the_lds.htm" />
+    <item name="Removing Application Trust" url="removing_application_trust.htm" />
+    <item name="Certificate Details" url="certificate_details.htm" />
   </book>
-  <book name="Using the LDS" url="Using_the_LDS.htm" >
-    <item name="Launching the LDS" url="Using_the_LDS.htm#bc-1" />
+  <book name="Using the LDS" url="using_the_lds.htm" >
+    <item name="Launching the LDS" url="using_the_lds.htm#bc-1" />
   </book>
-  <book name="Troubleshooting" url="Troubleshooting.htm" >
-    <item name="Overview" url="Troubleshooting.htm#bc-1" />
-    <item name="Log File" url="Log_File.htm" />
+  <book name="Troubleshooting" url="troubleshooting.htm" >
+    <item name="Overview" url="troubleshooting.htm#bc-1" />
+    <item name="Log File" url="log_file.htm" />
   </book>
 </book>
-<item name="Contact Us" url="Contact_Us.htm" />
-<item name="FAQs" url="FAQs.htm" />
+<item name="Contact Us" url="contact_us.htm" />
+<item name="FAQs" url="faqs.htm" />
 
 </tocdata>

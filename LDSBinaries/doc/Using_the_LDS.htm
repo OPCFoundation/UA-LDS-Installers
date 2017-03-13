@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Adobe RoboHelp 9" />
 <title>Using the LDS</title>
-<link rel="StyleSheet" href="RHStyleMapping.css" type="text/css" />
+<link rel="StyleSheet" href="rhstylemapping.css" type="text/css" />
 <script type="text/javascript" language="JavaScript">
 //<![CDATA[
 function reDo() {
@@ -78,13 +78,13 @@ addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
         if(bc == 1)
 {
         document.write("<p style=\"text-align:right\"> ");
-AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "Overview.htm");
-document.write("<a href=\"Overview.htm\">Local Discovery Server<\/a> &gt; <a href=\"Using_the_LDS.htm\">Using the LDS<\/a> &gt; Launching the LDS<\/p>");
+AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "overview.htm");
+document.write("<a href=\"overview.htm\">Local Discovery Server<\/a> &gt; <a href=\"using_the_lds.htm\">Using the LDS<\/a> &gt; Launching the LDS<\/p>");
 }
 else{
         document.write("<p style=\"text-align:right\"> ");
-AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "Overview.htm");
-document.write("<a href=\"Overview.htm\">Local Discovery Server<\/a> &gt; Using the LDS<\/p>");
+AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "overview.htm");
+document.write("<a href=\"overview.htm\">Local Discovery Server<\/a> &gt; Using the LDS<\/p>");
 }
 
 
@@ -106,7 +106,7 @@ else
 //]]>
 </script>
 <div style="width: 100%; position: relative; margin-bottom: 2em;" id="header">
-<p style="text-align: right; margin-top: 0pt; margin-bottom: 6em;"><a title="Launch the OPC Foundation website" href="http://www.opcfoundation.org" target="_blank" style="color: #0000ff; text-decoration: underline;"><img src="OPCFoundation.jpg" alt="OPCFoundation.jpg" title="OPC Foundation logo" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;" width="221" height="80" align="left" border="0" /></a> <span style="font-weight: bold; font-family: Calibri, sans-serif; font-size: 14pt;"><font size="4" style="font-size:14pt;"><b>OPC UA Local Discovery Server 1.02</b></font></span></p>
+<p style="text-align: right; margin-top: 0pt; margin-bottom: 6em;"><a title="Launch the OPC Foundation website" href="http://www.opcfoundation.org" target="_blank" style="color: #0000ff; text-decoration: underline;"><img src="opcfoundation.jpg" alt="opcfoundation.jpg" title="OPC Foundation logo" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;" width="221" height="80" align="left" border="0" /></a> <span style="font-weight: bold; font-family: Calibri, sans-serif; font-size: 14pt;"><font size="4" style="font-size:14pt;"><b>OPC UA Local Discovery Server 1.02</b></font></span></p>
 </div>
 <h1>Launching the LDS</h1>
 <p>The LDS executable is called "opcualds.exe".</p>
@@ -142,6 +142,9 @@ else
 <p>When debug mode (<span style="font-family: 'Courier New', monospace;">opcualds -d</span>) is used, log level is set to debug level and this is useful for debugging problems without changing the configuration file.</p>
 </li>
 </ul>
+<h1>Windows Installer</h1>
+<p>When installed on Windows, the LDS is registered as a Windows Service and will be automatically started by the installation. The LDS will launch automatically when Windows starts.</p>
+<p>You can start and stop the LDS using the familiar Windows Service Control manager found in the Windows Control Panel -&gt; Administrative Tools. You can ALSO use the command-line options described above.</p>
 <div style="width: 100%; position: relative;" id="footer">
 <p style="font-size: 10pt; background-color: #ccc;">© OPC Foundation, 1995-2012<br />
 16101 N. 82nd St, Suite 3B, Scottsdale AZ 85260 USA<br />

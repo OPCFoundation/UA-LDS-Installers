@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Adobe RoboHelp 9" />
 <title>Certificates Overview</title>
-<link rel="StyleSheet" href="RHStyleMapping.css" type="text/css" />
+<link rel="StyleSheet" href="rhstylemapping.css" type="text/css" />
 <script type="text/javascript" language="JavaScript">
 //<![CDATA[
 function reDo() {
@@ -78,13 +78,13 @@ addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
         if(bc == 1)
 {
         document.write("<p style=\"text-align:right\"> ");
-AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "Overview.htm");
-document.write("<a href=\"Overview.htm\">Local Discovery Server<\/a> &gt; <a href=\"OverviewCertificates.htm\">Certificate Management<\/a> &gt; Overview<\/p>");
+AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "overview.htm");
+document.write("<a href=\"overview.htm\">Local Discovery Server<\/a> &gt; <a href=\"overviewcertificates.htm\">Certificate Management<\/a> &gt; Overview<\/p>");
 }
 else{
         document.write("<p style=\"text-align:right\"> ");
-AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "Overview.htm");
-document.write("<a href=\"Overview.htm\">Local Discovery Server<\/a> &gt; Certificate Management<\/p>");
+AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "overview.htm");
+document.write("<a href=\"overview.htm\">Local Discovery Server<\/a> &gt; Certificate Management<\/p>");
 }
 
 
@@ -107,33 +107,34 @@ else
 </script><script type="text/javascript" language="JavaScript1.2" src="./ehlpdhtm.js">
 </script>
 <div style="width: 100%; position: relative; margin-bottom: 2em;" id="header">
-<p style="text-align: right; margin-top: 0pt; margin-bottom: 6em;"><a title="Launch the OPC Foundation website" href="http://www.opcfoundation.org" target="_blank" style="color: #0000ff; text-decoration: underline;"><img src="OPCFoundation.jpg" alt="OPCFoundation.jpg" title="OPC Foundation logo" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;" width="221" height="80" align="left" border="0" /></a> <span style="font-weight: bold; font-family: Calibri, sans-serif; font-size: 14pt;"><font size="4" style="font-size:14pt;"><b>OPC UA Local Discovery Server 1.02</b></font></span></p>
+<p style="text-align: right; margin-top: 0pt; margin-bottom: 6em;"><a title="Launch the OPC Foundation website" href="http://www.opcfoundation.org" target="_blank" style="color: #0000ff; text-decoration: underline;"><img src="opcfoundation.jpg" alt="opcfoundation.jpg" title="OPC Foundation logo" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;" width="221" height="80" align="left" border="0" /></a> <span style="font-weight: bold; font-family: Calibri, sans-serif; font-size: 14pt;"><font size="4" style="font-size:14pt;"><b>OPC UA Local Discovery Server 1.02</b></font></span></p>
 </div>
 <h1>Securing Applications Overview</h1>
-<p>OPC UA requires all products to be identified by a secure digital <a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot37387" name="HotSpot37387">certificate</a><script type="text/javascript" language="JavaScript1.2">
+<p>OPC UA requires all products to be identified by a secure digital <a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot30898" name="HotSpot30898">certificate</a><script type="text/javascript" language="JavaScript1.2">
 //<![CDATA[
-TextPopupInit('HotSpot37387', 'POPUP37387');
+TextPopupInit('HotSpot30898', 'POPUP30898');
 //]]>
-</script> <span class="glosstext" id="POPUP37387" style="display: none;">A PKI certificate for unique identification. These kinds of certificates are common on Websites, but can also be used to identify applications and people.</span> that uniquely identifies a specific product, to a specific computer. Each application can then be configured with a "<a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot32776" name="HotSpot32776">trust</a><script type="text/javascript" language="JavaScript1.2">
+</script> <span class="glosstext" id="POPUP30898" style="display: none;">A PKI certificate for unique identification. These kinds of certificates are common on Websites, but can also be used to identify applications and people.</span> that uniquely identifies a specific product, to a specific computer. Each application can then be configured with a "<a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot27253" name="HotSpot27253">trust</a><script type="text/javascript" language="JavaScript1.2">
 //<![CDATA[
-TextPopupInit('HotSpot32776', 'POPUP32776');
+TextPopupInit('HotSpot27253', 'POPUP27253');
 //]]>
-</script> <span class="glosstext" id="POPUP32776" style="display: none;">The need for an application to trust another application. Trust is established via PKI Certificates. Applications that do not trust each other can reject connections to each other depending upon the security methods used.</span> list" that identifies other UA products that it will trust. When a <a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot34717" name="HotSpot34717">UA Client</a><script type="text/javascript" language="JavaScript1.2">
+</script> <span class="glosstext" id="POPUP27253" style="display: none;">The need for an application to trust another application. Trust is established via PKI Certificates. Applications that do not trust each other can reject connections to each other depending upon the security methods used.</span> list" that identifies other UA products that it will trust. When a <a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot49525" name="HotSpot49525">UA Client</a><script type="text/javascript" language="JavaScript1.2">
 //<![CDATA[
-TextPopupInit('HotSpot34717', 'POPUP34717');
+TextPopupInit('HotSpot49525', 'POPUP49525');
 //]]>
-</script> <span class="glosstext" id="POPUP34717" style="display: none;">An OPC Client that supports a UA interface for connecting to OPC UA Servers.</span> connects to a Server, the Server and Client will check each other's certificates to make sure that they trust each other. Both products must trust each other for a connection to be established.</p>
+</script> <span class="glosstext" id="POPUP49525" style="display: none;">An OPC Client that supports a UA interface for connecting to OPC UA Servers.</span> connects to a Server, the Server and Client will check each other's certificates to make sure that they trust each other. Both products must trust each other for a connection to be established.</p>
 <p>When connecting a Client to a Server for the first time, typically the connection will be rejected as both applications do not trust each other - although some products may be configured to automatically trust new connections. An administrator will typically modify the trust list of the applications to make sure the Server trusts the Client, and the Client trusts the Server.</p>
 <p>It is essential to understand that the trust relationship between a Client and a Server is bidirectional, meaning that both applications must trust one another.</p>
+<p>Users can own PKI certificates to represent them when logging into applications. User-based PKI certificates should not be confused with UA application certificates; while similar, they are not the same. The LDS certificate repository stores application certificates, it does not store user certificates.</p>
 <h1>LDS &amp; UA Product(s) Trust Relationship</h1>
 <p>The LDS is like any other UA product, it is uniquely identified by its own application certificate. This means that any UA product (Client or Server) that will connect to the LDS must be trusted, as described above. Also, it means that the Client/Server must also trust the LDS certificate.</p>
 <p>See also:</p>
 <ul type="disc">
 <li>
-<p><a href="Certificate_Repository.htm">Certificate Repository</a></p>
+<p><a href="certificate_repository.htm">Certificate Repository</a></p>
 </li>
 <li>
-<p><a href="Trusting_the_LDS.htm">Trusting the LDS</a></p>
+<p><a href="trusting_the_lds.htm">Trusting the LDS</a></p>
 </li>
 </ul>
 <div style="width: 100%; position: relative;" id="footer">

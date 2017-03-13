@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Adobe RoboHelp 9" />
 <title>Trust an Application</title>
-<link rel="StyleSheet" href="RHStyleMapping.css" type="text/css" />
+<link rel="StyleSheet" href="rhstylemapping.css" type="text/css" />
 <script type="text/javascript" language="JavaScript">
 //<![CDATA[
 function reDo() {
@@ -75,8 +75,8 @@ addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
 
         
         document.write("<p style=\"text-align:right\"> ");
-AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "Overview.htm");
-document.write("<a href=\"Overview.htm\">Local Discovery Server<\/a> &gt; <a href=\"OverviewCertificates.htm\">Certificate Management<\/a> &gt; Trust an Application<\/p>");
+AddMasterBreadcrumbs("index.htm", "", "&gt;", "Home", "overview.htm");
+document.write("<a href=\"overview.htm\">Local Discovery Server<\/a> &gt; <a href=\"overviewcertificates.htm\">Certificate Management<\/a> &gt; Trust an Application<\/p>");
 
 
         if (window.setRelStartPage)
@@ -97,25 +97,25 @@ else
 </script><script type="text/javascript" language="JavaScript1.2" src="./ehlpdhtm.js">
 </script>
 <div style="width: 100%; position: relative; margin-bottom: 2em;" id="header">
-<p style="text-align: right; margin-top: 0pt; margin-bottom: 6em;"><a title="Launch the OPC Foundation website" href="http://www.opcfoundation.org" target="_blank" style="color: #0000ff; text-decoration: underline;"><img src="OPCFoundation.jpg" alt="OPCFoundation.jpg" title="OPC Foundation logo" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;" width="221" height="80" align="left" border="0" /></a> <span style="font-weight: bold; font-family: Calibri, sans-serif; font-size: 14pt;"><font size="4" style="font-size:14pt;"><b>OPC UA Local Discovery Server 1.02</b></font></span></p>
+<p style="text-align: right; margin-top: 0pt; margin-bottom: 6em;"><a title="Launch the OPC Foundation website" href="http://www.opcfoundation.org" target="_blank" style="color: #0000ff; text-decoration: underline;"><img src="opcfoundation.jpg" alt="opcfoundation.jpg" title="OPC Foundation logo" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;" width="221" height="80" align="left" border="0" /></a> <span style="font-weight: bold; font-family: Calibri, sans-serif; font-size: 14pt;"><font size="4" style="font-size:14pt;"><b>OPC UA Local Discovery Server 1.02</b></font></span></p>
 </div>
 <h1>Trusting a UA Application</h1>
-<p>The LDS must <a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot8150" name="HotSpot8150">trust</a><script type="text/javascript" language="JavaScript1.2">
+<p>The LDS must <a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot2515" name="HotSpot2515">trust</a><script type="text/javascript" language="JavaScript1.2">
 //<![CDATA[
-TextPopupInit('HotSpot8150', 'POPUP8150');
+TextPopupInit('HotSpot2515', 'POPUP2515');
 //]]>
-</script> <span class="glosstext" id="POPUP8150" style="display: none;">The need for an application to trust another application. Trust is established via PKI Certificates. Applications that do not trust each other can reject connections to each other depending upon the security methods used.</span> an application (UA Server or Client) before it can be used.<br />
+</script> <span class="glosstext" id="POPUP2515" style="display: none;">The need for an application to trust another application. Trust is established via PKI Certificates. Applications that do not trust each other can reject connections to each other depending upon the security methods used.</span> an application (UA Server or Client) before it can be used.<br />
 Trusting an application in the LDS is a simple process, you can either:</p>
 <ol type="1">
 <li>
-<p>Manually copy the UA server <a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot22561" name="HotSpot22561">certificate</a><script type="text/javascript" language="JavaScript1.2">
+<p>Manually copy the UA server <a class="glossterm" href="javascript:TextPopup(this)" id="HotSpot33524" name="HotSpot33524">certificate</a><script type="text/javascript" language="JavaScript1.2">
 //<![CDATA[
-TextPopupInit('HotSpot22561', 'POPUP22561');
+TextPopupInit('HotSpot33524', 'POPUP33524');
 //]]>
-</script> <span class="glosstext" id="POPUP22561" style="display: none;">A PKI certificate for unique identification. These kinds of certificates are common on Websites, but can also be used to identify applications and people.</span> to the trusted repository to trust the application.</p>
+</script> <span class="glosstext" id="POPUP33524" style="display: none;">A PKI certificate for unique identification. These kinds of certificates are common on Websites, but can also be used to identify applications and people.</span> to the trust list to trust the application.</p>
 </li>
 <li>
-<p>Try to connect (which will fail) and then look in the <a href="Certificate_Repository.htm">Rejected certificate repository</a> and MOVE the applicable certificate file to the <a href="Certificate_Repository.htm">Trusted repository</a>.</p>
+<p>Try to connect (which will fail) and then look in the <a href="certificate_repository.htm">Rejected certificate list</a> and MOVE the applicable certificate file to the <a href="certificate_repository.htm">trust list</a>.</p>
 </li>
 </ol>
 <h1>Normal Behavior, After Configuration</h1>
@@ -124,10 +124,10 @@ TextPopupInit('HotSpot22561', 'POPUP22561');
 <p>See also:</p>
 <ul type="disc">
 <li>
-<p><a href="Certificate_Details.htm">Certificate Details</a></p>
+<p><a href="certificate_details.htm">Certificate Details</a></p>
 </li>
 <li>
-<p><a href="Trusting_the_LDS.htm">Trusting the LDS</a></p>
+<p><a href="trusting_the_lds.htm">Trusting the LDS</a></p>
 </li>
 </ul>
 <div style="width: 100%; position: relative;" id="footer">
