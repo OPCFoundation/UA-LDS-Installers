@@ -1,6 +1,8 @@
 ECHO off
 
 SET ROOT=%~dp0
+SET ZIP="C:\Program Files\7-zip\7z.exe"
+SET LDSFN=OPC UA Local Discovery Server
 SET VERSION=1.03.%BUILD_NUMBER%
 SET ISHIELD="C:\Build\Program Files (x86)\InstallShield\2016\System\IsCmdBld.exe"
 SET SIGNTOOL=C:\Build\sign_output.bat
@@ -35,6 +37,12 @@ REN "OPC UA Local Discovery Server 1.03*.exe" "OPC UA Local Discovery Server %VE
 
 ECHO STEP 5) Sign the Binaries
 IF EXIST "%SIGNTOOL%" CALL "%SIGNTOOL%" "opc ua local discovery server*.exe" /sha1
+
+ECHO STEP 6) ZIP the Binaries
+CD %ROOT%\LocalDiscoveryServer_Installer\PROJECT_ASSISTANT\LDS\DiskImages\DISK1\
+%ZIP% a "%LDSFN% %VERSION%.zip" "%LDSFN% *.exe"
+%ZIP% a "%LDSFN% %VERSION%.zip" "%ROOT%\..\UA-LDS\Changelog.txt"
+%ZIP% a "%LDSFN% %VERSION% MergeModule.zip" "%ROOT%\LocalDiscoveryServer_MergeModule\Product Configuration 1\LDS\DiskImages\Disk1\*.msm"
 
 ECHO *** ALL DONE ***
 GOTO theEnd
