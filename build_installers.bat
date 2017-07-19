@@ -26,6 +26,9 @@ ECHO 3) Build Merge Module
 IF NOT ERRORLEVEL 0 EXIT /B 1
 DIR "%ROOT%\LocalDiscoveryServer_MergeModule\Product Configuration 1\LDS\DiskImages\DISK1\"
 
+CD "%ROOT%\LocalDiscoveryServer_MergeModule\Product Configuration 1\LDS\DiskImages\Disk1\"
+REN "OPC UA Local Discovery Server 1.03*.exe" "OPC UA Local Discovery Server %VERSION%.exe"
+
 ECHO 4) Build Installer
 %ISHIELD% -p "%ROOT%\LocalDiscoveryServer_Installer\LocalDiscoveryServer_Installer.ism" -r "LDS" -c COMP -y "%VERSION%"
 IF NOT ERRORLEVEL 0 EXIT /B 2
