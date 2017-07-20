@@ -19,10 +19,10 @@ cd %SRCDIR%
 msbuild "LocalDiscoveryServer_Dummy.sln" /p:Configuration=Release 
 
 ECHO STEP 3) Sign the Binaries
-IF EXIST "%SIGNTOOL%" CALL "%SIGNTOOL%" %SRCDIR%\bin\Release\*.exe /sha1
+IF EXIST "%SIGNTOOL%" CALL "%SIGNTOOL%" %SRCDIR%Release\*.exe /sha1
 
 ECHO STEP 4) Copy Outputs
-XCOPY /Y /Q ".\bin\Release\*.exe" "%INSTALLDIR%"
+XCOPY /Y /Q ".\Release\*.exe" "%INSTALLDIR%"
 XCOPY /Y /Q "..\..\Misc-Tools\bin\*.exe" "%INSTALLDIR%"
 
 ECHO *** ALL DONE ***

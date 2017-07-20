@@ -3745,6 +3745,7 @@
 	<table name="ISSwidtagProperty">
 		<col key="yes" def="s72">Name</col>
 		<col def="s0">Value</col>
+		<row><td>UniqueId</td><td>22B7EF28-826D-4017-9CEC-E19CF6E8DD8C</td></row>
 	</table>
 
 	<table name="ISTargetImage">
