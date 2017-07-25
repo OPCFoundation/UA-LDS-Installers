@@ -10,6 +10,83 @@ extern "C"
 #include "include\settings.h"
 }
 
+/*============================================================================
+ * OpcUa_StringToUnicode
+ *===========================================================================*/
+BOOL OpcUa_StringToUnicode(
+    LPSTR a_sSource,
+    LPWSTR* a_pUnicode)
+{
+    *a_pUnicode = NULL;
+
+    if (a_sSource == NULL)
+    {
+        return TRUE;
+    }
+
+	int iLength = MultiByteToWideChar(
+	   GetACP(), // CP_UTF8,
+       0,
+       a_sSource,
+       -1,
+       NULL,
+       0);
+
+    if (iLength == 0)
+    {
+		return FALSE;
+    }
+
+    *a_pUnicode = (WCHAR*)malloc(sizeof(WCHAR)*(iLength+1));
+
+	iLength = MultiByteToWideChar(
+	   GetACP(), // CP_UTF8,
+       0,
+       a_sSource,
+       -1,
+       (LPWSTR)*a_pUnicode,
+       iLength+1);
+
+    if (iLength == 0)
+    {
+        free(*a_pUnicode);
+        *a_pUnicode = NULL;
+		return FALSE;
+    }
+
+    (*a_pUnicode)[iLength] = L'\0';
+	return TRUE;
+}
+
+BOOL OpcUa_MakeDir(LPSTR sFilePath)
+{
+
+	LPWSTR wszFilePath = NULL;
+
+	if (!OpcUa_StringToUnicode(sFilePath, &wszFilePath))
+    {
+        MsiLog( _T("UpdateUaldsIni"), _T("Unicode Conversion Failed!") );
+        return FALSE;
+    }
+
+    int result = 0;
+
+    if (!CreateDirectoryW(wszFilePath, NULL))
+    {
+        result = GetLastError();
+    }
+
+    free(wszFilePath);
+    wszFilePath = 0;
+
+    if (result != 0 && result != ERROR_ALREADY_EXISTS)
+    {
+        MsiLog( _T("UpdateUaldsIni"), _T("Create Directory Failed!") );
+        return FALSE;
+    }
+
+    return TRUE;
+}
 
 // This is an example of an exported function.
 extern "C" LDSCA_API UINT UpdateUaldsIni( MSIHANDLE hInstall )
@@ -62,25 +139,57 @@ extern "C" LDSCA_API UINT UpdateUaldsIni( MSIHANDLE hInstall )
 
 	ret = ualds_settings_begingroup( "PKI" );
 
-	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\Discovery\\pki\\own\\ualdscert.der" );
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\own" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\own\\certs" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\own\\private" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\certs" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\crl" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\issuer" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\issuer\\certs" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\issuer\\crl" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\rejected" );
+	OpcUa_MakeDir(szUtf8Buffer);
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\rejected\\certs" );
+	OpcUa_MakeDir(szUtf8Buffer);
+
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\" );
+	ret = ualds_settings_writestring( "CertificateStorePath", szUtf8Buffer );
+
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\own\\certs\\ualdscert.der" );
 	ret = ualds_settings_writestring( "CertificateFile", szUtf8Buffer );
 
-	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\Discovery\\pki\\own\\ualdskey.nopass.pem" );
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\own\\certs\\ualdskey.nopass.pem" );
 	ret = ualds_settings_writestring( "CertificateKeyFile", szUtf8Buffer );
 
-	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\Discovery\\pki\\own\\cacert.pem" );
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\certs\\cacert.pem" );
 	ret = ualds_settings_writestring( "CertificateChainFile", szUtf8Buffer );
 
-	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\Discovery\\pki\\crl" );
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\certs\\crl" );
 	ret = ualds_settings_writestring( "CRLPath", szUtf8Buffer );
 
-	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\Discovery\\pki\\trusted\\certs" );
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\certs" );
 	ret = ualds_settings_writestring( "TrustListPath", szUtf8Buffer );
 
-	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\Discovery\\pki\\issuer" );
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\issuer\\certs" );
 	ret = ualds_settings_writestring( "IssuerPath", szUtf8Buffer );
 
-	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\Discovery\\pki\\rejected" );
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\rejected\\certs" );
 	ret = ualds_settings_writestring( "RejectedPath", szUtf8Buffer );
 
 	ret = ualds_settings_endgroup();

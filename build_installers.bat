@@ -3,7 +3,7 @@ ECHO off
 SET ROOT=%~dp0
 SET ZIP="C:\Program Files\7-zip\7z.exe"
 SET LDSFN=OPC UA Local Discovery Server
-SET VERSION=1.03.%BUILD_NUMBER%
+SET VERSION=1.03.350.%BUILD_NUMBER%
 SET ISHIELD="C:\Build\Program Files (x86)\InstallShield\2016\System\IsCmdBld.exe"
 SET SIGNTOOL=C:\Build\sign_output.bat
 
@@ -17,6 +17,9 @@ ECHO 2) Copy Inputs
 XCOPY /Q /S /Y %ROOT%\..\UA-LDS\bin\Release\*.* LDSBinaries\dist\bin\
 XCOPY /Q /S /Y %ROOT%\..\mDNSResponder\bin\*.* LDSBinaries\dist\bin\
 XCOPY /Q /S /Y %ROOT%\..\UA-LDS\etc\*.ini LDSBinaries\dist\etc\
+
+CD %ROOT%\LocalDiscoveryServer_CustomActions
+CALL build_custom-actions.bat 
 
 CD %ROOT%\LocalDiscoveryServer_Dummy
 CALL build_lds-dummy.bat 
