@@ -42,7 +42,8 @@ CD %ROOT%\LocalDiscoveryServer_Installer\PROJECT_ASSISTANT\LDS\DiskImages\DISK1\
 REN "OPC UA Local Discovery Server 1.03*.exe" "OPC UA Local Discovery Server %VERSION%.exe"
 
 ECHO STEP 5) Sign the Binaries
-IF EXIST "%SIGNTOOL%" CALL "%SIGNTOOL%" "opc ua local discovery server*.exe" /sha1
+IF EXIST "%SIGNTOOL%" CALL "%SIGNTOOL%" "%ROOT%\LocalDiscoveryServer_MergeModule\Product Configuration 1\LDS\DiskImages\Disk1\*.msm"
+IF EXIST "%SIGNTOOL%" CALL "%SIGNTOOL%" "opc ua local discovery server*.exe" /dual
 
 ECHO STEP 6) ZIP the Binaries
 CD %ROOT%\LocalDiscoveryServer_Installer\PROJECT_ASSISTANT\LDS\DiskImages\DISK1\
