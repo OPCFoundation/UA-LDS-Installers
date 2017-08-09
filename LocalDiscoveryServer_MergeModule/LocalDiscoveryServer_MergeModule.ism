@@ -1832,7 +1832,6 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<col def="S255">Arguments</col>
 		<col def="I2">Wait</col>
 		<col def="s72">Component_</col>
-		<row><td>NewEvent1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>UA Local Discovery Server</td><td>8</td><td/><td>1</td><td>C__BEA4E9D015C80A5E8AE8CFA12C907108.4E6EDC62C0B245CF831D3C5D4806F990</td></row>
 	</table>
 
 	<table name="ServiceInstall">

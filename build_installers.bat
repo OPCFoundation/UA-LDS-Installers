@@ -14,7 +14,7 @@ SET TARGET="%ROOT%\LocalDiscoveryServer_Installer\PROJECT_ASSISTANT\LDS"
 IF EXIST %TARGET% RMDIR /s /q %TARGET%
 
 ECHO 2) Copy Inputs
-XCOPY /Q /S /Y %ROOT%\..\UA-LDS\bin\Release\*.* LDSBinaries\dist\bin\
+XCOPY /Q /S /Y %ROOT%\..\UA-LDS\build\bin\Release\*.* LDSBinaries\dist\bin\
 XCOPY /Q /S /Y %ROOT%\..\mDNSResponder\bin\*.* LDSBinaries\dist\bin\
 XCOPY /Q /S /Y %ROOT%\..\UA-LDS\etc\*.ini LDSBinaries\dist\etc\
 
