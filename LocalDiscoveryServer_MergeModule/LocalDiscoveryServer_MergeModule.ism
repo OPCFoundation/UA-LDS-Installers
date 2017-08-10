@@ -121,6 +121,7 @@
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<row><td>ISLockPermissions.dll</td><td/><td>&lt;ISRedistPlatformDependentFolder&gt;\ISLockPermissions.dll</td></row>
+		<row><td>ISSELFREG.DLL</td><td/><td>&lt;ISRedistPlatformDependentFolder&gt;\isregsvr.dll</td></row>
 		<row><td>NewBinary1.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>&lt;PATH_TO_LDS_FILES&gt;\ldsca.dll</td></row>
 	</table>
 
@@ -183,7 +184,7 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>C__15D367928E4944E38891931CC1E971FA.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{725B363A-2FF4-AE30-5F8E-0130BDBE6882}</td><td>CONFIG1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>opc.ua.discoveryserver.confi.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>C__15D367928E4944E38891931CC1E971FA.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{725B363A-2FF4-AE30-5F8E-0130BDBE6882}</td><td>CONFIG.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>opc.ua.discoveryserver.confi.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>C__4410A08A265D4809BACA77FD1AB4C940.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{02F3E4AE-7215-1992-D2E4-A90878F4904D}</td><td>BIN3.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>opc.ua.discoveryserver.exe1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>C__9BAA850E232C4CB1AAD4621C03597A30.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{D41CD118-CB91-47B7-C4B8-A19A756670F7}</td><td>BIN.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>redist.txt.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>C__A9909FA1BEB9083A2B5E36FC9E12CFA4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{3E413047-FF79-AC1A-B9B7-B29D540EB651}</td><td>BIN.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>opc.ua.certificategenerator..4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -194,6 +195,7 @@
 		<row><td>DocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{2F144129-4F56-44F1-8E4A-89185130BAF9}</td><td>INSTALLDIR.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{F2957780-1BDE-4A54-AD41-864FD1BC51FE}</td><td>BIN1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>opcualds.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{FB17703D-2F47-4A1E-BF5A-07B2D6303211}</td><td>BIN1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>mDNSResponder.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>RuntimeFile2.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{1ED08575-6097-420C-8914-75A00DEA035A}</td><td>BIN1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>17</td><td/><td>mDNSResponder.exe</td><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>UaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{9AEC9EE2-6B71-4DC3-B4C9-DF2F6AD2572A}</td><td>DISCOVERY1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>issuerCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{AF07DDB4-4614-4673-979D-D385BC756640}</td><td>CERTS1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>issuerCrlFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{062539A5-C880-4A2D-9ECA-D6EB893531B2}</td><td>CRL1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -276,6 +278,8 @@
 		<col def="I4">ExtendedType</col>
 		<col def="S255">ISComments</col>
 		<row><td>Action_AddFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td>3137</td><td>NewBinary1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>AddDiscoveryServiceToFWEL</td><td/><td>Add Firewall Exception</td></row>
+		<row><td>Action_BackupUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>577</td><td>NewBinary1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>BackupOldUaldsIni</td><td/><td>Backup former ualds.ini</td></row>
+		<row><td>Action_CopyPkiKeysToIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>3137</td><td>NewBinary1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>CopyPkiKeysFromOldIniFile</td><td/><td>Copy pki keys and values from old ini file to the new one.</td></row>
 		<row><td>Action_RegBonjourService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>3154</td><td>mDNSResponder.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>-install</td><td/><td>Register OPCF Bonjour Service</td></row>
 		<row><td>Action_RegisterUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>3154</td><td>opcualds.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>-i SYSTEM</td><td/><td>Register Ualds Service</td></row>
 		<row><td>Action_RemDeprecatedCerts.4E6EDC62C0B245CF831D3C5D4806F990</td><td>3137</td><td>NewBinary1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>RemoveDeprecatedCertificateStore</td><td/><td>Remove deprecated certificates files</td></row>
@@ -287,9 +291,15 @@
 		<row><td>ISLockPermissionsCost</td><td>1</td><td>ISLockPermissions.dll</td><td>ISLockPermissionsCostAction</td><td/><td/></row>
 		<row><td>ISLockPermissionsInstall</td><td>3073</td><td>ISLockPermissions.dll</td><td>ISLockPermissionsInstallAction</td><td/><td/></row>
 		<row><td>ISPreventDowngrade</td><td>19</td><td/><td>[IS_PREVENT_DOWNGRADE_EXIT]</td><td/><td>Exits install when a newer version of this product is found</td></row>
+		<row><td>ISSelfRegisterCosting</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterCosting</td><td/><td/></row>
+		<row><td>ISSelfRegisterFiles</td><td>3073</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFiles</td><td/><td/></row>
+		<row><td>ISSelfRegisterFinalize</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFinalize</td><td/><td/></row>
+		<row><td>ISUnSelfRegisterFiles</td><td>3073</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%SystemRoot]\Profiles\All Users</td><td/><td/></row>
 		<row><td>setAddFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td>51</td><td>Action_AddFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td>[CommonFilesFolder]</td><td/><td/></row>
 		<row><td>setAllUsersProfile2K</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%ALLUSERSPROFILE]</td><td/><td/></row>
+		<row><td>setBackupUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>51</td><td>Action_BackupUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>[CommonFilesFolder]|[ALLUSERSPROFILE]</td><td/><td/></row>
+		<row><td>setCopyPkiKeysToIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>51</td><td>Action_CopyPkiKeysToIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>[CommonFilesFolder]|[ALLUSERSPROFILE]</td><td/><td/></row>
 		<row><td>setRemDeprecatedCerts.4E6EDC62C0B245CF831D3C5D4806F990</td><td>51</td><td>Action_RemDeprecatedCerts.4E6EDC62C0B245CF831D3C5D4806F990</td><td>[CommonFilesFolder]|[ALLUSERSPROFILE]</td><td/><td/></row>
 		<row><td>setRemFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td>51</td><td>Action_RemFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td>[CommonFilesFolder]</td><td/><td/></row>
 		<row><td>setUpdateUaldsIniData.4E6EDC62C0B245CF831D3C5D4806F990</td><td>51</td><td>Action_UpdateUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>[CommonFilesFolder]|[ALLUSERSPROFILE]</td><td/><td/></row>
@@ -332,6 +342,7 @@
 		<row><td>CERTS2.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OWN1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>certs</td><td/><td>0</td><td/></row>
 		<row><td>CERTS3.4E6EDC62C0B245CF831D3C5D4806F990</td><td>REJECTED1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>certs</td><td/><td>0</td><td/></row>
 		<row><td>CERTS4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>TRUSTED1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>certs</td><td/><td>0</td><td/></row>
+		<row><td>CONFIG.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_FOUNDATION1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>Config</td><td/><td>0</td><td/></row>
 		<row><td>CONFIG1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_FOUNDATION3.4E6EDC62C0B245CF831D3C5D4806F990</td><td>Config</td><td/><td>0</td><td/></row>
 		<row><td>CRL.4E6EDC62C0B245CF831D3C5D4806F990</td><td>PKI.4E6EDC62C0B245CF831D3C5D4806F990</td><td>crl</td><td/><td>0</td><td/></row>
 		<row><td>CRL1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>ISSUER1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>crl</td><td/><td>0</td><td/></row>
@@ -459,6 +470,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
+		<row><td>dnssd.dll.4E6EDC62C0B245CF831D3C5D4806F990</td><td>RuntimeFile2.4E6EDC62C0B245CF831D3C5D4806F990</td><td>dnssd.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\dnssd.dll</td><td>1</td><td/></row>
 		<row><td>mDNSResponder.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>MDNSRE~1.EXE|mDNSResponder.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\mDNSResponder.exe</td><td>1</td><td/></row>
 		<row><td>opc.ua.certificategenerator..4E6EDC62C0B245CF831D3C5D4806F990</td><td>C__A9909FA1BEB9083A2B5E36FC9E12CFA4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPCUAC~1.EXE|Opc.Ua.CertificateGenerator.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_DUMMYS_FILES&gt;\Opc.Ua.CertificateGenerator.exe</td><td>1</td><td/></row>
 		<row><td>opc.ua.discoveryserver.confi.4E6EDC62C0B245CF831D3C5D4806F990</td><td>C__15D367928E4944E38891931CC1E971FA.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPCUAD~1.XML|Opc.Ua.DiscoveryServer.Config.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>1</td><td>1</td><td>&lt;PATH_TO_DUMMYS_FILES&gt;\Opc.Ua.DiscoveryServer.Config.xml</td><td>21</td><td/></row>
@@ -593,6 +605,7 @@
 		<row><td>DocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_B1D9AA9E_EBCA_4104_8059_6C33C1EC1B6C_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_86C7100A_62E4_47CB_9AF4_3A7306C82843_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_261EAA25_97A0_4DE8_B751_AEB25D529B04_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>RuntimeFile2.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_7D3995AF_1819_4F13_931F_E5DF7774D886_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>UaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_467C7277_56B1_4F2E_9660_C6682AED701A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>issuerCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_1CEEC68E_483E_4569_B2E6_9F7D9AA354E9_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>issuerCrlFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_2B57C2AA_6313_448D_8A39_AB2DCB540683_FILTER</td><td/><td/><td/><td/></row>
@@ -1454,6 +1467,7 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<row><td>Documentation.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 		<row><td>DocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 		<row><td>RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>RuntimeFile2.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 		<row><td>UaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 		<row><td>issuerCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 		<row><td>issuerCrlFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
@@ -1511,6 +1525,8 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<col def="I2">After</col>
 		<col def="S255">Condition</col>
 		<row><td>Action_AddFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_RegBonjourService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
+		<row><td>Action_BackupUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>InstallValidate</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
+		<row><td>Action_CopyPkiKeysToIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_UpdateUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>Action_RegBonjourService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_RegisterUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>Action_RegisterUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_StartUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>Action_RemDeprecatedCerts.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_UpdateUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
@@ -1523,12 +1539,20 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<row><td>DeleteServices</td><td>2000</td><td/><td/><td/></row>
 		<row><td>ISLockPermissionsCost</td><td/><td>InstallValidate</td><td>1</td><td/></row>
 		<row><td>ISLockPermissionsInstall</td><td/><td>StartServices</td><td>1</td><td/></row>
+		<row><td>ISSelfRegisterCosting</td><td/><td>SelfUnregModules</td><td>1</td><td/></row>
+		<row><td>ISSelfRegisterFiles</td><td/><td>SelfRegModules</td><td>1</td><td/></row>
+		<row><td>ISSelfRegisterFinalize</td><td/><td>InstallFinalize</td><td>1</td><td/></row>
+		<row><td>ISUnSelfRegisterFiles</td><td/><td>ISSelfRegisterCosting</td><td>1</td><td/></row>
 		<row><td>InstallFinalize</td><td>6600</td><td/><td/><td/></row>
 		<row><td>InstallValidate</td><td>1400</td><td/><td/><td/></row>
+		<row><td>SelfRegModules</td><td>2850</td><td/><td/><td/></row>
+		<row><td>SelfUnregModules</td><td>1100</td><td/><td/><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td/><td>setAllUsersProfile2K</td><td>0</td><td>VersionNT = 400</td></row>
 		<row><td>StartServices</td><td>5900</td><td/><td/><td/></row>
 		<row><td>setAddFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>setUpdateUaldsIniData.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1</td><td/></row>
 		<row><td>setAllUsersProfile2K</td><td/><td>CostFinalize</td><td>0</td><td>VersionNT &gt;= 500</td></row>
+		<row><td>setBackupUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>InstallValidate</td><td>1</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
+		<row><td>setCopyPkiKeysToIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>CostFinalize</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>setRemDeprecatedCerts.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>CostFinalize</td><td>1</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>setRemFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>setAddFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1</td><td/></row>
 		<row><td>setUpdateUaldsIniData.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>CostFinalize</td><td>1</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>

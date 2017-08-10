@@ -12,6 +12,10 @@
 
 extern "C" LDSCA_API UINT UpdateUaldsIni( MSIHANDLE );
 
+extern "C" LDSCA_API UINT BackupOldUaldsIni(MSIHANDLE);
+
+extern "C" LDSCA_API UINT CopyPkiKeysFromOldIniFile(MSIHANDLE);
+
 extern "C" LDSCA_API LONG AddDiscoveryServiceToFWEL(MSIHANDLE );
 
 extern "C" LDSCA_API LONG RemoveDiscoveryServiceFromFWEL(MSIHANDLE );
