@@ -2318,8 +2318,8 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>PROJECT_ASSISTANT</td><td>IncludeActionHelp</td><td>1</td></row>
-		<row><td>PROJECT_ASSISTANT</td><td>MSIPackageFileName</td><td>OPC UA Local Discovery Server 1.03.341</td></row>
-		<row><td>PROJECT_ASSISTANT</td><td>SetupFileName</td><td>OPC UA Local Discovery Server 1.03.341</td></row>
+		<row><td>PROJECT_ASSISTANT</td><td>MSIPackageFileName</td><td>OPC UA Local Discovery Server 1.03</td></row>
+		<row><td>PROJECT_ASSISTANT</td><td>SetupFileName</td><td>OPC UA Local Discovery Server 1.03</td></row>
 	</table>
 
 	<table name="ISRelease">
@@ -4350,7 +4350,7 @@ TABEAFMAAQBQAFIATwBKAEUAQwBUAF8AQQBTAFMASQBTAFQAQQBOAFQA
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{3E34F52D-0CD0-45EF-B69F-7888FA1597E2}</td><td/></row>
+		<row><td>ProductCode</td><td>{7A4A8B23-8023-45B4-9857-3E95A74C5243}</td><td/></row>
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
 		<row><td>ProductName</td><td>OPC UA Local Discovery Server 1.03</td><td/></row>
