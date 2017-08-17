@@ -95,52 +95,35 @@ BOOL OpcUa_MakeDir(LPSTR sFilePath)
 
 extern "C" LDSCA_API UINT BackupOldUaldsIni(MSIHANDLE hInstall)
 {
-    TCHAR szCustomActionData[MAX_PATH * 2 + 1] = { 0 };
-    DWORD dwCustomActionDataLen = MAX_PATH * 2 + 1;
-
     MsiLogSetHandle(hInstall);
 
     MsiLog(_T("BackupOldUaldsIni"), _T("Started"));
 
-    UINT gp = MsiGetProperty(hInstall, L"CustomActionData", szCustomActionData, &dwCustomActionDataLen);
-
-    if (gp != 0)
+    char szCommonAppDataFolderUtf8[MAX_PATH + 1];
+    
+    char* buf = NULL;
+    size_t sz = 0;
+    if (_dupenv_s(&buf, &sz, "ALLUSERSPROFILE") == 0 && buf != NULL)
     {
-        MsiLog(_T("BackupOldUaldsIni"), _T("MsiGetProperty returned error"));
-        return gp;
+        strcpy_s(szCommonAppDataFolderUtf8, sz, buf);
+        free(buf);
+        buf = NULL;
     }
-
-    if (dwCustomActionDataLen == 0)
+    else
     {
-        MsiLog(_T("BackupOldUaldsIni"), _T("CustomActionData Length is 0"));
-        return 1;
+        MsiLog(_T("BackupOldUaldsIni"), _T("Failed to get EnviromentVariable ALLUSERSPROFILE"));
+        return 3;
     }
-
-    char szCustomActionDataUtf8[MAX_PATH * 2 + 1];
-    WideCharToMultiByte(CP_UTF8, 0, szCustomActionData, -1, szCustomActionDataUtf8, MAX_PATH * 2 + 1, NULL, NULL);
-
-    char szCommonFilesFolderUtf8[MAX_PATH + 1], szCommonAppDataFolderUtf8[MAX_PATH + 1];
-    char* mark = strchr(szCustomActionDataUtf8, '|');
-
-    if (mark == NULL)
-    {
-        MsiLog(_T("BackupOldUaldsIni"), _T("CustomActionData mark not found"));
-        return 2;
-    }
-
-    *mark = 0;
-    strcpy_s(szCommonFilesFolderUtf8, MAX_PATH + 1, szCustomActionDataUtf8);
-    strcpy_s(szCommonAppDataFolderUtf8, MAX_PATH + 1, mark + 1);
 
     char szUtf8Buffer[MAX_PATH * 2 + 1];
-    sprintf_s(szUtf8Buffer, MAX_PATH * 2 + 1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\Discovery\\ualds.ini");
+    sprintf_s(szUtf8Buffer, MAX_PATH * 2 + 1, "%s%s", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\Discovery\\ualds.ini");
 
     struct stat buffer;
     if (stat(szUtf8Buffer, &buffer) == 0)
     {
         // ini file exists
         char szUtf8Buffer_backup[MAX_PATH * 2 + 1 + 5];
-        sprintf_s(szUtf8Buffer_backup, MAX_PATH * 2 + 1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\Discovery\\ualds.ini.old");
+        sprintf_s(szUtf8Buffer_backup, MAX_PATH * 2 + 1, "%s%s", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\Discovery\\ualds.ini.old");
 
         LPWSTR ws_szUtf8Buffer = NULL;
         if (!OpcUa_StringToUnicode(szUtf8Buffer, &ws_szUtf8Buffer))
@@ -167,16 +150,6 @@ extern "C" LDSCA_API UINT BackupOldUaldsIni(MSIHANDLE hInstall)
         {
             MsiLog(_T("BackupOldUaldsIni"), _T("success"));
         }
-
-        /*int result = rename(szUtf8Buffer, szUtf8Buffer_backup);
-        if (result == 0)
-        {
-            MsiLog(_T("BackupOldUaldsIni"), _T("success"));
-        }
-        else
-        {
-            MsiLog(_T("BackupOldUaldsIni"), _T("failed"));
-        }*/
     }
     else
     {
@@ -190,47 +163,30 @@ extern "C" LDSCA_API UINT BackupOldUaldsIni(MSIHANDLE hInstall)
 
 extern "C" LDSCA_API UINT CopyPkiKeysFromOldIniFile(MSIHANDLE hInstall)
 {
-    TCHAR szCustomActionData[MAX_PATH * 2 + 1] = { 0 };
-    DWORD dwCustomActionDataLen = MAX_PATH * 2 + 1;
-
     MsiLogSetHandle(hInstall);
 
     MsiLog(_T("CopyPkiKeysFromOldIniFile"), _T("Started"));
 
-    UINT gp = MsiGetProperty(hInstall, L"CustomActionData", szCustomActionData, &dwCustomActionDataLen);
+    char szCommonAppDataFolderUtf8[MAX_PATH + 1];
 
-    if (gp != 0)
+    char* buf = NULL;
+    size_t sz = 0;
+    if (_dupenv_s(&buf, &sz, "ALLUSERSPROFILE") == 0 && buf != NULL)
     {
-        MsiLog(_T("CopyPkiKeysFromOldIniFile"), _T("MsiGetProperty returned error"));
-        return gp;
+        strcpy_s(szCommonAppDataFolderUtf8, sz, buf);
+        free(buf);
+        buf = NULL;
     }
-
-    if (dwCustomActionDataLen == 0)
+    else
     {
-        MsiLog(_T("CopyPkiKeysFromOldIniFile"), _T("CustomActionData Length is 0"));
-        return 1;
+        MsiLog(_T("BackupOldUaldsIni"), _T("Failed to get EnviromentVariable ALLUSERSPROFILE"));
+        return 3;
     }
-
-    char szCustomActionDataUtf8[MAX_PATH * 2 + 1];
-    WideCharToMultiByte(CP_UTF8, 0, szCustomActionData, -1, szCustomActionDataUtf8, MAX_PATH * 2 + 1, NULL, NULL);
-
-    char szCommonFilesFolderUtf8[MAX_PATH + 1], szCommonAppDataFolderUtf8[MAX_PATH + 1];
-    char* mark = strchr(szCustomActionDataUtf8, '|');
-
-    if (mark == NULL)
-    {
-        MsiLog(_T("CopyPkiKeysFromOldIniFile"), _T("CustomActionData mark not found"));
-        return 2;
-    }
-
-    *mark = 0;
-    strcpy_s(szCommonFilesFolderUtf8, MAX_PATH + 1, szCustomActionDataUtf8);
-    strcpy_s(szCommonAppDataFolderUtf8, MAX_PATH + 1, mark + 1);
 
     char szUtf8Buffer[MAX_PATH * 2 + 1];
-    sprintf_s(szUtf8Buffer, MAX_PATH * 2 + 1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\Discovery\\ualds.ini");
+    sprintf_s(szUtf8Buffer, MAX_PATH * 2 + 1, "%s%s", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\Discovery\\ualds.ini");
     char szUtf8Buffer_backup[MAX_PATH * 2 + 1 + 5];
-    sprintf_s(szUtf8Buffer_backup, MAX_PATH * 2 + 1, "%s%s", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\Discovery\\ualds.ini.old");
+    sprintf_s(szUtf8Buffer_backup, MAX_PATH * 2 + 1, "%s%s", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\Discovery\\ualds.ini.old");
 
     struct stat buffer;
     if (stat(szUtf8Buffer, &buffer) != 0)
@@ -268,7 +224,7 @@ extern "C" LDSCA_API UINT CopyPkiKeysFromOldIniFile(MSIHANDLE hInstall)
         }
         else
         {
-            sprintf_s(szUtf8Buffer_Old_TrustListPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\certs");
+            sprintf_s(szUtf8Buffer_Old_TrustListPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\pki\\trusted\\certs");
         }
     }
 
@@ -283,7 +239,7 @@ extern "C" LDSCA_API UINT CopyPkiKeysFromOldIniFile(MSIHANDLE hInstall)
         }
         else
         {
-            sprintf_s(szUtf8Buffer_Old_IssuerPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\issuer\\certs");
+            sprintf_s(szUtf8Buffer_Old_IssuerPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\pki\\issuer\\certs");
         }
     }
 
@@ -298,7 +254,7 @@ extern "C" LDSCA_API UINT CopyPkiKeysFromOldIniFile(MSIHANDLE hInstall)
         }
         else
         {
-            sprintf_s(szUtf8Buffer_Old_RejectedPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\rejected\\certs");
+            sprintf_s(szUtf8Buffer_Old_RejectedPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\pki\\rejected\\certs");
         }
     }
 
@@ -313,7 +269,7 @@ extern "C" LDSCA_API UINT CopyPkiKeysFromOldIniFile(MSIHANDLE hInstall)
         }
         else
         {
-            sprintf_s(szUtf8Buffer_Old_CRLPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\certs\\crl");
+            sprintf_s(szUtf8Buffer_Old_CRLPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\pki\\trusted\\crl");
         }
     }
 
@@ -328,7 +284,7 @@ extern "C" LDSCA_API UINT CopyPkiKeysFromOldIniFile(MSIHANDLE hInstall)
         }
         else
         {
-            sprintf_s(szUtf8Buffer_Old_CertificateChainFile, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\certs\\cacert.pem");
+            sprintf_s(szUtf8Buffer_Old_CertificateChainFile, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\pki\\trusted\\certs\\cacert.pem");
         }
     }
 
@@ -457,7 +413,7 @@ extern "C" LDSCA_API UINT UpdateUaldsIni( MSIHANDLE hInstall )
 	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\certs\\cacert.pem" );
 	ret = ualds_settings_writestring( "CertificateChainFile", szUtf8Buffer );
 
-	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\certs\\crl" );
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\crl" );
 	ret = ualds_settings_writestring( "CRLPath", szUtf8Buffer );
 
 	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\certs" );

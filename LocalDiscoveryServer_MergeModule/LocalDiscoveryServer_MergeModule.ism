@@ -54,7 +54,7 @@
 		<title>##ID_STRING1##</title>
 		<subject>##ID_STRING2##</subject>
 		<author>##ID_STRING3##</author>
-		<keywords>1.03.341</keywords>
+		<keywords>1.03.370</keywords>
 		<comments>##ID_STRING4##</comments>
 		<template>Intel;1033</template>
 		<lastauthor>Administrator</lastauthor>
@@ -1525,7 +1525,7 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<col def="I2">After</col>
 		<col def="S255">Condition</col>
 		<row><td>Action_AddFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_RegBonjourService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
-		<row><td>Action_BackupUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>InstallValidate</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
+		<row><td>Action_BackupUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>setBackupUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>Action_CopyPkiKeysToIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_UpdateUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>Action_RegBonjourService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_RegisterUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>Action_RegisterUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_StartUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
@@ -1575,7 +1575,7 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<col key="yes" def="s72">ModuleID</col>
 		<col key="yes" def="i2">Language</col>
 		<col def="s32">Version</col>
-		<row><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td><td>1.03.341</td></row>
+		<row><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td><td>1.03.370</td></row>
 	</table>
 
 	<table name="ModuleSubstitution">
