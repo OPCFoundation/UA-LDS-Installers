@@ -214,33 +214,71 @@ extern "C" LDSCA_API UINT CopyPkiKeysFromOldIniFile(MSIHANDLE hInstall)
     ret = ualds_settings_begingroup("PKI");
 
     char szUtf8Buffer_Old_TrustListPath[MAX_PATH * 2 + 1];
-    ret = ualds_settings_readstring("TrustListPath ", szUtf8Buffer_Old_TrustListPath, 256);
+    ret = ualds_settings_readstring("TrustListPath", szUtf8Buffer_Old_TrustListPath, 256);
     {
         // check if valid path
         struct stat sb;
         if (stat(szUtf8Buffer_Old_TrustListPath, &sb) == 0 && S_ISDIR(sb.st_mode))
         {
+			
+			LPWSTR wszFilePath = NULL;
+
+            OpcUa_StringToUnicode(szUtf8Buffer_Old_TrustListPath, &wszFilePath);
+			
+            MsiLog(_T("CopyPkiKeysFromOldIniFile Old TrustListPath read before modify: "), wszFilePath);
+		    //MessageBoxW(NULL, wszFilePath,_T("CopyPkiKeysFromOldIniFile"),MB_OK);
+            free(wszFilePath);
+            wszFilePath = 0;
             // it is a valid directory
         }
         else
         {
             sprintf_s(szUtf8Buffer_Old_TrustListPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\pki\\trusted\\certs");
+						
+			LPWSTR wszFilePath = NULL;
+
+            OpcUa_StringToUnicode(szUtf8Buffer_Old_TrustListPath, &wszFilePath);
+			
+			MsiLog(_T("CopyPkiKeysFromOldIniFile: use default value for TrustListPath: "), wszFilePath);
+		    //MessageBoxW(NULL, wszFilePath,_T("CopyPkiKeysFromOldIniFile_else"),MB_OK);
+            free(wszFilePath);
+            wszFilePath = 0;
         }
     }
 
     char szUtf8Buffer_Old_IssuerPath[MAX_PATH * 2 + 1];
-    ret = ualds_settings_readstring("IssuerPath ", szUtf8Buffer_Old_IssuerPath, 256);
+    ret = ualds_settings_readstring("IssuerPath", szUtf8Buffer_Old_IssuerPath, 256);
     {
         // check if valid path
         struct stat sb;
         if (stat(szUtf8Buffer_Old_IssuerPath, &sb) == 0 && S_ISDIR(sb.st_mode))
         {
             // it is a valid directory
+			{
+					LPWSTR wszFilePath = NULL;
+
+					OpcUa_StringToUnicode(szUtf8Buffer_Old_IssuerPath, &wszFilePath);
+					
+					MsiLog(_T("CopyPkiKeysFromOldIniFile Old IssuerPath read before modify: "), wszFilePath);
+					//MessageBoxW(NULL, wszFilePath,_T("CopyPkiKeysFromOldIniFile"),MB_OK);
+					free(wszFilePath);
+					wszFilePath = 0;
+			}
         }
         else
         {
             sprintf_s(szUtf8Buffer_Old_IssuerPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\pki\\issuer\\certs");
-        }
+			{
+					LPWSTR wszFilePath = NULL;
+
+					OpcUa_StringToUnicode(szUtf8Buffer_Old_IssuerPath, &wszFilePath);
+					
+					MsiLog(_T("CopyPkiKeysFromOldIniFile: use default value for IssuerPath: "), wszFilePath);
+					//MessageBoxW(NULL, wszFilePath,_T("CopyPkiKeysFromOldIniFile_else"),MB_OK);
+					free(wszFilePath);
+					wszFilePath = 0;
+			}
+		}
     }
 
     char szUtf8Buffer_Old_RejectedPath[MAX_PATH * 2 + 1];
@@ -251,26 +289,68 @@ extern "C" LDSCA_API UINT CopyPkiKeysFromOldIniFile(MSIHANDLE hInstall)
         if (stat(szUtf8Buffer_Old_RejectedPath, &sb) == 0 && S_ISDIR(sb.st_mode))
         {
             // it is a valid directory
-        }
+
+			{
+					LPWSTR wszFilePath = NULL;
+
+					OpcUa_StringToUnicode(szUtf8Buffer_Old_RejectedPath, &wszFilePath);
+					
+					MsiLog(_T("CopyPkiKeysFromOldIniFile Old RejectedPath read before modify: "), wszFilePath);
+					//MessageBoxW(NULL, wszFilePath,_T("CopyPkiKeysFromOldIniFile"),MB_OK);
+					free(wszFilePath);
+					wszFilePath = 0;
+			}
+		}
         else
         {
             sprintf_s(szUtf8Buffer_Old_RejectedPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\pki\\rejected\\certs");
-        }
+			{
+					LPWSTR wszFilePath = NULL;
+
+					OpcUa_StringToUnicode(szUtf8Buffer_Old_RejectedPath, &wszFilePath);
+					
+					MsiLog(_T("CopyPkiKeysFromOldIniFile: use default value for RejectedPath: "), wszFilePath);
+					//MessageBoxW(NULL, wszFilePath,_T("CopyPkiKeysFromOldIniFile_else"),MB_OK);
+					free(wszFilePath);
+					wszFilePath = 0;
+			} 
+		}
     }
 
     char szUtf8Buffer_Old_CRLPath[MAX_PATH * 2 + 1];
-    ret = ualds_settings_readstring("CRLPath ", szUtf8Buffer_Old_CRLPath, 256);
+    ret = ualds_settings_readstring("CRLPath", szUtf8Buffer_Old_CRLPath, 256);
+
     {
         // check if valid path
         struct stat sb;
         if (stat(szUtf8Buffer_Old_CRLPath, &sb) == 0 && S_ISDIR(sb.st_mode))
         {
             // it is a valid directory
-        }
+			{
+					LPWSTR wszFilePath = NULL;
+
+					OpcUa_StringToUnicode(szUtf8Buffer_Old_CRLPath, &wszFilePath);
+					
+					MsiLog(_T("CopyPkiKeysFromOldIniFile Old CRLPath read before modify: "), wszFilePath);
+					//MessageBoxW(NULL, wszFilePath,_T("CopyPkiKeysFromOldIniFile"),MB_OK);
+					free(wszFilePath);
+					wszFilePath = 0;
+			}
+		}
         else
         {
             sprintf_s(szUtf8Buffer_Old_CRLPath, MAX_PATH * 2 + 1, "\"%s%s\"", szCommonAppDataFolderUtf8, "\\OPC Foundation\\UA\\pki\\trusted\\crl");
-        }
+			{
+					LPWSTR wszFilePath = NULL;
+
+					OpcUa_StringToUnicode(szUtf8Buffer_Old_CRLPath, &wszFilePath);
+					
+					MsiLog(_T("CopyPkiKeysFromOldIniFile: use default value for CRLPath: "), wszFilePath);
+					//MessageBoxW(NULL, wszFilePath,_T("CopyPkiKeysFromOldIniFile_else"),MB_OK);
+					free(wszFilePath);
+					wszFilePath = 0;
+			}
+		}
     }
 
     char szUtf8Buffer_Old_CertificateChainFile[MAX_PATH * 2 + 1];
@@ -314,6 +394,8 @@ extern "C" LDSCA_API UINT CopyPkiKeysFromOldIniFile(MSIHANDLE hInstall)
     ret = ualds_settings_endgroup();
 
     ret = ualds_settings_close();
+
+	//MessageBoxW(NULL, _T("CopyPkiKeysFromOldIniFile completed."),_T("Info"),MB_OK);
 
     MsiLog(_T("CopyPkiKeysFromOldIniFile"), _T("Finished"));
 
@@ -443,7 +525,9 @@ extern "C" LDSCA_API UINT UpdateUaldsIni( MSIHANDLE hInstall )
 
 	ret = ualds_settings_close();
 
-    MsiLog(_T("UpdateUaldsIni"), _T("Finished"));
+	//MessageBoxW(NULL, _T("UpdateUaldsIni completed."),_T("Info"),MB_OK);
+
+	MsiLog(_T("UpdateUaldsIni"), _T("Finished"));
 
 	return 0;
 }
