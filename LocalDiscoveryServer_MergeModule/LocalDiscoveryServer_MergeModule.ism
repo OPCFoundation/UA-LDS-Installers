@@ -192,7 +192,7 @@
 		<row><td>DiscoveryData.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{EBD4F725-2CB4-46FD-AEFF-BD51F2169EF0}</td><td>DISCOVERY1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>DiscoveryPkiTrustedCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{DB50CBA4-8897-48CF-A47C-4158AFA3F1D4}</td><td>CERTS.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Documentation.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{B91B7DED-7286-4714-809B-8293D1A0DADD}</td><td>DOC.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>DocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{2F144129-4F56-44F1-8E4A-89185130BAF9}</td><td>INSTALLDIR.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>OnlineDocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{21E4F58E-E0E8-4522-8BAE-CEC8C7367073}</td><td>INSTALLDIR.4E6EDC62C0B245CF831D3C5D4806F990</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{F2957780-1BDE-4A54-AD41-864FD1BC51FE}</td><td>BIN1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>opcualds.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{FB17703D-2F47-4A1E-BF5A-07B2D6303211}</td><td>BIN1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>mDNSResponder.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>RuntimeFile2.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{1ED08575-6097-420C-8914-75A00DEA035A}</td><td>BIN1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>17</td><td/><td>mDNSResponder.exe</td><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -262,7 +262,7 @@
 		<row><td>CRL1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>issuerCrlFiles.4E6EDC62C0B245CF831D3C5D4806F990</td></row>
 		<row><td>CRL2.4E6EDC62C0B245CF831D3C5D4806F990</td><td>trustedCrlFiles.4E6EDC62C0B245CF831D3C5D4806F990</td></row>
 		<row><td>DISCOVERY1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>DiscoveryData.4E6EDC62C0B245CF831D3C5D4806F990</td></row>
-		<row><td>INSTALLDIR.4E6EDC62C0B245CF831D3C5D4806F990</td><td>DocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td></row>
+		<row><td>INSTALLDIR.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OnlineDocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td></row>
 		<row><td>ISSUER1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>issuerFiles.4E6EDC62C0B245CF831D3C5D4806F990</td></row>
 		<row><td>OWN1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>ownFiles.4E6EDC62C0B245CF831D3C5D4806F990</td></row>
 		<row><td>PRIVATE.4E6EDC62C0B245CF831D3C5D4806F990</td><td>ownPrivateFiles.4E6EDC62C0B245CF831D3C5D4806F990</td></row>
@@ -473,6 +473,7 @@
 		<col def="S72">ISComponentSubFolder_</col>
 		<row><td>dnssd.dll.4E6EDC62C0B245CF831D3C5D4806F990</td><td>RuntimeFile2.4E6EDC62C0B245CF831D3C5D4806F990</td><td>dnssd.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\dnssd.dll</td><td>1</td><td/></row>
 		<row><td>mDNSResponder.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>MDNSRE~1.EXE|mDNSResponder.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\mDNSResponder.exe</td><td>1</td><td/></row>
+		<row><td>onlinedocumentation.url.4E6EDC62C0B245CF831D3C5D4806F990</td><td>Documentation.4E6EDC62C0B245CF831D3C5D4806F990</td><td>ONLINE~1.URL|OnlineDocumentation.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_LDS_FILES&gt;\doc\OnlineDocumentation.url</td><td>1</td><td/></row>
 		<row><td>opc.ua.certificategenerator..4E6EDC62C0B245CF831D3C5D4806F990</td><td>C__A9909FA1BEB9083A2B5E36FC9E12CFA4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPCUAC~1.EXE|Opc.Ua.CertificateGenerator.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_DUMMYS_FILES&gt;\Opc.Ua.CertificateGenerator.exe</td><td>1</td><td/></row>
 		<row><td>opc.ua.discoveryserver.confi.4E6EDC62C0B245CF831D3C5D4806F990</td><td>C__15D367928E4944E38891931CC1E971FA.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPCUAD~1.XML|Opc.Ua.DiscoveryServer.Config.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>1</td><td>1</td><td>&lt;PATH_TO_DUMMYS_FILES&gt;\Opc.Ua.DiscoveryServer.Config.xml</td><td>21</td><td/></row>
 		<row><td>opc.ua.discoveryserver.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>C__BEA4E9D015C80A5E8AE8CFA12C907108.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPCUAD~1.EXE|Opc.Ua.DiscoveryServer.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_DUMMYS_FILES&gt;\Opc.Ua.DiscoveryServer.exe</td><td>1</td><td/></row>
@@ -603,7 +604,7 @@
 		<row><td>DiscoveryData.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_B04EFB3E_DACC_49AE_B0B2_FDD7EDC29879_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>DiscoveryPkiTrustedCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_16F4DBB7_4E12_41FB_B4FF_425C5617390F_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Documentation.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_0ECA9BC5_01DA_4BD5_B8D0_4E0FCC94AFA9_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>DocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_B1D9AA9E_EBCA_4104_8059_6C33C1EC1B6C_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>OnlineDocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_1F808DCF_775D_497A_9C88_784886E86575_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_86C7100A_62E4_47CB_9AF4_3A7306C82843_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_261EAA25_97A0_4DE8_B751_AEB25D529B04_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>RuntimeFile2.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_7D3995AF_1819_4F13_931F_E5DF7774D886_FILTER</td><td/><td/><td/><td/></row>
@@ -703,7 +704,6 @@
 		<col def="S0">IncludeFiles</col>
 		<col def="S0">ExcludeFiles</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>Documentation.4E6EDC62C0B245CF831D3C5D4806F990</td><td>&lt;PATH_TO_LDS_FILES&gt;\doc</td><td>4</td><td/><td/><td>2</td></row>
 	</table>
 
 	<table name="ISFeatureMergeModuleExcludes">
@@ -1212,6 +1212,7 @@
 		<col def="S0">Comment</col>
 		<col def="I4">TimeStamp</col>
 		<row><td>ID_STRING1</td><td>1033</td><td>Installation Database</td><td>0</td><td/><td>-257829269</td></row>
+		<row><td>ID_STRING1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td><td>ONLINE~1|OnlineDocumentation</td><td>0</td><td/><td>-1004158234</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>OPC UA Local Discovery Server 1.03 MergeModule</td><td>0</td><td/><td>-257854005</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>OPC Foundation</td><td>0</td><td/><td>-392100278</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>OPC UA Local Discovery Server 1.03 MergeModule</td><td>0</td><td/><td>-257845813</td></row>
@@ -1313,7 +1314,7 @@
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">ISIconIndex</col>
-		<row><td>NewShortcut1.4E6EDC62C0B245CF831D3C5D4806F990.exe</td><td/><td>&lt;SystemFolder&gt;\mshtml.dll</td><td>1</td></row>
+		<row><td>ONLINEDOCUMENTATION.4E6EDC62C0B245CF831D3C5D4806F990.exe</td><td/><td>&lt;SystemFolder&gt;\mshtml.dll</td><td>1</td></row>
 	</table>
 
 	<table name="IniFile">
@@ -1466,7 +1467,7 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<row><td>DiscoveryData.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 		<row><td>DiscoveryPkiTrustedCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 		<row><td>Documentation.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>DocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>OnlineDocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 		<row><td>RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 		<row><td>RuntimeFile2.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 		<row><td>UaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
@@ -1810,7 +1811,7 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>NewShortcut1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>DocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>newfolder4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>2</td></row>
+		<row><td>ONLINEDOCUMENTATION.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OnlineDocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>newfolder4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>2</td></row>
 	</table>
 
 	<table name="RemoveIniFile">
@@ -1896,7 +1897,7 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>NewShortcut1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>newfolder4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>##ID_STRING9##</td><td>DocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td>[DOC.4E6EDC62C0B245CF831D3C5D4806F990]index.htm</td><td/><td/><td/><td>NewShortcut1.4E6EDC62C0B245CF831D3C5D4806F990.exe</td><td>1</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ONLINEDOCUMENTATION.4E6EDC62C0B245CF831D3C5D4806F990</td><td>newfolder4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>##ID_STRING1.4E6EDC62C0B245CF831D3C5D4806F990##</td><td>OnlineDocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td>[DOC.4E6EDC62C0B245CF831D3C5D4806F990]OnlineDocumentation.url</td><td/><td/><td/><td>ONLINEDOCUMENTATION.4E6EDC62C0B245CF831D3C5D4806F990.exe</td><td>1</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">
