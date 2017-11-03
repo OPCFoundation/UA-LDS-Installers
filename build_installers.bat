@@ -6,6 +6,7 @@ SET LDSFN=OPC UA Local Discovery Server
 SET VERSION=1.03.370.%BUILD_NUMBER%
 SET ISHIELD="C:\Build\Program Files (x86)\InstallShield\2016\System\IsCmdBld.exe"
 SET SIGNTOOL=C:\Build\sign_output.bat
+set VS_CONFIG=RelWithDebInfo
 
 ECHO 1) Cleaning Old Files
 SET TARGET="%ROOT%\LocalDiscoveryServer_MergeModule\Product Configuration 1\LDS"
@@ -14,7 +15,7 @@ SET TARGET="%ROOT%\LocalDiscoveryServer_Installer\PROJECT_ASSISTANT\LDS"
 IF EXIST %TARGET% RMDIR /s /q %TARGET%
 
 ECHO 2) Copy Inputs
-XCOPY /Q /S /Y %ROOT%\..\UA-LDS\build\bin\Release\*.* LDSBinaries\dist\bin\
+XCOPY /Q /S /Y %ROOT%\..\UA-LDS\build\bin\%VS_CONFIG%\*.* LDSBinaries\dist\bin\
 XCOPY /Q /S /Y %ROOT%\..\mDNSResponder\bin\*.* LDSBinaries\dist\bin\
 XCOPY /Q /S /Y %ROOT%\..\UA-LDS\etc\*.ini LDSBinaries\dist\etc\
 
