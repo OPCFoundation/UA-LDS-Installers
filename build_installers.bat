@@ -4,7 +4,7 @@ SET ROOT=%~dp0
 SET ZIP="C:\Program Files\7-zip\7z.exe"
 SET LDSFN=OPC UA Local Discovery Server
 SET VERSION=1.03.370.%BUILD_NUMBER%
-SET ISHIELD="C:\Build\Program Files (x86)\InstallShield\2016\System\IsCmdBld.exe"
+SET ISHIELD="C:\Program Files (x86)\InstallShield\2016\System\IsCmdBld.exe"
 SET SIGNTOOL=C:\Build\sign_output.bat
 set VS_CONFIG=RelWithDebInfo
 
