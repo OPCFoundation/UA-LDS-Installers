@@ -489,7 +489,7 @@ extern "C" LDSCA_API UINT UpdateUaldsIni( MSIHANDLE hInstall )
 	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\own\\certs\\ualdscert.der" );
 	ret = ualds_settings_writestring( "CertificateFile", szUtf8Buffer );
 
-	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\own\\certs\\ualdskey.nopass.pem" );
+	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\own\\private\\ualdskey.nopass.pem" );
 	ret = ualds_settings_writestring( "CertificateKeyFile", szUtf8Buffer );
 
 	sprintf_s( szUtf8Buffer, MAX_PATH*2+1, "\"%s%s\"", szCommonAppDataFolderUtf8, "OPC Foundation\\UA\\pki\\trusted\\certs\\cacert.pem" );
