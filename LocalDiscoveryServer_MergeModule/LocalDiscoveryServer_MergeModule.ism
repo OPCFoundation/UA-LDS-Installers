@@ -1532,11 +1532,11 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<row><td>Action_RegBonjourService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_RegisterUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>Action_RegisterUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_StartUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>Action_RemDeprecatedCerts.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_UpdateUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
-		<row><td>Action_RemFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_UnregUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=2</td></row>
+		<row><td>Action_RemFirewallException.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_UnregUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>Action_StartUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>InstallFinalize</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>Action_StopUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_UpdateUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
-		<row><td>Action_UnregBonjourService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>DeleteServices</td><td>1</td><td>$RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990=2</td></row>
-		<row><td>Action_UnregUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>DeleteServices</td><td>1</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=2</td></row>
+		<row><td>Action_UnregBonjourService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>DeleteServices</td><td>1</td><td>$RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
+		<row><td>Action_UnregUaldsService.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>DeleteServices</td><td>1</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>Action_UpdateUaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td>Action_CopyPkiKeysToIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td>$RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990=3</td></row>
 		<row><td>CostFinalize</td><td>1000</td><td/><td/><td/></row>
 		<row><td>DeleteServices</td><td>2000</td><td/><td/><td/></row>
