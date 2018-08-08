@@ -4350,11 +4350,11 @@ TABEAFMAAQBQAFIATwBKAEUAQwBUAF8AQQBTAFMASQBTAFQAQQBOAFQA
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{7A4A8B23-8023-45B4-9857-3E95A74C5243}</td><td/></row>
+		<row><td>ProductCode</td><td>{EB02C72C-882D-4B94-B03E-4252F13FD6D9}</td><td/></row>
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
 		<row><td>ProductName</td><td>OPC UA Local Discovery Server 1.03</td><td/></row>
-		<row><td>ProductVersion</td><td>1.03.371</td><td/></row>
+		<row><td>ProductVersion</td><td>1.03.400</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
@@ -4630,8 +4630,8 @@ TABEAFMAAQBQAFIATwBKAEUAQwBUAF8AQQBTAFMASQBTAFQAQQBOAFQA
 		<col def="S255">Remove</col>
 		<col def="s72">ActionProperty</col>
 		<col def="S72">ISDisplayName</col>
-		<row><td>{00000000-0000-0000-0000-000000000000}</td><td></td><td>1.03.371</td><td></td><td>1</td><td/><td>ISACTIONPROP1</td><td>UninstallOldApp</td></row>
-		<row><td>{00000000-0000-0000-0000-000000000000}</td><td>1.03.371</td><td></td><td></td><td>2</td><td/><td>ISFOUNDNEWERPRODUCTVERSION</td><td>ISPreventDowngrade</td></row>
+		<row><td>{00000000-0000-0000-0000-000000000000}</td><td></td><td>1.03.400</td><td></td><td>1</td><td/><td>ISACTIONPROP1</td><td>UninstallOldApp</td></row>
+		<row><td>{00000000-0000-0000-0000-000000000000}</td><td>1.03.400</td><td></td><td></td><td>2</td><td/><td>ISFOUNDNEWERPRODUCTVERSION</td><td>ISPreventDowngrade</td></row>
 	</table>
 
 	<table name="Verb">
