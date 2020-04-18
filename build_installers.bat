@@ -4,9 +4,12 @@ SET ROOT=%~dp0
 SET ZIP="C:\Program Files\7-zip\7z.exe"
 SET LDSFN=OPC UA Local Discovery Server
 SET VERSION=1.03.401.%BUILD_NUMBER%
-SET ISHIELD="C:\Program Files (x86)\InstallShield\2016\System\IsCmdBld.exe"
 SET SIGNTOOL=C:\Build\sign_output.bat
 set VS_CONFIG=RelWithDebInfo
+
+SET ISHIELD="C:\Program Files (x86)\InstallShield\2018\System\IsCmdBld.exe"
+IF NOT EXIST %ISHIELD% SET ISHIELD="C:\Program Files (x86)\InstallShield\2016\System\IsCmdBld.exe"
+ECHO Using %ISHIELD% 
 
 ECHO 1) Cleaning Old Files
 SET TARGET="%ROOT%\LocalDiscoveryServer_MergeModule\Product Configuration 1\LDS"
