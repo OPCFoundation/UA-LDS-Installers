@@ -54,7 +54,7 @@
 		<title>##ID_STRING1##</title>
 		<subject>##ID_STRING2##</subject>
 		<author>##ID_STRING3##</author>
-		<keywords>1.03.401</keywords>
+		<keywords>1.04.402</keywords>
 		<comments>##ID_STRING4##</comments>
 		<template>Intel;1033</template>
 		<lastauthor>Administrator</lastauthor>
@@ -184,11 +184,8 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>C__15D367928E4944E38891931CC1E971FA.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{725B363A-2FF4-AE30-5F8E-0130BDBE6882}</td><td>CONFIG.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>opc.ua.discoveryserver.confi.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>C__4410A08A265D4809BACA77FD1AB4C940.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{02F3E4AE-7215-1992-D2E4-A90878F4904D}</td><td>BIN3.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>opc.ua.discoveryserver.exe1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>C__9BAA850E232C4CB1AAD4621C03597A30.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{D41CD118-CB91-47B7-C4B8-A19A756670F7}</td><td>BIN.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>redist.txt.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>C__A9909FA1BEB9083A2B5E36FC9E12CFA4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{3E413047-FF79-AC1A-B9B7-B29D540EB651}</td><td>BIN.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>opc.ua.certificategenerator..4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>C__BEA4E9D015C80A5E8AE8CFA12C907108.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{A39509DA-A45F-D59F-BF46-915A817C4828}</td><td>BIN.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td>opc.ua.discoveryserver.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>DiscoveryData.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{EBD4F725-2CB4-46FD-AEFF-BD51F2169EF0}</td><td>DISCOVERY1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>DiscoveryPkiTrustedCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{DB50CBA4-8897-48CF-A47C-4158AFA3F1D4}</td><td>CERTS.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Documentation.4E6EDC62C0B245CF831D3C5D4806F990</td><td>{B91B7DED-7286-4714-809B-8293D1A0DADD}</td><td>DOC.4E6EDC62C0B245CF831D3C5D4806F990</td><td>0</td><td/><td/><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -475,9 +472,6 @@
 		<row><td>mDNSResponder.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>RuntimeFile1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>MDNSRE~1.EXE|mDNSResponder.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\mDNSResponder.exe</td><td>1</td><td/></row>
 		<row><td>onlinedocumentation.url.4E6EDC62C0B245CF831D3C5D4806F990</td><td>Documentation.4E6EDC62C0B245CF831D3C5D4806F990</td><td>ONLINE~1.URL|OnlineDocumentation.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_LDS_FILES&gt;\doc\OnlineDocumentation.url</td><td>1</td><td/></row>
 		<row><td>opc.ua.certificategenerator..4E6EDC62C0B245CF831D3C5D4806F990</td><td>C__A9909FA1BEB9083A2B5E36FC9E12CFA4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPCUAC~1.EXE|Opc.Ua.CertificateGenerator.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_DUMMYS_FILES&gt;\Opc.Ua.CertificateGenerator.exe</td><td>1</td><td/></row>
-		<row><td>opc.ua.discoveryserver.confi.4E6EDC62C0B245CF831D3C5D4806F990</td><td>C__15D367928E4944E38891931CC1E971FA.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPCUAD~1.XML|Opc.Ua.DiscoveryServer.Config.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>1</td><td>1</td><td>&lt;PATH_TO_DUMMYS_FILES&gt;\Opc.Ua.DiscoveryServer.Config.xml</td><td>21</td><td/></row>
-		<row><td>opc.ua.discoveryserver.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>C__BEA4E9D015C80A5E8AE8CFA12C907108.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPCUAD~1.EXE|Opc.Ua.DiscoveryServer.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_DUMMYS_FILES&gt;\Opc.Ua.DiscoveryServer.exe</td><td>1</td><td/></row>
-		<row><td>opc.ua.discoveryserver.exe1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>C__4410A08A265D4809BACA77FD1AB4C940.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPCUAD~1.EXE|Opc.Ua.DiscoveryServer.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_DUMMYS_FILES&gt;\Opc.Ua.DiscoveryServer.exe</td><td>1</td><td/></row>
 		<row><td>opcualds.exe.4E6EDC62C0B245CF831D3C5D4806F990</td><td>RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990</td><td>opcualds.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\opcualds.exe</td><td>1</td><td/></row>
 		<row><td>redist.txt.4E6EDC62C0B245CF831D3C5D4806F990</td><td>C__9BAA850E232C4CB1AAD4621C03597A30.4E6EDC62C0B245CF831D3C5D4806F990</td><td>REDIST.TXT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_DUMMYS_FILES&gt;\REDIST.TXT</td><td>1</td><td/></row>
 		<row><td>ualds.ini.4E6EDC62C0B245CF831D3C5D4806F990</td><td>UaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>ualds.ini</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_ETC_FILES&gt;\ualds.ini</td><td>1</td><td/></row>
@@ -596,11 +590,8 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>C__15D367928E4944E38891931CC1E971FA.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_0CE548DC_2063_4A95_8F80_EE591D7D9575_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>C__4410A08A265D4809BACA77FD1AB4C940.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_A372CEF8_07FF_4EE5_9014_B6F3E2D3A816_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>C__9BAA850E232C4CB1AAD4621C03597A30.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_D2355649_CFFE_4DE3_A1A2_8E2327DD5BDB_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>C__A9909FA1BEB9083A2B5E36FC9E12CFA4.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_8E478F3E_D24F_47A2_93BD_3E0D298BBDCA_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>C__BEA4E9D015C80A5E8AE8CFA12C907108.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_924747BC_23BD_4B79_AA6F_83878C64BF04_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>DiscoveryData.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_B04EFB3E_DACC_49AE_B0B2_FDD7EDC29879_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>DiscoveryPkiTrustedCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_16F4DBB7_4E12_41FB_B4FF_425C5617390F_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Documentation.4E6EDC62C0B245CF831D3C5D4806F990</td><td/><td/><td>_0ECA9BC5_01DA_4BD5_B8D0_4E0FCC94AFA9_FILTER</td><td/><td/><td/><td/></row>
@@ -1213,13 +1204,13 @@
 		<col def="I4">TimeStamp</col>
 		<row><td>ID_STRING1</td><td>1033</td><td>Installation Database</td><td>0</td><td/><td>-257829269</td></row>
 		<row><td>ID_STRING1.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td><td>ONLINE~1|OnlineDocumentation</td><td>0</td><td/><td>-1004158234</td></row>
-		<row><td>ID_STRING2</td><td>1033</td><td>OPC UA Local Discovery Server 1.03 MergeModule</td><td>0</td><td/><td>-257854005</td></row>
+		<row><td>ID_STRING2</td><td>1033</td><td>OPC UA Local Discovery Server 1.04 MergeModule</td><td>0</td><td/><td>1923631978</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>OPC Foundation</td><td>0</td><td/><td>-392100278</td></row>
-		<row><td>ID_STRING4</td><td>1033</td><td>OPC UA Local Discovery Server 1.03 MergeModule</td><td>0</td><td/><td>-257845813</td></row>
+		<row><td>ID_STRING4</td><td>1033</td><td>OPC UA Local Discovery Server 1.04 MergeModule</td><td>0</td><td/><td>1923652458</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>OPCFOU~1|OPC Foundation</td><td>0</td><td/><td>-920538644</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>UNIFIE~1|Unified Architecture</td><td>0</td><td/><td>-920526356</td></row>
-		<row><td>ID_STRING7</td><td>1033</td><td>1.03</td><td>0</td><td/><td>-920569332</td></row>
-		<row><td>ID_STRING8</td><td>1033</td><td>DISCOV~1|Discovery</td><td>0</td><td/><td>-920550900</td></row>
+		<row><td>ID_STRING7</td><td>1033</td><td>1.04</td><td>0</td><td/><td>1923625930</td></row>
+		<row><td>ID_STRING8</td><td>1033</td><td>DISCOV~1|Discovery</td><td>0</td><td/><td>1923630058</td></row>
 		<row><td>ID_STRING9</td><td>1033</td><td>DOCUME~1|Documentation</td><td>0</td><td/><td>-920524015</td></row>
 	</table>
 
@@ -1459,29 +1450,26 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<col key="yes" def="s72">Component</col>
 		<col key="yes" def="s72">ModuleID</col>
 		<col key="yes" def="i2">Language</col>
-		<row><td>C__15D367928E4944E38891931CC1E971FA.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>C__4410A08A265D4809BACA77FD1AB4C940.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>C__9BAA850E232C4CB1AAD4621C03597A30.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>C__A9909FA1BEB9083A2B5E36FC9E12CFA4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>C__BEA4E9D015C80A5E8AE8CFA12C907108.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>DiscoveryData.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>DiscoveryPkiTrustedCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>Documentation.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>OnlineDocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>RuntimeFile2.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>UaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>issuerCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>issuerCrlFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>issuerFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>ownCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>ownFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>ownPrivateFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>rejectedCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>rejectedFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>trustedCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>trustedCrlFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
-		<row><td>trustedFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>C__9BAA850E232C4CB1AAD4621C03597A30.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>C__A9909FA1BEB9083A2B5E36FC9E12CFA4.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>DiscoveryData.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>DiscoveryPkiTrustedCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>Documentation.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>OnlineDocumentationShortcut.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>RuntimeFile.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>RuntimeFile2.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>UaldsIni.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>issuerCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>issuerCrlFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>issuerFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>ownCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>ownFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>ownPrivateFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>rejectedCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>rejectedFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>trustedCertsFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>trustedCrlFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
+		<row><td>trustedFiles.4E6EDC62C0B245CF831D3C5D4806F990</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 	</table>
 
 	<table name="ModuleConfiguration">
@@ -1578,7 +1566,7 @@ TABEAFMAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 		<col key="yes" def="s72">ModuleID</col>
 		<col key="yes" def="i2">Language</col>
 		<col def="s32">Version</col>
-		<row><td>OPC_UA_Local_Discovery_Server_1.03.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td><td>1.03.401</td></row>
+		<row><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td><td>1.04.402</td></row>
 	</table>
 
 	<table name="ModuleSubstitution">

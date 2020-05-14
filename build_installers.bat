@@ -3,7 +3,7 @@ ECHO off
 SET ROOT=%~dp0
 SET ZIP="C:\Program Files\7-zip\7z.exe"
 SET LDSFN=OPC UA Local Discovery Server
-SET VERSION=1.03.401.%BUILD_NUMBER%
+SET VERSION=1.04.402.%BUILD_NUMBER%
 SET SIGNTOOL=C:\Build\sign_output.bat
 set VS_CONFIG=RelWithDebInfo
 
@@ -25,16 +25,13 @@ XCOPY /Q /S /Y %ROOT%\..\UA-LDS\etc\*.ini LDSBinaries\dist\etc\
 CD %ROOT%\LocalDiscoveryServer_CustomActions
 CALL build_custom-actions.bat 
 
-CD %ROOT%\LocalDiscoveryServer_Dummy
-CALL build_lds-dummy.bat 
-
 ECHO 3) Build Merge Module
 %ISHIELD% -p "%ROOT%\LocalDiscoveryServer_MergeModule\LocalDiscoveryServer_MergeModule.ism" -r "LDS" -c COMP -y "%VERSION%"
 IF NOT ERRORLEVEL 0 EXIT /B 1
 DIR "%ROOT%\LocalDiscoveryServer_MergeModule\Product Configuration 1\LDS\DiskImages\DISK1\"
 
 CD "%ROOT%\LocalDiscoveryServer_MergeModule\Product Configuration 1\LDS\DiskImages\DISK1\"
-REN "OPC_UA_Local_Discovery_Server_1.03*.exe" "OPC_UA_Local_Discovery_Server_%VERSION%.exe"
+REN "OPC_UA_Local_Discovery_Server_1.04*.exe" "OPC_UA_Local_Discovery_Server_%VERSION%.exe"
 
 ECHO 4) Build Installer
 %ISHIELD% -p "%ROOT%\LocalDiscoveryServer_Installer\LocalDiscoveryServer_Installer.ism" -r "LDS" -c COMP -y "%VERSION%"
@@ -43,7 +40,7 @@ DIR %ROOT%\LocalDiscoveryServer_Installer\PROJECT_ASSISTANT\LDS\DiskImages\DISK1
 
 REM Rename the installer so that it has the correct version number, not the hard-coded 1.03.341 version...
 CD %ROOT%\LocalDiscoveryServer_Installer\PROJECT_ASSISTANT\LDS\DiskImages\DISK1\
-REN "OPC UA Local Discovery Server 1.03*.exe" "OPC UA Local Discovery Server %VERSION%.exe"
+REN "OPC UA Local Discovery Server 1.04*.exe" "OPC UA Local Discovery Server %VERSION%.exe"
 
 ECHO STEP 5) Sign the Binaries
 IF EXIST "%SIGNTOOL%" CALL "%SIGNTOOL%" "%ROOT%\LocalDiscoveryServer_MergeModule\Product Configuration 1\LDS\DiskImages\Disk1\*.msm"
