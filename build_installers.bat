@@ -7,7 +7,7 @@ SET VERSION=1.04.402.%BUILD_NUMBER%
 SET SIGNTOOL=C:\Build\sign_output.bat
 set VS_CONFIG=RelWithDebInfo
 
-SET ISHIELD="C:\Program Files (x86)\InstallShield\2018\System\IsCmdBld.exe"
+SET ISHIELD="C:\Program Files (x86)\InstallShield\2019\System\IsCmdBld.exe"
 IF NOT EXIST %ISHIELD% SET ISHIELD="C:\Program Files (x86)\InstallShield\2016\System\IsCmdBld.exe"
 ECHO Using %ISHIELD% 
 
