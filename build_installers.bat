@@ -19,7 +19,7 @@ IF EXIST %TARGET% RMDIR /s /q %TARGET%
 
 ECHO 2) Copy Inputs
 XCOPY /Q /S /Y %ROOT%\..\UA-LDS\build\bin\%VS_CONFIG%\*.* LDSBinaries\dist\bin\
-XCOPY /Q /S /Y %ROOT%\..\mDNSResponder\bin\*.* LDSBinaries\dist\bin\
+XCOPY /Q /S /Y %ROOT%\..\UA-LDS-mDNSResponder\bin\*.* LDSBinaries\dist\bin\
 XCOPY /Q /S /Y %ROOT%\..\UA-LDS\etc\*.ini LDSBinaries\dist\etc\
 
 CD %ROOT%\LocalDiscoveryServer_CustomActions
