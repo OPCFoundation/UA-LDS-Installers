@@ -2077,7 +2077,7 @@
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s255">ISMergeModule_</col>
 		<col key="yes" def="i2">Language_</col>
-		<row><td>OPC_UA_Local_Discovery_Server_1</td><td>Microsoft_VC120_CRT_x86.194841A2_D0F2_3B96_9F71_05BA91BEA0FA</td><td>0</td></row>
+		<row><td>OPC_UA_Local_Discovery_Server_1</td><td>Microsoft_VC143_CRT_X86.F1670FCA_6780_3657_9C04_AF8005AC8143</td><td>0</td></row>
 		<row><td>OPC_UA_Local_Discovery_Server_1</td><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td></row>
 	</table>
 
@@ -2201,7 +2201,7 @@
 		<col def="s255">Name</col>
 		<col def="S255">Destination</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>Microsoft_VC120_CRT_x86.194841A2_D0F2_3B96_9F71_05BA91BEA0FA</td><td>0</td><td>Visual C++ 12.0 CRT (x86)</td><td/><td/></row>
+		<row><td>Microsoft_VC143_CRT_X86.F1670FCA_6780_3657_9C04_AF8005AC8143</td><td>0</td><td>Visual C++ 14.38 CRT (X86)</td><td/><td/></row>
 		<row><td>OPC_UA_Local_Discovery_Server_1.04.4E6EDC62C0B245CF831D3C5D4806F990</td><td>1033</td><td>OPC UA Local Discovery Server 1.04 MergeModule</td><td/><td/></row>
 	</table>
 
@@ -3736,6 +3736,7 @@
 		<row><td>ID_STRING3</td><td>1033</td><td>0</td><td>0</td><td/><td>-920341807</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>0</td><td>0</td><td/><td>-920341807</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>0</td><td>0</td><td/><td>-920341807</td></row>
+		<row><td>ID_STRING6</td><td>1033</td><td>NewFeature1</td><td>0</td><td/><td>883748265</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>1394414478</td></row>
 	</table>
 
