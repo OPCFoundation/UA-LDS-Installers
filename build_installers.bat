@@ -3,7 +3,7 @@ ECHO off
 SET ROOT=%~dp0
 SET ZIP="C:\Program Files\7-zip\7z.exe"
 SET LDSFN=OPC UA Local Discovery Server
-SET VERSION=1.04.411.%BUILD_NUMBER%
+SET VERSION=1.04.413.%BUILD_NUMBER%
 SET SIGNTOOL=C:\Build\sign_output.bat
 set VS_CONFIG=RelWithDebInfo
 
