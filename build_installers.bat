@@ -31,7 +31,7 @@ IF NOT ERRORLEVEL 0 EXIT /B 1
 DIR "%ROOT%\LocalDiscoveryServer_MergeModule\Product Configuration 1\LDS\DiskImages\DISK1\"
 
 CD "%ROOT%\LocalDiscoveryServer_MergeModule\Product Configuration 1\LDS\DiskImages\DISK1\"
-REN "OPC_UA_Local_Discovery_Server_1.04*.exe" "OPC_UA_Local_Discovery_Server_%VERSION%.exe"
+REN "OPC_UA_Local_Discovery_Server_1.04*.msm" "OPC_UA_Local_Discovery_Server_%VERSION%.msm"
 
 ECHO 4) Build Installer
 %ISHIELD% -p "%ROOT%\LocalDiscoveryServer_Installer\LocalDiscoveryServer_Installer.ism" -r "LDS" -c COMP -y "%VERSION%"
