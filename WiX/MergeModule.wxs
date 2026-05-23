@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    OPC UA Local Discovery Server - Runtime Merge Module
+
+    Packages opcualds.exe, mDNSResponder.exe, dnssd.dll, ualds.ini, the PKI
+    directory tree, the two Windows services, the firewall rules, and the
+    ldsca.dll custom actions for INI/PKI initialization.
+
+    Install layout (matches the InstallShield project):
+      [CommonFiles]\OPC Foundation\UA\Discovery\bin\    binaries
+      [CommonAppData]\OPC Foundation\UA\Discovery\      ualds.ini
+      [CommonAppData]\OPC Foundation\UA\pki\...\        PKI tree (empty folders)
+
+    The x86 variant targets CommonFilesFolder (= CommonFiles (x86) on 64-bit
+    Windows); the x64 variant targets CommonFiles64Folder.  Both share the
+    same CommonAppData paths so the config + PKI store don't fork.
+
+    Variables (passed via -d):
+      BinDir      - staged binaries directory (out\$Arch\bin)
+      ModuleGuid  - per-platform merge module GUID
+      Platform    - x86 | x64
+      Version     - MAJOR.MINOR.REVISION.BUILD
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:fw="http://wixtoolset.org/schemas/v4/wxs/firewall"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+
+    <?if $(var.Platform) = x86 ?>
+    <?define CommonFilesRoot = CommonFilesFolder ?>
+    <?else?>
+    <?define CommonFilesRoot = CommonFiles64Folder ?>
+    <?endif?>
+
+    <Module Id="OpcUaLdsMergeModule"
+            Guid="$(var.ModuleGuid)"
+            Language="1033"
+            Version="$(var.Version)">
+
+        <SummaryInformation
+            Description="OPC UA Local Discovery Server runtime ($(var.Platform))"
+            Manufacturer="OPC Foundation" />
+
+        <!--
+            Binaries: opcualds.exe, mDNSResponder.exe, dnssd.dll
+            -> [CommonFiles{,64}]\OPC Foundation\UA\Discovery\bin\
+        -->
+        <StandardDirectory Id="$(var.CommonFilesRoot)">
+            <Directory Id="OPCF_CF" Name="OPC Foundation">
+                <Directory Id="UA_CF" Name="UA">
+                    <Directory Id="DISCOVERY_CF" Name="Discovery">
+                        <Directory Id="BIN_CF" Name="bin">
+
+                            <Component Id="comp_opcualds" Guid="A2B7C9D3-1001-4A00-9001-E5F6A7B8C001">
+                                <File Id="file_opcualds"
+                                      Name="opcualds.exe"
+                                      Source="$(var.BinDir)\opcualds.exe"
+                                      KeyPath="yes">
+                                    <!-- TCP 4840: OPC UA Discovery -->
+                                    <fw:FirewallException Id="fwLdsTcp"
+                                                           Name="OPC UA Local Discovery Server"
+                                                           Description="Allow OPC UA Discovery (TCP 4840)"
+                                                           Port="4840"
+                                                           Protocol="tcp"
+                                                           Profile="all"
+                                                           Scope="any"
+                                                           IgnoreFailure="yes" />
+                                </File>
+
+                                <!-- Native Windows service install (replaces the old
+                                     `opcualds.exe -i SYSTEM` CustomAction) -->
+                                <ServiceInstall Id="UaldsService"
+                                                Name="UALDS"
+                                                DisplayName="OPC UA Local Discovery Server"
+                                                Description="Allows OPC UA clients to discover OPC UA servers running on the local machine."
+                                                Type="ownProcess"
+                                                Start="auto"
+                                                ErrorControl="normal"
+                                                Account="LocalSystem"
+                                                Vital="yes">
+                                    <ServiceDependency Id="OPCF Bonjour Service" />
+                                    <util:ServiceConfig FirstFailureActionType="restart"
+                                                        SecondFailureActionType="restart"
+                                                        ThirdFailureActionType="none"
+                                                        RestartServiceDelayInSeconds="30" />
+                                </ServiceInstall>
+                                <ServiceControl Id="UaldsServiceControl"
+                                                Name="UALDS"
+                                                Start="install"
+                                                Stop="both"
+                                                Remove="uninstall"
+                                                Wait="yes" />
+                            </Component>
+
+                            <Component Id="comp_mDNSResponder" Guid="A2B7C9D3-1002-4A00-9001-E5F6A7B8C002">
+                                <File Id="file_mDNSResponder"
+                                      Name="mDNSResponder.exe"
+                                      Source="$(var.BinDir)\mDNSResponder.exe"
+                                      KeyPath="yes">
+                                    <!-- UDP 5353: multicast DNS -->
+                                    <fw:FirewallException Id="fwBonjourUdp"
+                                                           Name="OPCF Bonjour Service"
+                                                           Description="Allow multicast DNS (UDP 5353)"
+                                                           Port="5353"
+                                                           Protocol="udp"
+                                                           Profile="all"
+                                                           Scope="any"
+                                                           IgnoreFailure="yes" />
+                                </File>
+
+                                <!-- Native Windows service install (replaces the old
+                                     `mDNSResponder.exe -install` CustomAction).
+                                     NOTE: the internal service name must match what
+                                     the mDNSResponder source code uses when SCM
+                                     invokes it.  The OPC fork uses "OPCFBonjourService"
+                                     (no spaces) as the registry key; verify when the
+                                     mDNS CMake port lands. -->
+                                <ServiceInstall Id="OPCFBonjourService"
+                                                Name="OPCF Bonjour Service"
+                                                DisplayName="OPCF Bonjour Service"
+                                                Description="Provides multicast DNS (mDNS/DNS-SD) for the OPC UA Local Discovery Server."
+                                                Type="ownProcess"
+                                                Start="auto"
+                                                ErrorControl="normal"
+                                                Account="LocalSystem"
+                                                Vital="yes">
+                                    <!-- mDNSResponder needs TCP/IP up before it starts. -->
+                                    <ServiceDependency Id="Tcpip" />
+                                    <util:ServiceConfig FirstFailureActionType="restart"
+                                                        SecondFailureActionType="restart"
+                                                        ThirdFailureActionType="none"
+                                                        RestartServiceDelayInSeconds="30" />
+                                </ServiceInstall>
+
+                                <!-- Apple's mDNSResponder reads HKLM\SOFTWARE\Apple Inc.\OPCF Bonjour
+                                     for its config.  In particular, ManageLLRouting=1 is what
+                                     Service.c's SetServiceParameters() writes during -install;
+                                     pre-creating it here avoids the service hitting an
+                                     uninitialized RegQueryValueEx and failing to start. -->
+                                <RegistryKey Root="HKLM" Key="SOFTWARE\Apple Inc.\OPCF Bonjour">
+                                    <RegistryValue Name="ManageLLRouting" Type="integer" Value="1" />
+                                </RegistryKey>
+                                <ServiceControl Id="BonjourServiceControl"
+                                                Name="OPCF Bonjour Service"
+                                                Start="install"
+                                                Stop="both"
+                                                Remove="uninstall"
+                                                Wait="yes" />
+                            </Component>
+
+                            <Component Id="comp_dnssd" Guid="A2B7C9D3-1003-4A00-9001-E5F6A7B8C003">
+                                <File Id="file_dnssd"
+                                      Name="dnssd.dll"
+                                      Source="$(var.BinDir)\dnssd.dll"
+                                      KeyPath="yes" />
+                            </Component>
+
+                        </Directory>
+                    </Directory>
+                </Directory>
+            </Directory>
+        </StandardDirectory>
+
+        <!--
+            Config + PKI tree -> CommonAppData (shared between x86/x64 installs)
+            ualds.ini gets shipped as-is; ldsca.dll's UpdateUaldsIni custom
+            action rewrites the absolute paths post-install.
+        -->
+        <StandardDirectory Id="CommonAppDataFolder">
+            <Directory Id="OPCF_CA" Name="OPC Foundation">
+                <Directory Id="UA_CA" Name="UA">
+
+                    <Directory Id="DISCOVERY_CA" Name="Discovery">
+                        <Component Id="comp_ualds_ini" Guid="A2B7C9D3-2001-4A00-9001-E5F6A7B8C004">
+                            <File Id="file_ualds_ini"
+                                  Name="ualds.ini"
+                                  Source="$(var.BinDir)\ualds.ini"
+                                  KeyPath="yes" />
+                        </Component>
+                    </Directory>
+
+                    <Directory Id="PKI_CA" Name="pki">
+                        <Directory Id="PKI_OWN"      Name="own">
+                            <Directory Id="PKI_OWN_CERTS"   Name="certs">
+                                <Component Id="comp_pki_own_certs" Guid="A2B7C9D3-3001-4A00-9001-E5F6A7B8C010">
+                                    <CreateFolder />
+                                </Component>
+                            </Directory>
+                            <Directory Id="PKI_OWN_PRIVATE" Name="private">
+                                <Component Id="comp_pki_own_private" Guid="A2B7C9D3-3002-4A00-9001-E5F6A7B8C011">
+                                    <CreateFolder />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="PKI_TRUSTED"  Name="trusted">
+                            <Directory Id="PKI_TRUSTED_CERTS" Name="certs">
+                                <Component Id="comp_pki_trusted_certs" Guid="A2B7C9D3-3003-4A00-9001-E5F6A7B8C012">
+                                    <CreateFolder />
+                                </Component>
+                            </Directory>
+                            <Directory Id="PKI_TRUSTED_CRL"   Name="crl">
+                                <Component Id="comp_pki_trusted_crl" Guid="A2B7C9D3-3004-4A00-9001-E5F6A7B8C013">
+                                    <CreateFolder />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="PKI_ISSUER"   Name="issuer">
+                            <Directory Id="PKI_ISSUER_CERTS" Name="certs">
+                                <Component Id="comp_pki_issuer_certs" Guid="A2B7C9D3-3005-4A00-9001-E5F6A7B8C014">
+                                    <CreateFolder />
+                                </Component>
+                            </Directory>
+                            <Directory Id="PKI_ISSUER_CRL"   Name="crl">
+                                <Component Id="comp_pki_issuer_crl" Guid="A2B7C9D3-3006-4A00-9001-E5F6A7B8C015">
+                                    <CreateFolder />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="PKI_REJECTED" Name="rejected">
+                            <Directory Id="PKI_REJECTED_CERTS" Name="certs">
+                                <Component Id="comp_pki_rejected_certs" Guid="A2B7C9D3-3007-4A00-9001-E5F6A7B8C016">
+                                    <CreateFolder />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+
+                </Directory>
+            </Directory>
+        </StandardDirectory>
+
+        <!--
+            Custom actions still required from ldsca.dll:
+              BackupOldUaldsIni             - copies ualds.ini -> ualds.ini.old
+              UpdateUaldsIni                - rewrites absolute paths in ualds.ini
+              CopyPkiKeysFromOldIniFile     - preserves user-customized PKI paths
+
+            The firewall and service-install actions are gone (native WiX above).
+            The old InstallShield project also referenced a
+            RemoveDeprecatedCertificateStore action, but no such symbol was ever
+            exported from ldsca.dll (verified via dumpbin on the prebuilt DLL).
+            Dropping it.
+        -->
+        <Binary Id="ldsca_dll" SourceFile="$(var.BinDir)\ldsca.dll" />
+
+        <CustomAction Id="BackupOldUaldsIni"
+                      BinaryRef="ldsca_dll"
+                      DllEntry="BackupOldUaldsIni"
+                      Execute="immediate"
+                      Return="check" />
+
+        <!--
+            ldsca.dll's UpdateUaldsIni reads CustomActionData formatted as
+            "[CommonFilesFolder]|[CommonAppDataFolder]" — matches the old
+            setUpdateUaldsIniData property setter from the InstallShield project.
+        -->
+        <SetProperty Id="UpdateUaldsIni"
+                     Value="[$(var.CommonFilesRoot)]|[CommonAppDataFolder]"
+                     Sequence="execute"
+                     Before="UpdateUaldsIni" />
+        <CustomAction Id="UpdateUaldsIni"
+                      BinaryRef="ldsca_dll"
+                      DllEntry="UpdateUaldsIni"
+                      Execute="deferred"
+                      Impersonate="no"
+                      Return="check" />
+
+        <SetProperty Id="CopyPkiKeysFromOldIniFile"
+                     Value="[$(var.CommonFilesRoot)]|[CommonAppDataFolder]"
+                     Sequence="execute"
+                     Before="CopyPkiKeysFromOldIniFile" />
+        <CustomAction Id="CopyPkiKeysFromOldIniFile"
+                      BinaryRef="ldsca_dll"
+                      DllEntry="CopyPkiKeysFromOldIniFile"
+                      Execute="deferred"
+                      Impersonate="no"
+                      Return="check" />
+
+        <!--
+            Sequence (matches the InstallShield ordering, simplified):
+              Backup runs before InstallValidate on a fresh install or upgrade.
+              UpdateUaldsIni runs after file install completes.
+              CopyPkiKeysFromOldIniFile runs after UpdateUaldsIni to layer
+                user-customized paths back over the freshly-written defaults.
+        -->
+        <InstallExecuteSequence>
+            <Custom Action="BackupOldUaldsIni"
+                    Before="InstallValidate"
+                    Condition="NOT Installed" />
+
+            <Custom Action="UpdateUaldsIni"
+                    After="InstallFiles"
+                    Condition="NOT Installed OR REINSTALL" />
+
+            <Custom Action="CopyPkiKeysFromOldIniFile"
+                    After="UpdateUaldsIni"
+                    Condition="NOT Installed OR REINSTALL" />
+        </InstallExecuteSequence>
+
+    </Module>
+
+</Wix>

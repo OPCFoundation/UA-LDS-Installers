@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    OPC UA Local Discovery Server - MSI Installer
+
+    Wraps the merge module (MergeModule.wxs) in a product MSI with a feature
+    tree, the OPC EULA, and an icon/banner.  Field installs of the legacy
+    InstallShield-built 1.04.x MSI will silently upgrade because we preserve
+    the UpgradeCode {B264EE1D-BEDE-4E35-91D9-AEC6EB0E7DF7}.
+
+    Features:
+      Core           - mandatory; the merge module's payload
+      Help           - optional; PDF + HTM documentation under
+                       [ProgramFiles]\OPC Foundation\UA\Discovery\help
+      CertGenerator  - optional; Opc.Ua.CertificateGenerator.exe utility
+
+    Variables (passed via -d):
+      MsmFile       - path to the runtime merge module produced by MergeModule.wxs
+      UpgradeCode   - preserved from InstallShield: B264EE1D-...-7DF7
+      Version       - MAJOR.MINOR.REVISION.BUILD
+      Platform      - x86 | x64
+      HelpDir       - staged help files (out\help)
+      CertGenDir    - staged Opc.Ua.CertificateGenerator.exe (out\certgenerator)
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+    <?if $(var.Platform) = x86 ?>
+    <?define ProgramFilesRoot = ProgramFilesFolder ?>
+    <?define PlatformTag = (x86) ?>
+    <?else?>
+    <?define ProgramFilesRoot = ProgramFiles64Folder ?>
+    <?define PlatformTag = (x64) ?>
+    <?endif?>
+
+    <Package Name="OPC UA Local Discovery Server $(var.PlatformTag)"
+             Manufacturer="OPC Foundation"
+             Version="$(var.Version)"
+             UpgradeCode="$(var.UpgradeCode)"
+             Compressed="yes"
+             InstallerVersion="500"
+             Scope="perMachine">
+
+        <SummaryInformation
+            Description="OPC UA Local Discovery Server $(var.PlatformTag)"
+            Manufacturer="OPC Foundation" />
+
+        <!-- Require admin privileges. -->
+        <Launch Condition="Privileged"
+                Message="[ProductName] requires administrator privileges.  Right-click the installer and choose 'Run as administrator'." />
+
+        <!--
+            MajorUpgrade with the preserved UpgradeCode picks up every prior
+            InstallShield-built 1.04.x install and uninstalls it cleanly before
+            laying down the new one.
+        -->
+        <MajorUpgrade
+            DowngradeErrorMessage="A newer version of [ProductName] is already installed."
+            Schedule="afterInstallInitialize" />
+
+        <MediaTemplate EmbedCab="yes" />
+
+        <!-- Embed the runtime merge module -->
+        <StandardDirectory Id="TARGETDIR">
+            <Merge Id="LdsRuntime"
+                   Language="1033"
+                   SourceFile="$(var.MsmFile)"
+                   DiskId="1" />
+        </StandardDirectory>
+
+        <!--
+            CertGenerator -> [ProgramFiles]\OPC Foundation\UA\Discovery\bin
+            (Help docs are dropped from this iteration - see TASK 16 in
+            MIGRATION_PLAN.  WiX 4.0.6 lacks the <Files> bulk-harvest element
+            that shipped in WiX 5.  Help payload is still staged in out\help.)
+        -->
+        <StandardDirectory Id="$(var.ProgramFilesRoot)">
+            <Directory Id="OPCF_PF" Name="OPC Foundation">
+                <Directory Id="UA_PF" Name="UA">
+                    <Directory Id="DISCOVERY_PF" Name="Discovery">
+                        <Directory Id="CERTGEN_DIR" Name="bin">
+                            <Component Id="comp_CertGenerator" Guid="A2B7C9D3-4001-4A00-9001-E5F6A7B8C100">
+                                <File Id="file_CertGenerator"
+                                      Name="Opc.Ua.CertificateGenerator.exe"
+                                      Source="$(var.CertGenDir)\Opc.Ua.CertificateGenerator.exe"
+                                      KeyPath="yes" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                </Directory>
+            </Directory>
+        </StandardDirectory>
+
+        <!-- Feature tree -->
+        <Feature Id="Core"
+                 Title="OPC UA Local Discovery Server"
+                 Description="Runtime: opcualds.exe, Bonjour Service, dnssd.dll, default ualds.ini, PKI directory tree."
+                 Level="1"
+                 AllowAbsent="no">
+            <MergeRef Id="LdsRuntime" />
+        </Feature>
+
+        <Feature Id="CertGenerator"
+                 Title="Certificate Generator Utility"
+                 Description="Opc.Ua.CertificateGenerator.exe — companion CLI for managing the LDS certificate store."
+                 Level="1"
+                 AllowAbsent="yes">
+            <ComponentRef Id="comp_CertGenerator" />
+        </Feature>
+
+        <!--
+            UI: feature-tree dialog gives the user a Custom-install path.
+            We deliberately don't override WixUIBannerBmp / WixUIDialogBmp
+            yet - the OPC Logo Banner.jpg is 493x58 (banner-shaped) and
+            stretches badly when WiX uses it as the 493x312 dialog
+            background.  A future task: ship two correctly-sized BMPs.
+        -->
+        <ui:WixUI Id="WixUI_FeatureTree" />
+
+        <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+        <Icon Id="OpcIcon.ico" SourceFile="OpcLogoIcon.ico" />
+        <Property Id="ARPPRODUCTICON" Value="OpcIcon.ico" />
+
+        <!-- Always write a verbose install log to %TEMP%\MSI*.log -
+             saves having to remember msiexec /l*vx when debugging field issues. -->
+        <Property Id="MsiLogging" Value="voicewarmupx!" />
+        <Property Id="ARPURLINFOABOUT"    Value="https://opcfoundation.org/" />
+        <Property Id="ARPHELPLINK"        Value="https://opcfoundation.github.io/UA-LDS/" />
+        <Property Id="ARPCONTACT"         Value="OPC Foundation" />
+
+    </Package>
+
+</Wix>
