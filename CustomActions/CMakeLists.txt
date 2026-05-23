@@ -8,15 +8,15 @@
 #
 # Replaces the InstallShield-era project which:
 #   - Linked against a prebuilt msiaction.lib (a frozen VS2008 build of
-#     UA-LDS\settings.c).  We rebuild that here from the current settings.c.
+#     LDS\settings.c).  We rebuild that here from the current settings.c.
 #   - Also exported AddDiscoveryServiceToFWEL / RemoveDiscoveryServiceFromFWEL
 #     for firewall management.  Replaced by WixToolset.Firewall.wixext.
 #
-# To make UA-LDS\settings.c compile without dragging in the OPC UA AnsiC
+# To make LDS\settings.c compile without dragging in the OPC UA AnsiC
 # stack and the LDS logger, the stubs/ folder shadows two of its includes:
 #   stubs/opcua_p_crypto.h  - empty (no symbols from it are referenced)
 #   stubs/log.h             - minimal LogLevel + ualds_log declaration
-# `stubs` MUST come first in the include path so it wins over UA-LDS\win32\log.h.
+# `stubs` MUST come first in the include path so it wins over LDS\win32\log.h.
 # ============================================================================
 
 cmake_minimum_required(VERSION 3.20)
@@ -26,9 +26,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
-set(UALDS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../UA-LDS")
+set(UALDS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../LDS")
 if(NOT EXISTS "${UALDS_DIR}/settings.c")
-    message(FATAL_ERROR "Cannot find UA-LDS/settings.c at ${UALDS_DIR}. Expected layout: LDS\\UA-LDS\\ and LDS\\UA-LDS-Installers\\CustomActions\\.")
+    message(FATAL_ERROR "Cannot find LDS/settings.c at ${UALDS_DIR}. Expected layout: UA-LDS-Installers/LDS/ (submodule) alongside UA-LDS-Installers/CustomActions/.")
 endif()
 
 add_library(ldsca SHARED
@@ -40,8 +40,9 @@ add_library(ldsca SHARED
     log_stub.c
     platform_stub.c
 
-    # Pulled in from UA-LDS so settings.c builds with the same toolchain/CRT as
-    # the rest of the installer. Drops the legacy msiaction.lib (VS2008) dep.
+    # Pulled in from the LDS submodule so settings.c builds with the same
+    # toolchain/CRT as the rest of the installer. Drops the legacy
+    # msiaction.lib (VS2008) dep.
     "${UALDS_DIR}/settings.c"
     "${UALDS_DIR}/strlcat.c"
     "${UALDS_DIR}/strlcpy.c"
@@ -63,9 +64,9 @@ target_compile_definitions(ldsca PRIVATE
     _CRT_NONSTDC_NO_WARNINGS
 )
 
-# Include path order matters: stubs/ must come before UA-LDS/win32/ so that
-# UA-LDS\settings.c's `#include <log.h>` picks up our stub instead of the real
-# UA-LDS logger header.
+# Include path order matters: stubs/ must come before LDS/win32/ so that
+# settings.c's `#include <log.h>` picks up our stub instead of the real
+# LDS logger header.
 target_include_directories(ldsca PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/stubs"
     "${CMAKE_CURRENT_SOURCE_DIR}"
