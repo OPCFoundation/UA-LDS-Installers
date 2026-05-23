@@ -3,20 +3,34 @@
     UA Local Discovery Server - Build Script
 
 .DESCRIPTION
-    Orchestrates the full LDS build pipeline that the old Jenkins job did:
-      1. Bump version, generate buildversion.h
-      2. Per arch: build OpenSSL 3.5.6 from upstream source (if not already built)
-      3. Per arch: build UA-LDS (opcualds.exe + dnssd.dll) via CMake
-      4. Per arch: build mDNSResponder.exe via CMake          [TODO until port]
-      5. Per arch: build ldsca.dll (MSI custom actions)       [TODO until port]
-      6. Per arch: stage binaries + sign
-      7. Per arch: WiX merge module + installer + sign
-      8. Bundle redistributable ZIP
+    Orchestrates the full LDS build pipeline that the old Jenkins job did.
+    Source trees live as git submodules under this directory:
+        LDS/                  - opcualds.exe / dnssd.dll source (UA-LDS)
+        mDNSResponder/        - Bonjour service source
+        CertificateGenerator/ - legacy Misc-Tools certgen (pinned to OpenSSL 1.1.1w)
 
-    Steps 4-5 currently fail loudly with "TODO: not yet ported" markers; the
-    WiX phase is skipped automatically when staging is incomplete. That lets
-    you smoke-test the OpenSSL + UA-LDS portion today and incrementally light
-    up the rest of the pipeline.
+    Help is no longer bundled in the installer - documentation is served
+    online and the Help feature is dropped from the MSI.
+
+    Phases:
+      1.  Bump version, generate buildversion.h
+      2.  Per arch: build OpenSSL 3.5.6 from upstream source (if not already built)
+      3.  Per arch: build UA-LDS (opcualds.exe + dnssd.dll) via CMake
+      4.  Per arch: build mDNSResponder.exe via msbuild (legacy .sln, v143)
+      5.  Per arch: build ldsca.dll (MSI custom actions)       [TODO until port]
+      5b. Once: build Opc.Ua.CertificateGenerator.exe (x86, OpenSSL 1.1.1w)
+      6.  Per arch: stage binaries + sign
+      7.  Per arch: WiX merge module + installer + sign
+      8.  Bundle redistributable ZIP
+
+    Step 5 (ldsca.dll) is still a placeholder; the WiX phase is skipped
+    automatically when staging is incomplete. That lets you smoke-test the
+    rest of the pipeline today and light up custom actions later.
+
+    Step 5b uses the legacy CertificateGenerator submodule, which is pinned to
+    OpenSSL 1.1.1w and built via msbuild against the .sln. This is a stopgap
+    until the certgen is rewritten in a way that preserves its CLI; the binary
+    is still shipped under the CertGenerator MSI feature.
 
 .PARAMETER Platform
     Target platform: x86, x64, or both (default: both)
@@ -66,16 +80,15 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # ---------------------------------------------------------------------------
-# Paths
+# Paths - source trees live as git submodules under this directory.
 # ---------------------------------------------------------------------------
 $ScriptDir   = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$RepoRoot    = Split-Path -Parent $ScriptDir
-$UaLdsDir    = Join-Path $RepoRoot 'UA-LDS'
-$MdnsDir     = Join-Path $RepoRoot 'UA-LDS-mDNSResponder'
+$UaLdsDir    = Join-Path $ScriptDir 'LDS'
+$MdnsDir     = Join-Path $ScriptDir 'mDNSResponder'
+$CertGenDir  = Join-Path $ScriptDir 'CertificateGenerator'
 $CaDir       = Join-Path $ScriptDir 'CustomActions'
 $WixDir      = Join-Path $ScriptDir 'WiX'
 $CmakeDir    = Join-Path $ScriptDir 'cmake'
-$OldDir      = Join-Path $RepoRoot 'UA-LDS-Installers-Old'
 
 if (-not $BuildRoot) { $BuildRoot = if ($env:BUILD_ROOT) { $env:BUILD_ROOT } else { Join-Path $ScriptDir 'build' } }
 if (-not $OutDir)    { $OutDir    = if ($env:OUT_DIR)    { $env:OUT_DIR }    else { Join-Path $ScriptDir 'out' } }
@@ -321,26 +334,43 @@ function Build-UALDS {
 }
 
 # ---------------------------------------------------------------------------
-# Phase 4: mDNSResponder.exe - TODO: not yet ported to CMake
+# Phase 4: mDNSResponder.exe via msbuild against the legacy .sln (v143 toolset).
+# A CMake port is planned but not done yet; the existing .vcxproj already
+# targets v143, so we just drive it with msbuild for both Win32 and x64.
 # ---------------------------------------------------------------------------
 function Build-MDNSResponder {
     param([string]$Arch)
-    $cml = Join-Path $MdnsDir 'CMakeLists.txt'
-    if (-not (Test-Path $cml)) {
-        Write-Host "  mDNSResponder ($Arch): SKIPPED - UA-LDS-mDNSResponder/CMakeLists.txt not yet present (Phase 2 of plan)." -ForegroundColor Yellow
+
+    $sln = Join-Path $MdnsDir 'mDNSResponder.sln'
+    if (-not (Test-Path $sln)) {
+        Write-Host "  mDNSResponder ($Arch): SKIPPED - $sln not present (submodule not initialized?)." -ForegroundColor Yellow
         return $null
     }
-    $BuildDir = Join-Path $BuildRoot "mDNSResponder\$Arch"
-    if ($Clean -and (Test-Path $BuildDir)) { Remove-Item $BuildDir -Recurse -Force }
-    New-Item -ItemType Directory -Path $BuildDir -Force | Out-Null
-    $cmakeArch = if ($Arch -eq 'x86') { 'Win32' } else { 'x64' }
-    $extraExe  = if ($Arch -eq 'x86') { '/SAFESEH' } else { '/HIGHENTROPYVA' }
-    & cmake -S $MdnsDir -B $BuildDir -A $cmakeArch -T v143 -C $HardeningCmake `
-        "-DCMAKE_EXE_LINKER_FLAGS=/NXCOMPAT /DYNAMICBASE /GUARD:CF /SUBSYSTEM:CONSOLE,6.01 $extraExe" | Out-Host
-    if ($LASTEXITCODE -ne 0) { throw "mDNSResponder CMake configure failed for $Arch." }
-    & cmake --build $BuildDir --config Release | Out-Host
-    if ($LASTEXITCODE -ne 0) { throw "mDNSResponder build failed for $Arch." }
-    return (Join-Path $BuildDir 'bin\Release')
+
+    $msPlatform = if ($Arch -eq 'x86') { 'Win32' } else { 'x64' }
+    $exeOut     = Join-Path $MdnsDir "mDNSWindows\SystemService\$msPlatform\Release"
+    $exePath    = Join-Path $exeOut 'mDNSResponder.exe'
+
+    if ($Clean -and (Test-Path $exeOut)) { Remove-Item $exeOut -Recurse -Force }
+
+    $vcArg = if ($Arch -eq 'x86') { 'x86' } else { 'x64' }
+    $msbLines = @(
+        '@echo off',
+        ('call "{0}" {1} -vcvars_ver=14.4 || exit /b 10' -f $VcVarsAll, $vcArg),
+        ('cd /d "{0}" || exit /b 11' -f $MdnsDir),
+        ('msbuild "{0}" /p:Configuration=Release /p:Platform={1} /m /nologo /v:minimal || exit /b 12' -f $sln, $msPlatform),
+        'exit /b 0'
+    )
+    $tmp = [System.IO.Path]::ChangeExtension([System.IO.Path]::GetTempFileName(), '.cmd')
+    Set-Content -Path $tmp -Value $msbLines -Encoding ASCII
+    Write-Host "Building mDNSResponder ($Arch)..."
+    & cmd.exe /c $tmp | Out-Host
+    $code = $LASTEXITCODE
+    Remove-Item $tmp -Force -ErrorAction SilentlyContinue
+    if ($code -ne 0) { throw "mDNSResponder build failed for $Arch (exit $code)." }
+
+    if (-not (Test-Path $exePath)) { throw "Expected mDNSResponder.exe not produced at $exeOut" }
+    return $exeOut
 }
 
 # ---------------------------------------------------------------------------
@@ -364,6 +394,103 @@ function Build-CustomActions {
     & cmake --build $BuildDir --config Release | Out-Host
     if ($LASTEXITCODE -ne 0) { throw "CustomActions build failed for $Arch." }
     return (Join-Path $BuildDir 'bin\Release')
+}
+
+# ---------------------------------------------------------------------------
+# Phase 5b: Opc.Ua.CertificateGenerator.exe (x86 only)
+#
+# Uses the legacy CertificateGenerator submodule (Misc-Tools). It is pinned to
+# OpenSSL 1.1.1w and cannot be upgraded without a rewrite that preserves the
+# CLI; for now we build it as-is with its own bundled OpenSSL so the installer
+# can keep shipping the binary.
+# ---------------------------------------------------------------------------
+function Build-CertGenOpenSSL {
+    $tpDir      = Join-Path $CertGenDir 'third-party'
+    $sslSource  = Join-Path $tpDir 'openssl-1.1.1w'
+    $sslInstall = Join-Path $tpDir 'openssl'
+    $marker     = Join-Path $sslInstall 'lib\libcrypto.lib'
+
+    if ($CleanOpenSSL -and (Test-Path $sslInstall)) {
+        Write-Host "  Cleaning $sslInstall"
+        Remove-Item $sslInstall -Recurse -Force
+    }
+    if (Test-Path $marker) {
+        Write-Host "CertGen OpenSSL: already built at $sslInstall - skipping"
+        return
+    }
+
+    if (-not (Test-Path (Join-Path $sslSource 'Configure'))) {
+        Write-Host "CertGen OpenSSL: cloning upstream source (tag OpenSSL_1_1_1w)..."
+        New-Item -ItemType Directory -Path $tpDir -Force | Out-Null
+        & git clone --branch OpenSSL_1_1_1w --depth 1 https://github.com/openssl/openssl.git $sslSource | Out-Host
+        if ($LASTEXITCODE -ne 0) { throw "git clone of OpenSSL 1.1.1w failed." }
+    }
+
+    # CertificateGenerator is x86-only; OpenSSL 1.1.1w configured for VC-WIN32.
+    $opensslLines = @(
+        '@echo off',
+        ('call "{0}" x86 -vcvars_ver=14.4 || exit /b 10' -f $VcVarsAll),
+        ('cd /d "{0}" || exit /b 11' -f $sslSource),
+        'nmake clean 1>nul 2>nul',
+        ('perl Configure VC-WIN32 no-asm no-shared enable-capieng no-autoload-config --prefix="{0}" --openssldir="{0}" || exit /b 12' -f $sslInstall),
+        'nmake || exit /b 13',
+        'nmake install_sw || exit /b 14',
+        'exit /b 0'
+    )
+    $tmp = [System.IO.Path]::ChangeExtension([System.IO.Path]::GetTempFileName(), '.cmd')
+    Set-Content -Path $tmp -Value $opensslLines -Encoding ASCII
+    Write-Host "Building OpenSSL 1.1.1w (x86) for CertificateGenerator..."
+    & cmd.exe /c $tmp | Out-Host
+    $code = $LASTEXITCODE
+    Remove-Item $tmp -Force -ErrorAction SilentlyContinue
+    if ($code -ne 0) { throw "CertGen OpenSSL build failed (exit $code)." }
+
+    # The certgen .vcxproj references libeay32.lib / ssleay32.lib (OpenSSL 1.0
+    # naming) — alias them to the 1.1 names so linking succeeds.
+    $libDir = Join-Path $sslInstall 'lib'
+    Copy-Item (Join-Path $libDir 'libcrypto.lib') (Join-Path $libDir 'libeay32.lib') -Force
+    Copy-Item (Join-Path $libDir 'libssl.lib')    (Join-Path $libDir 'ssleay32.lib') -Force
+
+    if (-not (Test-Path $marker)) { throw "CertGen OpenSSL install did not produce $marker." }
+    Write-Host "CertGen OpenSSL: built into $sslInstall"
+}
+
+function Build-CertGen {
+    $sln     = Join-Path $CertGenDir 'CertificateGenerator Solution.sln'
+    $exeName = 'Opc.Ua.CertificateGenerator.exe'
+    $exeOut  = Join-Path $CertGenDir 'build\Release\Opc.Ua.CertificateGenerator'
+    $exePath = Join-Path $exeOut $exeName
+
+    if (-not (Test-Path $sln)) {
+        Write-Host "  CertGen: SKIPPED - $sln not present (submodule not initialized?)." -ForegroundColor Yellow
+        return $null
+    }
+
+    Build-CertGenOpenSSL
+
+    if ($Clean -and (Test-Path (Join-Path $CertGenDir 'build'))) {
+        Remove-Item (Join-Path $CertGenDir 'build') -Recurse -Force
+    }
+
+    # msbuild via the x86 vcvars env so the v143 x86 toolset resolves.
+    $msbLines = @(
+        '@echo off',
+        ('call "{0}" x86 -vcvars_ver=14.4 || exit /b 10' -f $VcVarsAll),
+        ('cd /d "{0}" || exit /b 11' -f $CertGenDir),
+        ('msbuild "{0}" /p:Configuration=Release /p:Platform=Win32 /m /nologo /v:minimal || exit /b 12' -f $sln),
+        'exit /b 0'
+    )
+    $tmp = [System.IO.Path]::ChangeExtension([System.IO.Path]::GetTempFileName(), '.cmd')
+    Set-Content -Path $tmp -Value $msbLines -Encoding ASCII
+    Write-Host "Building CertificateGenerator (x86)..."
+    & cmd.exe /c $tmp | Out-Host
+    $code = $LASTEXITCODE
+    Remove-Item $tmp -Force -ErrorAction SilentlyContinue
+    if ($code -ne 0) { throw "CertificateGenerator build failed (exit $code)." }
+
+    if (-not (Test-Path $exePath)) { throw "Expected $exeName not produced at $exeOut" }
+    Write-Host "CertGen: built $exePath"
+    return $exePath
 }
 
 # ---------------------------------------------------------------------------
@@ -444,10 +571,14 @@ function Build-Wix {
     $MsiPath = Join-Path $WixOut $MsiName
 
     Write-Host "WiX ($Arch): building merge module..."
+    # -sw1072: silence "MSM should not contain Error table" emitted by the
+    # Firewall extension. Safe because we are the sole consumer of the MSM
+    # and Installer.wxs does not add its own Error-table rows.
     & $WixCmd build (Join-Path $WixDir 'MergeModule.wxs') `
         -arch $Arch `
         -ext WixToolset.Util.wixext `
         -ext WixToolset.Firewall.wixext `
+        -sw1072 `
         -d "BinDir=$StageBin" `
         -d "ModuleGuid=$ModuleGuid" `
         -d "Platform=$Arch" `
@@ -465,7 +596,6 @@ function Build-Wix {
         -d "UpgradeCode=$UpgradeCode" `
         -d "Version=$Version" `
         -d "Platform=$Arch" `
-        -d "HelpDir=$(Join-Path $OutDir 'help')" `
         -d "CertGenDir=$(Join-Path $OutDir 'certgenerator')" `
         -bindpath $WixDir `
         -o $MsiPath | Out-Host
@@ -476,29 +606,21 @@ function Build-Wix {
 }
 
 # ---------------------------------------------------------------------------
-# Phase 8: Stage shared (help, certgenerator) - same files for both arches
+# Phase 8: Stage shared (certgenerator) - same files for both arches
 # ---------------------------------------------------------------------------
 function Stage-Shared {
-    $HelpStage = Join-Path $OutDir 'help'
-    if (Test-Path $HelpStage) { Remove-Item $HelpStage -Recurse -Force }
-    New-Item -ItemType Directory -Path $HelpStage -Force | Out-Null
-    $oldHelp = Join-Path $OldDir 'LDSBinaries\doc'
-    if (Test-Path $oldHelp) {
-        Copy-Item (Join-Path $oldHelp '*') $HelpStage -Recurse -Force
-        Write-Host "Help: staged from $oldHelp"
-    } else {
-        Write-Host "Help: source not found at $oldHelp - feature payload will be empty." -ForegroundColor Yellow
-    }
+    param([string]$CertGenExe)
 
     $CertStage = Join-Path $OutDir 'certgenerator'
     if (Test-Path $CertStage) { Remove-Item $CertStage -Recurse -Force }
     New-Item -ItemType Directory -Path $CertStage -Force | Out-Null
-    $oldCert = Join-Path $OldDir 'LDSBinaries\dummys\Opc.Ua.CertificateGenerator.exe'
-    if (Test-Path $oldCert) {
-        Copy-Item $oldCert $CertStage
-        Write-Host "CertGenerator: staged from $oldCert (3rd-party signed binary - re-signing skipped)"
+    if ($CertGenExe -and (Test-Path $CertGenExe)) {
+        Copy-Item $CertGenExe $CertStage
+        $staged = Join-Path $CertStage (Split-Path -Leaf $CertGenExe)
+        Sign-Files @($staged)
+        Write-Host "CertGenerator: staged from $CertGenExe"
     } else {
-        Write-Host "CertGenerator: source not found at $oldCert - feature payload will be empty." -ForegroundColor Yellow
+        Write-Host "CertGenerator: binary not built - feature payload will be empty." -ForegroundColor Yellow
     }
 }
 
@@ -510,6 +632,17 @@ try {
     New-Item -ItemType Directory -Path $OutDir    -Force | Out-Null
 
     $platforms = if ($Platform -eq 'both') { @('x86','x64') } else { @($Platform) }
+
+    # CertificateGenerator is x86-only and arch-independent for consumers, so
+    # build it once up front; same exe is bundled into both x86 and x64 MSIs.
+    $certGenExe = $null
+    if (-not $SkipWix) {
+        Write-Host ''
+        Write-Host '============================================================'
+        Write-Host '  CertificateGenerator (x86, legacy OpenSSL 1.1.1w)'
+        Write-Host '============================================================'
+        $certGenExe = Build-CertGen
+    }
 
     foreach ($arch in $platforms) {
         Write-Host ''
@@ -524,7 +657,7 @@ try {
         $staged   = Stage-Arch $arch $uaLdsBin $mdnsBin $caBin
 
         if (-not $SkipWix) {
-            Stage-Shared       # idempotent, OK to call inside loop
+            Stage-Shared -CertGenExe $certGenExe   # idempotent, OK to call inside loop
             Build-Wix $arch $staged
         }
     }

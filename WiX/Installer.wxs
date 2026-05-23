@@ -9,8 +9,6 @@
 
     Features:
       Core           - mandatory; the merge module's payload
-      Help           - optional; PDF + HTM documentation under
-                       [ProgramFiles]\OPC Foundation\UA\Discovery\help
       CertGenerator  - optional; Opc.Ua.CertificateGenerator.exe utility
 
     Variables (passed via -d):
@@ -18,7 +16,6 @@
       UpgradeCode   - preserved from InstallShield: B264EE1D-...-7DF7
       Version       - MAJOR.MINOR.REVISION.BUILD
       Platform      - x86 | x64
-      HelpDir       - staged help files (out\help)
       CertGenDir    - staged Opc.Ua.CertificateGenerator.exe (out\certgenerator)
 -->
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
@@ -69,9 +66,7 @@
 
         <!--
             CertGenerator -> [ProgramFiles]\OPC Foundation\UA\Discovery\bin
-            (Help docs are dropped from this iteration - see TASK 16 in
-            MIGRATION_PLAN.  WiX 4.0.6 lacks the <Files> bulk-harvest element
-            that shipped in WiX 5.  Help payload is still staged in out\help.)
+            (Help is no longer bundled - documentation is served online.)
         -->
         <StandardDirectory Id="$(var.ProgramFilesRoot)">
             <Directory Id="OPCF_PF" Name="OPC Foundation">

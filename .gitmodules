@@ -1,0 +1,12 @@
+[submodule "Help"]
+	path = Help
+	url = https://github.com/OPCFoundation/UA-LDS-Help.git
+[submodule "mDNSResponder"]
+	path = mDNSResponder
+	url = https://github.com/OPCFoundation/UA-LDS-mDNSResponder.git
+[submodule "LDS"]
+	path = LDS
+	url = https://github.com/OPCFoundation/UA-LDS.git
+[submodule "CertificateGenerator"]
+	path = CertificateGenerator
+	url = https://github.com/OPCFoundation/Misc-Tools.git
