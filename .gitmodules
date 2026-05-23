@@ -1,6 +1,3 @@
-[submodule "Help"]
-	path = Help
-	url = https://github.com/OPCFoundation/UA-LDS-Help.git
 [submodule "mDNSResponder"]
 	path = mDNSResponder
 	url = https://github.com/OPCFoundation/UA-LDS-mDNSResponder.git

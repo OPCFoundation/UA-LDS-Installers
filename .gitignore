@@ -5,3 +5,4 @@ dist/
 *.bak
 *.log
 signing-key.secret.ps1
+.claude/
