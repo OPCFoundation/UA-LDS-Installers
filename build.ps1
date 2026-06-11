@@ -14,7 +14,7 @@
 
     Phases:
       1.  Bump version, generate buildversion.h
-      2.  Per arch: build OpenSSL 3.5.6 from upstream source (if not already built)
+      2.  Per arch: build OpenSSL 3.5.7 from upstream source (if not already built)
       3.  Per arch: build UA-LDS (opcualds.exe + dnssd.dll) via CMake
       4.  Per arch: build mDNSResponder.exe via msbuild (legacy .sln, v143)
       5.  Per arch: build ldsca.dll (MSI custom actions)       [TODO until port]
@@ -241,8 +241,8 @@ function Build-OpenSSL {
 
     # Clone upstream OpenSSL at the pinned tag if not present
     if (-not (Test-Path (Join-Path $sslSource 'Configure'))) {
-        Write-Host "OpenSSL: cloning upstream source (tag openssl-3.5.6)..."
-        & git clone --branch openssl-3.5.6 --depth 1 https://github.com/openssl/openssl.git $sslSource | Out-Host
+        Write-Host "OpenSSL: cloning upstream source (tag openssl-3.5.7)..."
+        & git clone --branch openssl-3.5.7 --depth 1 https://github.com/openssl/openssl.git $sslSource | Out-Host
         if ($LASTEXITCODE -ne 0) { throw "git clone of OpenSSL failed." }
     }
 
@@ -265,7 +265,7 @@ function Build-OpenSSL {
     )
     $tmp = [System.IO.Path]::ChangeExtension([System.IO.Path]::GetTempFileName(), '.cmd')
     Set-Content -Path $tmp -Value $opensslLines -Encoding ASCII
-    Write-Host "Building OpenSSL 3.5.6 ($Arch) - this takes 10-20 min the first time..."
+    Write-Host "Building OpenSSL 3.5.7 ($Arch) - this takes 10-20 min the first time..."
     & cmd.exe /c $tmp | Out-Host
     $code = $LASTEXITCODE
     Remove-Item $tmp -Force -ErrorAction SilentlyContinue
