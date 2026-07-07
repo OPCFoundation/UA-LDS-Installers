@@ -26,3 +26,5 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 The complete license agreement can be found here:
 http://opcfoundation.org/License/MIT/1.00/
+
+The Software uses "Apple Bonjour Services under Apache License 2.0".
