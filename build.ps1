@@ -17,15 +17,11 @@
       2.  Per arch: build OpenSSL 3.5.7 from upstream source (if not already built)
       3.  Per arch: build UA-LDS (opcualds.exe + dnssd.dll) via CMake
       4.  Per arch: build mDNSResponder.exe via msbuild (legacy .sln, v143)
-      5.  Per arch: build ldsca.dll (MSI custom actions)       [TODO until port]
+      5.  Per arch: build ldsca.dll (MSI custom actions)
       5b. Once: build Opc.Ua.CertificateGenerator.exe (x86, OpenSSL 1.1.1w)
       6.  Per arch: stage binaries + sign
       7.  Per arch: WiX merge module + installer + sign
       8.  Bundle redistributable ZIP
-
-    Step 5 (ldsca.dll) is still a placeholder; the WiX phase is skipped
-    automatically when staging is incomplete. That lets you smoke-test the
-    rest of the pipeline today and light up custom actions later.
 
     Step 5b uses the legacy CertificateGenerator submodule, which is pinned to
     OpenSSL 1.1.1w and built via msbuild against the .sln. This is a stopgap
