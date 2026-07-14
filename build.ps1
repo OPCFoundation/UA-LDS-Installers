@@ -186,7 +186,6 @@ $Build = [int]((Get-Content $BuildFile -Raw).Trim()) + 1
 Set-Content -Path $BuildFile -Value $Build -NoNewline
 
 $Version       = "$Major.$Minor.$Revision.$Build"
-$ShortVersion  = "$Major.$Minor.$Revision"
 $CopyrightYear = (Get-Date).Year
 
 # Regenerate UA-LDS\buildversion.h (replaces the old Perl XXX/YYY substitution)
@@ -561,8 +560,8 @@ function Build-Wix {
     # DO NOT regenerate - field installs depend on this GUID for upgrade.
     $UpgradeCode = 'B264EE1D-BEDE-4E35-91D9-AEC6EB0E7DF7'
 
-    $MsmName = "opc-ua-lds-mergemodule-$ShortVersion-$Arch.msm"
-    $MsiName = "opc-ua-lds-$ShortVersion-$Arch.msi"
+    $MsmName = "opc-ua-lds-mergemodule-$Version-$Arch.msm"
+    $MsiName = "opc-ua-lds-$Version-$Arch.msi"
     $MsmPath = Join-Path $WixOut $MsmName
     $MsiPath = Join-Path $WixOut $MsiName
 
@@ -665,13 +664,15 @@ try {
         $DistDir = Join-Path $ScriptDir 'dist'
         New-Item -ItemType Directory -Path $DistDir -Force | Out-Null
         $WixOut = Join-Path $OutDir 'wix'
-        $msi = @(Get-ChildItem $WixOut -Filter '*.msi' -ErrorAction SilentlyContinue)
+        # Only pick up artifacts from THIS build - out\wix accumulates the
+        # output of previous builds, which carry older build numbers.
+        $msi = @(Get-ChildItem $WixOut -Filter "*-$Version-*.msi" -ErrorAction SilentlyContinue)
         if ($msi.Count -gt 0) {
-            $ZipName = "OPC-UA-Local-Discovery-Server-$ShortVersion.zip"
+            $ZipName = "OPC-UA-Local-Discovery-Server-$Version.zip"
             $ZipPath = Join-Path $DistDir $ZipName
             if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
             $items = @($msi.FullName)
-            $items += @(Get-ChildItem $WixOut -Filter '*.msm' | Select-Object -ExpandProperty FullName)
+            $items += @(Get-ChildItem $WixOut -Filter "*-$Version-*.msm" | Select-Object -ExpandProperty FullName)
             $changelog = Join-Path $UaLdsDir 'Changelog.txt'
             if (Test-Path $changelog) { $items += $changelog }
             Compress-Archive -Path $items -DestinationPath $ZipPath -CompressionLevel Optimal
