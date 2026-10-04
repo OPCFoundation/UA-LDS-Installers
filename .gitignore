@@ -2,6 +2,10 @@ build/
 out/
 dist/
 .wix/
+.scratch/
+
+# Standalone CertGen build trees (build.ps1 builds into build/certgen-<arch>)
+CertGen/.build*/
 *.bak
 *.log
 signing-key.secret.ps1
