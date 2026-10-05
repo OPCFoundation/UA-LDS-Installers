@@ -419,17 +419,44 @@ function Build-OpenSSL {
 function Build-UALDS {
     param([string]$Arch)
 
-    # Point the UA stack at the per-arch OpenSSL install directly.
-    #
-    # stack/Stack/CMakeLists.txt only falls back to its in-tree
-    # ${_PROJECT_ROOT}/openssl when the caller supplies nothing, so passing
-    # OPENSSL_ROOT_DIR is enough. This previously required copying the whole
-    # per-arch tree (154 files) into stack\openssl before every configure,
-    # because that file used to set OPENSSL_ROOT_DIR unconditionally and
-    # clobbered the command line.
+    # Point the UA stack at the per-arch OpenSSL install.
     $opensslRoot = Join-Path $UaLdsDir "stack\openssl-$Arch"
     if (-not (Test-Path (Join-Path $opensslRoot 'include\openssl\opensslv.h'))) {
         throw "OpenSSL not found at $opensslRoot. Build-OpenSSL must run first."
+    }
+
+    # Two ways to get OpenSSL in front of the UA stack, depending on which
+    # version of the submodule is checked out.
+    #
+    # stack/Stack/CMakeLists.txt historically did an unconditional
+    #     set (OPENSSL_ROOT_DIR ${_PROJECT_ROOT}/openssl)
+    # which silently overrides anything passed with -D, so the only way to use
+    # an out-of-tree OpenSSL was to copy it to that exact path. The fix makes
+    # that set() conditional, after which -DOPENSSL_ROOT_DIR is enough and the
+    # copy is pure waste (154 files, every configure, every arch).
+    #
+    # The two repositories are versioned independently, so a checkout can have
+    # either version - a clean clone at the current submodule pointer has the
+    # old one. Detect which, and copy only when we have to. Without this, a
+    # fresh clone fails configure with OPENSSL_INCLUDE_DIR / LIB_EAY_LIBRARY /
+    # SSL_EAY_LIBRARY set to NOTFOUND, because nothing supplies the path the
+    # old CMakeLists insists on.
+    #
+    # This whole branch can go once the submodule fix is published and the
+    # pointer bumped.
+    $stackCMake = Join-Path $UaLdsDir 'stack\Stack\CMakeLists.txt'
+    $honoursRootDir = $false
+    if (Test-Path $stackCMake) {
+        $honoursRootDir = (Get-Content -Raw $stackCMake) -match '(?m)^\s*if\s*\(\s*NOT\s+OPENSSL_ROOT_DIR\s*\)'
+    }
+
+    if ($honoursRootDir) {
+        Write-Host "  UA stack: using OpenSSL at $opensslRoot (no copy needed)"
+    } else {
+        $opensslShared = Join-Path $UaLdsDir 'stack\openssl'
+        Write-Host "  UA stack: submodule hard-codes OPENSSL_ROOT_DIR - staging OpenSSL into $opensslShared" -ForegroundColor Yellow
+        if (Test-Path $opensslShared) { Remove-Item $opensslShared -Recurse -Force }
+        Copy-Item $opensslRoot $opensslShared -Recurse -Force
     }
 
     $BuildDir = Join-Path $BuildRoot "UA-LDS\$Arch"
