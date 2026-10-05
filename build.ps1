@@ -7,7 +7,17 @@
     Source trees live as git submodules under this directory:
         LDS/                  - opcualds.exe / dnssd.dll source (UA-LDS)
         mDNSResponder/        - Bonjour service source
-        CertificateGenerator/ - legacy Misc-Tools certgen (pinned to OpenSSL 1.1.1w)
+
+    In-tree source (not a submodule):
+        CertificateGenerator/ - Opc.Ua.CertificateGenerator.exe source (C,
+                                OpenSSL 3.x)
+        CustomActions/        - ldsca.dll, the MSI custom actions
+
+    CertificateGenerator/ used to be a submodule pointing at Misc-Tools, built
+    against the end-of-life OpenSSL 1.1.1w. That submodule has been removed and
+    replaced by the in-tree C project of the same name, which links the LDS's
+    own OpenSSL. The original remains available at OPCFoundation/Misc-Tools for
+    reference while the last few commands are ported.
 
     Help is no longer bundled in the installer - documentation is served
     online and the Help feature is dropped from the MSI.
@@ -18,15 +28,18 @@
       3.  Per arch: build UA-LDS (opcualds.exe + dnssd.dll) via CMake
       4.  Per arch: build mDNSResponder.exe via msbuild (legacy .sln, v143)
       5.  Per arch: build ldsca.dll (MSI custom actions)
-      5b. Once: build Opc.Ua.CertificateGenerator.exe (x86, OpenSSL 1.1.1w)
+      5b. Once: build Opc.Ua.CertificateGenerator.exe (shares the LDS's
+          OpenSSL 3.5.7)
       6.  Per arch: stage binaries + sign
+      6b. Per arch: generate CycloneDX 1.6 SBOM (after signing, so the recorded
+          SHA-256 digests match the binaries we actually ship)
       7.  Per arch: WiX merge module + installer + sign
-      8.  Bundle redistributable ZIP
+      8.  Bundle redistributable ZIP (MSI, MSM, changelog, SBOMs)
 
-    Step 5b uses the legacy CertificateGenerator submodule, which is pinned to
-    OpenSSL 1.1.1w and built via msbuild against the .sln. This is a stopgap
-    until the certgen is rewritten in a way that preserves its CLI; the binary
-    is still shipped under the CertGenerator MSI feature.
+    Step 5b builds CertificateGenerator\, a C re-implementation that links the
+    same OpenSSL 3.5.7 as the LDS. The command line is unchanged;
+    CertificateGenerator\README.md lists the deviations and the commands still
+    to be ported. The binary is shipped under the CertGenerator MSI feature.
 
 .PARAMETER Platform
     Target platform: x86, x64, or both (default: both)
@@ -48,7 +61,9 @@
       - VS 2022 or newer with C++ desktop workload, MSVC v143 toolset
       - CMake 3.20+
       - WiX v4+: dotnet tool install --global wix
-      - Strawberry Perl (for OpenSSL Configure)
+      - A native Windows Perl 5.10+ on PATH (for OpenSSL Configure). Any
+        distribution works. The Cygwin perl bundled with Git for Windows does
+        not; the script detects that and skips past it.
       - AzureSignTool (only if code signing): dotnet tool install --global AzureSignTool
 
     Code signing credentials in env:
@@ -105,8 +120,105 @@ function Assert-Tool {
 }
 
 Assert-Tool 'cmake' 'Install via Visual Studio Installer or cmake.org.'
-Assert-Tool 'perl'  'Install Strawberry Perl (https://strawberryperl.com) - required by OpenSSL Configure.'
 Assert-Tool 'git'   'Required to clone OpenSSL.'
+
+# ---------------------------------------------------------------------------
+# Perl selection
+#
+# Any Perl on PATH that can actually configure OpenSSL is fine - there is no
+# dependency on a particular distribution. Two capabilities are required, and
+# both are tested rather than assumed:
+#
+#   1. A native Windows Perl ($^O = MSWin32). Configure generates an nmake
+#      makefile for the VC targets, so the Perl has to use Windows path
+#      semantics. A Cygwin or MSYS Perl reports Unix paths and corrupts the
+#      generated makefile; OpenSSL's own NOTES-WINDOWS says as much.
+#   2. Perl 5.10+ with the core modules Configure pulls in (IPC::Cmd and
+#      friends). Minimal installs sometimes omit them.
+#
+# This matters because Git for Windows bundles a Cygwin Perl, its bin directory
+# is frequently *first* on PATH, and it fails both tests. A bare
+# `Get-Command perl` check finds it, passes, and Configure then dies 30 seconds
+# later with an opaque "Can't locate Locale/Maketext/Simple.pm".
+#
+# So probe each candidate, take the first that qualifies, and put its directory
+# ahead of PATH for the OpenSSL build so Configure cannot pick up a different
+# one. Rejections are reported with the reason, so a wrong PATH order is
+# diagnosable instead of mysterious.
+# ---------------------------------------------------------------------------
+
+# Returns $null when the Perl is usable, otherwise the reason it is not.
+function Test-PerlForOpenSSL {
+    param([string]$PerlPath)
+
+    $previous = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        $flavour = (& $PerlPath -e 'print $^O' 2>&1 | Out-String).Trim()
+        if ($LASTEXITCODE -ne 0) {
+            return 'failed to run'
+        }
+
+        if ($flavour -ne 'MSWin32') {
+            return "not a native Windows perl (`$^O = '$flavour') - OpenSSL's nmake build needs Windows path semantics"
+        }
+
+        $null = & $PerlPath -e 'exit($] < 5.010 ? 1 : 0)' 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            $version = (& $PerlPath -e 'print $]' 2>&1 | Out-String).Trim()
+            return "perl 5.10 or newer required, found $version"
+        }
+
+        # -M rather than a string eval inside -e: PowerShell mangles embedded
+        # double quotes when it hands arguments to a native executable, so a
+        # one-liner containing eval "require $m" arrives corrupted and every
+        # perl looks broken. -M needs no quoting and fails the same way.
+        $null = & $PerlPath -MIPC::Cmd -MGetopt::Std -MFile::Spec::Functions -e 1 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            return 'missing a core module Configure needs (one of IPC::Cmd, Getopt::Std, File::Spec::Functions)'
+        }
+
+        return $null
+    } catch {
+        return 'failed to run'
+    } finally {
+        $ErrorActionPreference = $previous
+    }
+}
+
+$PerlExe = $null
+$PerlRejected = @()
+
+foreach ($candidate in @(Get-Command perl -All -ErrorAction SilentlyContinue |
+                         Select-Object -ExpandProperty Source -Unique)) {
+    $reason = Test-PerlForOpenSSL $candidate
+    if (-not $reason) { $PerlExe = $candidate; break }
+    $PerlRejected += "  $candidate`n      $reason"
+}
+
+if (-not $PerlExe) {
+    $detail = if ($PerlRejected.Count -gt 0) {
+        "Perl was found on PATH but none of these can configure OpenSSL:`n" +
+        ($PerlRejected -join "`n")
+    } else {
+        'No perl was found on PATH.'
+    }
+
+    throw @"
+No Perl capable of configuring OpenSSL was found.
+$detail
+
+Any native Windows Perl 5.10+ with the standard core modules will do. If one is
+already installed, put its directory on PATH ahead of any Cygwin/MSYS perl -
+notably the one bundled with Git for Windows, which cannot be used here.
+"@
+}
+
+$PerlDir = Split-Path -Parent $PerlExe
+Write-Host "Perl: $PerlExe"
+if ($PerlRejected.Count -gt 0) {
+    Write-Host "  (skipped $($PerlRejected.Count) unusable perl(s) earlier on PATH)"
+}
 if (-not $SkipWix) {
     Assert-Tool $WixCmd 'Install with: dotnet tool install --global wix'
 
@@ -133,6 +245,24 @@ function Find-VcVarsAll {
     return $vcvars
 }
 $VcVarsAll = Find-VcVarsAll
+
+# The MSVC C runtime is linked statically (/MT via cmake\Hardening.cmake), so it
+# is a shipped component rather than an environment assumption - a CRT fix needs
+# us to rebuild, not Windows Update on the operator's machine.  Record the exact
+# toolset version in the SBOM.
+function Find-CrtVersion {
+    $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+    if (-not (Test-Path $vswhere)) { return 'v143' }
+    $vsRoot = (& $vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.NativeDesktop -property installationPath) | Select-Object -First 1
+    if (-not $vsRoot) { return 'v143' }
+    $defaultTxt = Join-Path $vsRoot 'VC\Auxiliary\Build\Microsoft.VCToolsVersion.v143.default.txt'
+    if (Test-Path $defaultTxt) {
+        $v = (Get-Content $defaultTxt -First 1).Trim()
+        if ($v) { return "$v (v143)" }
+    }
+    return 'v143'
+}
+$CrtVersion = Find-CrtVersion
 
 # ---------------------------------------------------------------------------
 # Code signing detection
@@ -250,10 +380,19 @@ function Build-OpenSSL {
     # so the literal " characters in the output are unambiguous.
     $opensslLines = @(
         '@echo off',
+        # Put the Perl we validated at startup ahead of anything else on PATH,
+        # so Configure does not pick up Git's MSYS perl. See Find-Perl.
+        ('set "PATH={0};%PATH%"' -f $PerlDir),
         ('call "{0}" {1} -vcvars_ver=14.4 || exit /b 10' -f $VcVarsAll, $vcArg),
         ('cd /d "{0}" || exit /b 11' -f $sslSource),
         'nmake clean 1>nul 2>nul',
-        ('perl Configure {0} no-shared no-asm no-ec no-autoload-config --prefix="{1}" --openssldir="{1}\ssl" || exit /b 12' -f $target, $sslPrefix),
+        # EC is REQUIRED: the OPC UA ECC security policies (ECC_nistP256,
+        # ECC_nistP384, ECC_brainpoolP256r1, ECC_brainpoolP384r1,
+        # ECC_curve25519, ECC_curve448) all need it, and the certificate
+        # generator issues certificates for them.  This build was previously
+        # configured `no-ec`, which disabled EC, ECDH, ECDSA, ECX and EC2M and
+        # made six of the seven -keyType values impossible.  Do not re-add it.
+        ('perl Configure {0} no-shared no-asm no-autoload-config --prefix="{1}" --openssldir="{1}\ssl" || exit /b 12' -f $target, $sslPrefix),
         'nmake || exit /b 13',
         'nmake install_sw || exit /b 14',
         'exit /b 0'
@@ -280,13 +419,45 @@ function Build-OpenSSL {
 function Build-UALDS {
     param([string]$Arch)
 
-    # UA-LDS's stack/Stack/CMakeLists hard-codes OPENSSL_ROOT_DIR to
-    # ${_PROJECT_ROOT}/openssl.  We don't modify that file; instead, copy the
-    # per-arch build into UA-LDS\stack\openssl right before configuring.
-    $opensslPerArch = Join-Path $UaLdsDir "stack\openssl-$Arch"
-    $opensslShared  = Join-Path $UaLdsDir 'stack\openssl'
-    if (Test-Path $opensslShared) { Remove-Item $opensslShared -Recurse -Force }
-    Copy-Item $opensslPerArch $opensslShared -Recurse -Force
+    # Point the UA stack at the per-arch OpenSSL install.
+    $opensslRoot = Join-Path $UaLdsDir "stack\openssl-$Arch"
+    if (-not (Test-Path (Join-Path $opensslRoot 'include\openssl\opensslv.h'))) {
+        throw "OpenSSL not found at $opensslRoot. Build-OpenSSL must run first."
+    }
+
+    # Two ways to get OpenSSL in front of the UA stack, depending on which
+    # version of the submodule is checked out.
+    #
+    # stack/Stack/CMakeLists.txt historically did an unconditional
+    #     set (OPENSSL_ROOT_DIR ${_PROJECT_ROOT}/openssl)
+    # which silently overrides anything passed with -D, so the only way to use
+    # an out-of-tree OpenSSL was to copy it to that exact path. The fix makes
+    # that set() conditional, after which -DOPENSSL_ROOT_DIR is enough and the
+    # copy is pure waste (154 files, every configure, every arch).
+    #
+    # The two repositories are versioned independently, so a checkout can have
+    # either version - a clean clone at the current submodule pointer has the
+    # old one. Detect which, and copy only when we have to. Without this, a
+    # fresh clone fails configure with OPENSSL_INCLUDE_DIR / LIB_EAY_LIBRARY /
+    # SSL_EAY_LIBRARY set to NOTFOUND, because nothing supplies the path the
+    # old CMakeLists insists on.
+    #
+    # This whole branch can go once the submodule fix is published and the
+    # pointer bumped.
+    $stackCMake = Join-Path $UaLdsDir 'stack\Stack\CMakeLists.txt'
+    $honoursRootDir = $false
+    if (Test-Path $stackCMake) {
+        $honoursRootDir = (Get-Content -Raw $stackCMake) -match '(?m)^\s*if\s*\(\s*NOT\s+OPENSSL_ROOT_DIR\s*\)'
+    }
+
+    if ($honoursRootDir) {
+        Write-Host "  UA stack: using OpenSSL at $opensslRoot (no copy needed)"
+    } else {
+        $opensslShared = Join-Path $UaLdsDir 'stack\openssl'
+        Write-Host "  UA stack: submodule hard-codes OPENSSL_ROOT_DIR - staging OpenSSL into $opensslShared" -ForegroundColor Yellow
+        if (Test-Path $opensslShared) { Remove-Item $opensslShared -Recurse -Force }
+        Copy-Item $opensslRoot $opensslShared -Recurse -Force
+    }
 
     $BuildDir = Join-Path $BuildRoot "UA-LDS\$Arch"
     if ($Clean -and (Test-Path $BuildDir)) { Remove-Item $BuildDir -Recurse -Force }
@@ -308,6 +479,7 @@ function Build-UALDS {
         '-S', $UaLdsDir, '-B', $BuildDir,
         '-A', $cmakeArch, '-T', 'v143',
         '-C', $HardeningCmake,
+        "-DOPENSSL_ROOT_DIR=$opensslRoot",
         "-DCMAKE_C_FLAGS=/GS /sdl /guard:cf /wd4996$extraC",
         "-DCMAKE_EXE_LINKER_FLAGS=/NXCOMPAT /DYNAMICBASE /GUARD:CF /SUBSYSTEM:CONSOLE,6.01 $extraExe",
         "-DCMAKE_SHARED_LINKER_FLAGS=/NXCOMPAT /DYNAMICBASE /GUARD:CF $extraDll"
@@ -392,98 +564,49 @@ function Build-CustomActions {
 }
 
 # ---------------------------------------------------------------------------
-# Phase 5b: Opc.Ua.CertificateGenerator.exe (x86 only)
+# Phase 5b: Opc.Ua.CertificateGenerator.exe
 #
-# Uses the legacy CertificateGenerator submodule (Misc-Tools). It is pinned to
-# OpenSSL 1.1.1w and cannot be upgraded without a rewrite that preserves the
-# CLI; for now we build it as-is with its own bundled OpenSSL so the installer
-# can keep shipping the binary.
+# Built from the in-tree CertificateGenerator\ project, which links the SAME
+# per-arch OpenSSL the LDS uses (LDS\stack\openssl-$arch, currently 3.5.7).
+#
+# This replaces the former CertificateGenerator submodule build, which pinned
+# OpenSSL 1.1.1w - end of life since 2023-09-11 - and cloned and compiled an
+# entire second OpenSSL tree for this one binary. That step is gone: no extra
+# clone, no second OpenSSL, no libeay32/ssleay32 aliasing.
+#
+# The command line is unchanged. See CertificateGenerator\README.md for the
+# compatibility notes and the full list of deviations.
 # ---------------------------------------------------------------------------
-function Build-CertGenOpenSSL {
-    $tpDir      = Join-Path $CertGenDir 'third-party'
-    $sslSource  = Join-Path $tpDir 'openssl-1.1.1w'
-    $sslInstall = Join-Path $tpDir 'openssl'
-    $marker     = Join-Path $sslInstall 'lib\libcrypto.lib'
-
-    if ($CleanOpenSSL -and (Test-Path $sslInstall)) {
-        Write-Host "  Cleaning $sslInstall"
-        Remove-Item $sslInstall -Recurse -Force
-    }
-    if (Test-Path $marker) {
-        Write-Host "CertGen OpenSSL: already built at $sslInstall - skipping"
-        return
-    }
-
-    if (-not (Test-Path (Join-Path $sslSource 'Configure'))) {
-        Write-Host "CertGen OpenSSL: cloning upstream source (tag OpenSSL_1_1_1w)..."
-        New-Item -ItemType Directory -Path $tpDir -Force | Out-Null
-        & git clone --branch OpenSSL_1_1_1w --depth 1 https://github.com/openssl/openssl.git $sslSource | Out-Host
-        if ($LASTEXITCODE -ne 0) { throw "git clone of OpenSSL 1.1.1w failed." }
-    }
-
-    # CertificateGenerator is x86-only; OpenSSL 1.1.1w configured for VC-WIN32.
-    $opensslLines = @(
-        '@echo off',
-        ('call "{0}" x86 -vcvars_ver=14.4 || exit /b 10' -f $VcVarsAll),
-        ('cd /d "{0}" || exit /b 11' -f $sslSource),
-        'nmake clean 1>nul 2>nul',
-        ('perl Configure VC-WIN32 no-asm no-shared enable-capieng no-autoload-config --prefix="{0}" --openssldir="{0}" || exit /b 12' -f $sslInstall),
-        'nmake || exit /b 13',
-        'nmake install_sw || exit /b 14',
-        'exit /b 0'
-    )
-    $tmp = [System.IO.Path]::ChangeExtension([System.IO.Path]::GetTempFileName(), '.cmd')
-    Set-Content -Path $tmp -Value $opensslLines -Encoding ASCII
-    Write-Host "Building OpenSSL 1.1.1w (x86) for CertificateGenerator..."
-    & cmd.exe /c $tmp | Out-Host
-    $code = $LASTEXITCODE
-    Remove-Item $tmp -Force -ErrorAction SilentlyContinue
-    if ($code -ne 0) { throw "CertGen OpenSSL build failed (exit $code)." }
-
-    # The certgen .vcxproj references libeay32.lib / ssleay32.lib (OpenSSL 1.0
-    # naming) — alias them to the 1.1 names so linking succeeds.
-    $libDir = Join-Path $sslInstall 'lib'
-    Copy-Item (Join-Path $libDir 'libcrypto.lib') (Join-Path $libDir 'libeay32.lib') -Force
-    Copy-Item (Join-Path $libDir 'libssl.lib')    (Join-Path $libDir 'ssleay32.lib') -Force
-
-    if (-not (Test-Path $marker)) { throw "CertGen OpenSSL install did not produce $marker." }
-    Write-Host "CertGen OpenSSL: built into $sslInstall"
-}
-
 function Build-CertGen {
-    $sln     = Join-Path $CertGenDir 'CertificateGenerator Solution.sln'
-    $exeName = 'Opc.Ua.CertificateGenerator.exe'
-    $exeOut  = Join-Path $CertGenDir 'build\Release\Opc.Ua.CertificateGenerator'
-    $exePath = Join-Path $exeOut $exeName
+    param([string]$Arch)
 
-    if (-not (Test-Path $sln)) {
-        Write-Host "  CertGen: SKIPPED - $sln not present (submodule not initialized?)." -ForegroundColor Yellow
+    $exeName = 'Opc.Ua.CertificateGenerator.exe'
+
+    if (-not (Test-Path (Join-Path $CertGenDir 'CMakeLists.txt'))) {
+        Write-Host "  CertGen: SKIPPED - $CertGenDir not present." -ForegroundColor Yellow
         return $null
     }
 
-    Build-CertGenOpenSSL
-
-    if ($Clean -and (Test-Path (Join-Path $CertGenDir 'build'))) {
-        Remove-Item (Join-Path $CertGenDir 'build') -Recurse -Force
+    $opensslRoot = Join-Path $UaLdsDir "stack\openssl-$Arch"
+    if (-not (Test-Path (Join-Path $opensslRoot 'include\openssl\opensslv.h'))) {
+        throw "CertGen: OpenSSL not found at $opensslRoot. Build-OpenSSL must run first."
     }
 
-    # msbuild via the x86 vcvars env so the v143 x86 toolset resolves.
-    $msbLines = @(
-        '@echo off',
-        ('call "{0}" x86 -vcvars_ver=14.4 || exit /b 10' -f $VcVarsAll),
-        ('cd /d "{0}" || exit /b 11' -f $CertGenDir),
-        ('msbuild "{0}" /p:Configuration=Release /p:Platform=Win32 /m /nologo /v:minimal || exit /b 12' -f $sln),
-        'exit /b 0'
-    )
-    $tmp = [System.IO.Path]::ChangeExtension([System.IO.Path]::GetTempFileName(), '.cmd')
-    Set-Content -Path $tmp -Value $msbLines -Encoding ASCII
-    Write-Host "Building CertificateGenerator (x86)..."
-    & cmd.exe /c $tmp | Out-Host
-    $code = $LASTEXITCODE
-    Remove-Item $tmp -Force -ErrorAction SilentlyContinue
-    if ($code -ne 0) { throw "CertificateGenerator build failed (exit $code)." }
+    $BuildDir  = Join-Path $BuildRoot "certgen-$Arch"
+    $cmakeArch = if ($Arch -eq 'x86') { 'Win32' } else { 'x64' }
 
-    if (-not (Test-Path $exePath)) { throw "Expected $exeName not produced at $exeOut" }
+    if ($Clean -and (Test-Path $BuildDir)) { Remove-Item $BuildDir -Recurse -Force }
+
+    & cmake -S $CertGenDir -B $BuildDir -A $cmakeArch -T v143 `
+        "-DCERTGEN_OPENSSL_ROOT=$opensslRoot" | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw "CertGen cmake configure failed for $Arch." }
+
+    & cmake --build $BuildDir --config Release | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw "CertGen build failed for $Arch." }
+
+    $exePath = Join-Path $BuildDir "Release\$exeName"
+    if (-not (Test-Path $exePath)) { throw "Expected $exeName not produced at $exePath" }
+
     Write-Host "CertGen: built $exePath"
     return $exePath
 }
@@ -530,6 +653,99 @@ function Stage-Arch {
 
     Write-Host "Staged $Arch binaries in $StageBin"
     return $staged
+}
+
+# ---------------------------------------------------------------------------
+# Phase 6b: CycloneDX SBOM
+#
+# Required by CRA Annex I Part II(1).  Generated from the curated inventory in
+# sbom\components.json - every third-party component in this build is vendored
+# C source or a pinned upstream git tag, so there is no package manifest for a
+# dependency scanner to read and off-the-shelf tooling yields a near-empty SBOM.
+#
+# Runs after Stage-Arch (and therefore after signing) so the recorded SHA-256
+# digests are those of the shipped binaries.
+# ---------------------------------------------------------------------------
+function New-SbomForArch {
+    param([string]$Arch)
+
+    $sbomScript = Join-Path $ScriptDir 'sbom\New-Sbom.ps1'
+    if (-not (Test-Path $sbomScript)) {
+        throw "SBOM generator not found at $sbomScript. The SBOM is a compliance deliverable; refusing to produce an unaccompanied release."
+    }
+
+    $sbomManifest = Join-Path $ScriptDir 'sbom\components.json'
+    if (-not (Test-Path $sbomManifest)) { throw "SBOM manifest not found at $sbomManifest." }
+
+    $stageBin  = Join-Path $OutDir "$Arch\bin"
+    $certStage = Join-Path $OutDir 'certgenerator'
+    $sbomDir   = Join-Path $OutDir $Arch
+
+    # Each submodule is its own public GitHub project and publishes its own
+    # SBOM, so render those first - the composed document links back to them by
+    # SHA-256 and the digests have to exist before it is written.
+    #
+    # The subproject list and the BOM naming convention live in the manifest,
+    # not here, so there is one place to change when a project is added.
+    $manifest = Get-Content -Raw $sbomManifest | ConvertFrom-Json
+    $subprojects = @()
+    if ($manifest.PSObject.Properties['subprojects']) { $subprojects = @($manifest.subprojects) }
+
+    $canonicalHash = (Get-FileHash -LiteralPath $sbomScript -Algorithm SHA256).Hash
+
+    foreach ($sub in $subprojects) {
+        $subManifest = Join-Path $ScriptDir $sub.manifest
+        if (-not (Test-Path $subManifest)) {
+            throw @"
+Subproject SBOM manifest missing: $subManifest
+'$($sub.id)' declares its own components. If the submodule is not checked out, run:
+    git submodule update --init
+"@
+        }
+
+        # Each subproject carries a verbatim copy of the generator so it can
+        # publish its own SBOM without depending on this repository. This repo
+        # is upstream for that script; warn if a copy has drifted, because the
+        # SBOM a project publishes for itself and the one composed here would
+        # then be produced by different code.
+        $subScript = Join-Path (Split-Path -Parent $subManifest) 'New-Sbom.ps1'
+        if (-not (Test-Path $subScript)) {
+            Write-Host "  SBOM: $($sub.id) has no New-Sbom.ps1 copy - it cannot generate its own SBOM standalone." -ForegroundColor Yellow
+        } elseif ((Get-FileHash -LiteralPath $subScript -Algorithm SHA256).Hash -ne $canonicalHash) {
+            Write-Host "  SBOM: $($sub.id)'s New-Sbom.ps1 has DRIFTED from sbom\New-Sbom.ps1 - re-copy it." -ForegroundColor Yellow
+        }
+
+        $subBomName = $sub.bomFile.Replace('{version}', $Version).Replace('{arch}', $Arch)
+
+        & $sbomScript `
+            -ManifestPath $subManifest `
+            -ProjectOnly `
+            -OutputPath   (Join-Path $sbomDir $subBomName) `
+            -Version      $Version `
+            -Architecture $Arch `
+            -BinDir       $stageBin `
+            -ExtraBinDir  $certStage `
+            -CrtVersion   $CrtVersion | Out-Host
+    }
+
+    # Now the composed SBOM for the installed product.
+    $sbomOut = Join-Path $sbomDir "OPC-UA-LDS-$Version-$Arch.cdx.json"
+
+    & $sbomScript `
+        -OutputPath       $sbomOut `
+        -Version          $Version `
+        -Architecture     $Arch `
+        -SubprojectBomDir $sbomDir `
+        -BinDir           $stageBin `
+        -ExtraBinDir      $certStage `
+        -CrtVersion       $CrtVersion | Out-Host
+
+    # No $LASTEXITCODE check here: the generator shells out to git, whose
+    # non-zero exits are expected and handled internally.  It throws on real
+    # failures, which propagates through $ErrorActionPreference = 'Stop'.
+    if (-not (Test-Path $sbomOut)) { throw "SBOM generation produced no output for $Arch." }
+
+    return $sbomOut
 }
 
 # ---------------------------------------------------------------------------
@@ -628,16 +844,16 @@ try {
 
     $platforms = if ($Platform -eq 'both') { @('x86','x64') } else { @($Platform) }
 
-    # CertificateGenerator is x86-only and arch-independent for consumers, so
-    # build it once up front; same exe is bundled into both x86 and x64 MSIs.
-    $certGenExe = $null
-    if (-not $SkipWix) {
-        Write-Host ''
-        Write-Host '============================================================'
-        Write-Host '  CertificateGenerator (x86, legacy OpenSSL 1.1.1w)'
-        Write-Host '============================================================'
-        $certGenExe = Build-CertGen
-    }
+    # The same CertificateGenerator exe is bundled into both the x86 and x64
+    # MSIs, so it is built once.  x86 is preferred because it runs on either
+    # architecture, which is what the legacy build shipped.
+    #
+    # Unlike the legacy build this cannot run before the arch loop: it links the
+    # LDS's per-arch OpenSSL, so Build-OpenSSL has to have run for the matching
+    # architecture first.  It is therefore built inside the loop, on the pass
+    # for $certGenArch.
+    $certGenArch = if ($platforms -contains 'x86') { 'x86' } else { $platforms[0] }
+    $certGenExe  = $null
 
     foreach ($arch in $platforms) {
         Write-Host ''
@@ -651,8 +867,22 @@ try {
         $caBin    = Build-CustomActions $arch
         $staged   = Stage-Arch $arch $uaLdsBin $mdnsBin $caBin
 
+        if (-not $SkipWix -and $arch -eq $certGenArch) {
+            Write-Host ''
+            Write-Host "  CertificateGenerator ($arch, OpenSSL 3.5.7 - shared with the LDS)"
+            $certGenExe = Build-CertGen $arch
+        }
+
         if (-not $SkipWix) {
             Stage-Shared -CertGenExe $certGenExe   # idempotent, OK to call inside loop
+        }
+
+        # After all staging and signing, so the recorded digests are those of
+        # the binaries that actually ship - including the certificate generator,
+        # which Stage-Shared places outside the per-arch bin directory.
+        New-SbomForArch $arch
+
+        if (-not $SkipWix) {
             Build-Wix $arch $staged
         }
     }
@@ -675,6 +905,16 @@ try {
             $items += @(Get-ChildItem $WixOut -Filter "*-$Version-*.msm" | Select-Object -ExpandProperty FullName)
             $changelog = Join-Path $UaLdsDir 'Changelog.txt'
             if (Test-Path $changelog) { $items += $changelog }
+
+            # SBOMs ship with the release: downstream integrators embedding the
+            # LDS need them for their own CRA obligations, and an SBOM nobody
+            # can find is not an SBOM.
+            $items += @(Get-ChildItem $OutDir -Recurse -Filter '*.cdx.json' | Select-Object -ExpandProperty FullName)
+
+            # So the recipient knows where to report a vulnerability.
+            $securityMd = Join-Path $ScriptDir 'SECURITY.md'
+            if (Test-Path $securityMd) { $items += $securityMd }
+
             Compress-Archive -Path $items -DestinationPath $ZipPath -CompressionLevel Optimal
             Write-Host ''
             Write-Host "Redistributable: $ZipPath"
