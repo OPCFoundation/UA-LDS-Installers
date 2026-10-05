@@ -1,0 +1,74 @@
+# Security contact information for OPC Foundation software.
+# Format: RFC 9116 (https://www.rfc-editor.org/rfc/rfc9116).
+#
+# DEPLOYMENT: a security.txt only takes effect when served over HTTPS from a
+# domain's well-known location. This file is the version-controlled source; it
+# must be published at:
+#
+#     https://opcfoundation.org/.well-known/security.txt
+#
+# It does nothing sitting in a git repository, and GitHub cannot serve it for
+# us (github.com/.well-known belongs to GitHub). Whoever operates
+# opcfoundation.org owns the deployment.
+#
+# RFC 9116 section 2.3 recommends publishing this file clearsigned with the
+# OpenPGP key referenced below.
+
+# -----------------------------------------------------------------------------
+# Where to report
+# -----------------------------------------------------------------------------
+Contact: mailto:securityteam@opcfoundation.org
+
+# OpenPGP key for encrypting a report. This is the same key used to sign
+# published advisories, so verifying an advisory and encrypting a report use
+# one trust anchor.
+#
+# Fingerprint: 651D FC36 2518 1D8C 7D44  3E74 6283 C351 3199 FAF8
+# Verify the fingerprint out of band before trusting a fetched copy.
+Encryption: https://raw.githubusercontent.com/OPCFoundation/OPC-SecurityAdvisories/latest/keys/OPC%20Foundation%20Security%20Team_651DFC3625181D8C7D443E746283C3513199FAF8_public.asc
+
+# -----------------------------------------------------------------------------
+# Policy
+# -----------------------------------------------------------------------------
+# Vulnerability handling and coordinated disclosure.
+Policy: https://github.com/OPCFoundation/OPC-SecurityAdvisories
+
+# How vulnerabilities are identified. The OPC Foundation is GCVE Numbering
+# Authority 105 (https://gcve.eu/gna/105/) and assigns GCVE-105-<YEAR>-<NNNN>
+# as the PRIMARY identifier, because it is the only one obtainable in a
+# timeframe disclosure can work to. Not being a CNA, the Foundation also
+# requests a CVE from another CNA as a SECONDARY identifier; that is often
+# significantly delayed, and the advisory is reissued carrying both when it
+# arrives. Do not wait for the CVE before patching - no CVE yet does not mean
+# no CVE ever. GCVE namespace 0 is reserved for the CVE program, so CVEs map in
+# unchanged (CVE-2023-40224 = GCVE-0-2023-40224).
+Policy: https://github.com/OPCFoundation/UA-LDS-Installers/blob/master/docs/cra/cve-policy.md
+
+# -----------------------------------------------------------------------------
+# Machine-readable advisories
+# -----------------------------------------------------------------------------
+# CSAF v2.0 provider metadata, listing the advisory directory and signing keys.
+# Published advisories are signed CSAF documents.
+#
+# The raw URL is used deliberately: a scanner needs JSON, and the GitHub
+# "blob/" URL that the metadata declares as its own canonical_url serves HTML.
+# Worth reconciling - see docs/cra/cve-policy.md open items.
+CSAF: https://raw.githubusercontent.com/OPCFoundation/OPC-SecurityAdvisories/latest/csaf-provider-metadata.json
+
+# -----------------------------------------------------------------------------
+# Administrative
+# -----------------------------------------------------------------------------
+Preferred-Languages: en
+Canonical: https://opcfoundation.org/.well-known/security.txt
+
+# MUST be refreshed before this date, or researchers are told to distrust the
+# file (RFC 9116 section 2.5). Review annually with the disclosure policy.
+Expires: 2027-10-01T00:00:00.000Z
+
+# -----------------------------------------------------------------------------
+# Deliberately omitted
+# -----------------------------------------------------------------------------
+# Acknowledgments: add once a page crediting reporters exists. Credit is
+#   currently given inside individual advisories, and pointing this field at
+#   something that is not a thanks page is worse than leaving it out.
+# Hiring: not applicable.
