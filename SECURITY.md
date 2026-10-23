@@ -56,7 +56,7 @@ The OPC Foundation is [GCVE Numbering Authority 105](https://gcve.eu/gna/105/) a
 The OPC Foundation will request a CVE from another CNA (for example GitHub, for code hosted there) as a secondary identifier. That request is often significantly delayed, so:
 
 - advisories may be published with only a GCVE;
-- when CVE is added when issued, the advisory is reissued with both;
+- the advisory is reissued with a CVE when one is assigned;
 
 Where an upstream CVE affects a component we ship, such as OpenSSL, the advisory references that CVE instead of minting a new identifier. GCVE is interoperable rather than parallel: namespace 0 is reserved for the CVE program, so `CVE-2023-40224` is also `GCVE-0-2023-40224`. 
 
@@ -70,7 +70,7 @@ Full policy, including what does and does not earn an identifier and how this di
 
 - The build pipeline (`build.ps1`), hardening flags (`cmake/Hardening.cmake`), and the WiX installer and merge module (`WiX/`)
 - The MSI custom actions (`CustomActions/` → `ldsca.dll`)
-- Insecure defaults in the shipped `ualds.ini` or the PKI store layout theinstaller provisions
+- Insecure defaults in the shipped `ualds.ini` or the PKI store layout the installer provisions
 - The integrity of released artifacts and their code signatures
 
 **Report here, but fixed upstream**: the LDS is assembled from submodules that are separate projects:
@@ -83,9 +83,8 @@ Full policy, including what does and does not earn an identifier and how this di
 
 **Out of scope:**
 
-- Vulnerabilities in OpenSSL, the Apple mDNSResponder upstream, or the Microsoft Visual C++ runtime as such. Report those to their maintainers. Do
-  tell us if the LDS is affected and we have not yet shipped the update  part is ours.
-- The OPC UA specification itself. Those go to the OPC Foundation specification process.
+- Vulnerabilities in OpenSSL, the Apple mDNSResponder upstream, or the Microsoft Visual C++ runtime as such need to reported to their respective maintainers. If we are informed of vulnerabilities in this components we will produce of a new version for the LDS>
+- The OPC UA specification itself. Those are reported in [mantis](https://mantis.opcfoundation.org/my_view_page.php).
 - Findings from an automated scanner with no demonstrated impact on the LDS as shipped, including reports that a bundled library version "appears in a CVE database" without analysis of whether the affected code path is reachable in our build. Our builds use `no-shared no-asm no-autoload-config`, so some of OpenSSL is not compiled in at all.
 - Denial of service achieved only through resource exhaustion by an already privileged local user.
 
@@ -113,10 +112,10 @@ A CycloneDX 1.6 SBOM is generated at build time and shipped in the release ZIP a
 
 ## Our own reporting obligations
 
-As an open-source software steward, OPC Federation AISBL will be required under CRA Article 24(3) — from 11 December 2027 — to report actively exploited vulnerabilities in this product, and severe incidents affecting the infrastructure we provide for its development, to ENISA and our coordinating CSIRT.
+As an open-source software steward, OPC Federation AISBL is required under CRA Article 24(3) to report actively exploited vulnerabilities in this product, and severe incidents affecting the infrastructure we provide for its development, to ENISA and our coordinating CSIRT.
 
-We operate that process now rather than waiting for the date. If you report something with evidence of active exploitation, treat it as triggering a regulatory notification on a 24-hour clock.
+This process is running now. If you report something with evidence of active exploitation then it will trigger a regulatory notification on a 24-hour clock.
 
-Note what is **not** reportable, so that nothing discourages you from filing: the obligation is triggered by *active exploitation*, not by the existence of a vulnerability or a CVE. A vulnerability you report to us that is not being exploited in the wild creates no notification duty — it is handled through ordinary vulnerability handling, on the timelines above.
+A vulnerability you report that is not being exploited in the wild does not trigger a notification duty and will be handled through ordinary vulnerability handling.
 
 Those notifications identify the product and the nature of the flaw. They do not identify you as the reporter unless you ask us to credit you publicly.
