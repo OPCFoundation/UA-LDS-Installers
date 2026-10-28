@@ -60,15 +60,3 @@ CSAF: https://raw.githubusercontent.com/OPCFoundation/OPC-SecurityAdvisories/lat
 # -----------------------------------------------------------------------------
 Preferred-Languages: en
 Canonical: https://opcfoundation.org/.well-known/security.txt
-
-# MUST be refreshed before this date, or researchers are told to distrust the
-# file (RFC 9116 section 2.5). Review annually with the disclosure policy.
-Expires: 2027-10-01T00:00:00.000Z
-
-# -----------------------------------------------------------------------------
-# Deliberately omitted
-# -----------------------------------------------------------------------------
-# Acknowledgments: add once a page crediting reporters exists. Credit is
-#   currently given inside individual advisories, and pointing this field at
-#   something that is not a thanks page is worse than leaving it out.
-# Hiring: not applicable.

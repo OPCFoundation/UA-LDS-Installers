@@ -22,7 +22,7 @@ Please include, as far as you are able:
 - Reproduction steps, a proof of concept, or a crash dump
 - Your assessment of impact, and whether you believe the issue is being  exploited in the wild
 
-If you have evidence that the issue is **already being exploited**, say so prominently in your first message. That changes our legal reporting deadlines under CRA Article 14 from "when triaged" to **within 24 hours**, so we need to know immediately.
+If you have evidence that the issue is already being exploited, say so prominently in your first message. That changes our legal reporting deadlines under CRA Article 14 from "when triaged" to within 24 hours, so the OPC Foundation needs to know immediately.
 
 ## What to expect
 
@@ -38,16 +38,16 @@ These are good-faith targets for a volunteer-supported open-source project, not 
 
 ## Coordinated disclosure
 
-We ask for **90 days** from acknowledgement before public disclosure, or until a fix ships. We will:
+The OPC Foundation asks for **90 days** from acknowledgement before public disclosure, or until a fix ships. We will:
 
 - Agree a disclosure date with you rather than impose one
 - Credit you in the advisory unless you ask us not to
 - Tell you if we need longer, and why
 - Publish an advisory even where we decide not to fix, explaining why
 
-We support embargoed pre-notification to downstream redistributors who ship the LDS inside their own products. If that is you, see [`docs/cra/cybersecurity-policy.md`](docs/cra/cybersecurity-policy.md) for how to join the notification list.
+The OPC Foundation supports embargoed pre-notification to downstream redistributors who ship the LDS inside their own products. If that is you, see [`docs/cra/cybersecurity-policy.md`](docs/cra/cybersecurity-policy.md) for how to join the notification list.
 
-We are a non-profit that provides standards and open source software to the OT community and do not operate a paid bug bounty.
+The OPC Foundation is a non-profit that provides standards and open source software to the OT community and do not operate a paid bug bounty.
 
 ## Identifiers — GCVE with optional secondary CVE.
 
@@ -58,7 +58,7 @@ The OPC Foundation will request a CVE from another CNA (for example GitHub, for 
 - advisories may be published with only a GCVE;
 - the advisory is reissued with a CVE when one is assigned;
 
-Where an upstream CVE affects a component we ship, such as OpenSSL, the advisory references that CVE instead of minting a new identifier. GCVE is interoperable rather than parallel: namespace 0 is reserved for the CVE program, so `CVE-2023-40224` is also `GCVE-0-2023-40224`. 
+Where an upstream CVE affects a component included in the LDS, such as OpenSSL, the advisory references that CVE instead of minting a new identifier. GCVE is interoperable rather than parallel: namespace 0 is reserved for the CVE program, so `CVE-2023-40224` is also `GCVE-0-2023-40224`. 
 
 Advisories are published as signed CSAF v2.0 documents at [opcfoundation.org/security/csaf](https://opcfoundation.org/security/csaf).
 
@@ -83,7 +83,7 @@ Full policy, including what does and does not earn an identifier and how this di
 
 **Out of scope:**
 
-- Vulnerabilities in OpenSSL, the Apple mDNSResponder upstream, or the Microsoft Visual C++ runtime as such need to reported to their respective maintainers. If we are informed of vulnerabilities in this components we will produce of a new version for the LDS>
+- Vulnerabilities in OpenSSL, the Apple mDNSResponder upstream, or the Microsoft Visual C++ runtime as such need to reported to their respective maintainers. If the OPC Foundation is informed of vulnerabilities in this components the OPC Foundation  will produce of a new version for the LDS
 - The OPC UA specification itself. Those are reported in [mantis](https://mantis.opcfoundation.org/my_view_page.php).
 - Findings from an automated scanner with no demonstrated impact on the LDS as shipped, including reports that a bundled library version "appears in a CVE database" without analysis of whether the affected code path is reachable in our build. Our builds use `no-shared no-asm no-autoload-config`, so some of OpenSSL is not compiled in at all.
 - Denial of service achieved only through resource exhaustion by an already privileged local user.
@@ -112,7 +112,7 @@ A CycloneDX 1.6 SBOM is generated at build time and shipped in the release ZIP a
 
 ## Our own reporting obligations
 
-As an open-source software steward, OPC Federation AISBL is required under CRA Article 24(3) to report actively exploited vulnerabilities in this product, and severe incidents affecting the infrastructure we provide for its development, to ENISA and our coordinating CSIRT.
+As an open-source software steward, OPC Federation AISBL is required under CRA Article 24(3) to report actively exploited vulnerabilities in this product, and severe incidents affecting the infrastructure the OPC Foundation provides for its development, to ENISA and our coordinating CSIRT.
 
 This process is running now. If you report something with evidence of active exploitation then it will trigger a regulatory notification on a 24-hour clock.
 
