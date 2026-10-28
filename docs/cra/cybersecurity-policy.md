@@ -1,28 +1,26 @@
 # Cybersecurity Policy — OPC UA Local Discovery Server
 
-**Entity:** OPC Federation AISBL
-**CRA role:** Open-source software steward, Regulation (EU) 2024/2847 Article 24
-**Product:** OPC UA Local Discovery Server (`UA-LDS-Installers` and its submodules)
-**Document status:** `<<TBD: approval — see README.md, open item 3>>`
-**Version:** 1.0 (draft)
-**Last reviewed:** 2026-10-04
-**Review cadence:** Annually, and on any change to the shipped component set
+**Entity:** OPC Federation AISBL ("OPC Foundation")  
+**CRA role:** Open-source software steward, Regulation (EU) 2024/2847 Article 24  
+**Product:** OPC UA Local Discovery Server (`UA-LDS-Installers` and its submodules)  
+**Document status:** DRAFT  
+**Version:** 1.0 (draft)  
+**Last reviewed:** 2026-10-24  
+**Review cadence:** Annually, and on any change to the shipped component set  
 
 ---
 
-## 0. Why this document exists
+## 0. Purpose
 
 CRA Article 24(1) requires an open-source software steward to "put in place and
-document **in a verifiable manner** a cybersecurity policy to foster the
+document in a verifiable manner a cybersecurity policy to foster the
 development of a secure product with digital elements as well as an effective
 handling of vulnerabilities by the developers of that product."
 
-"In a verifiable manner" is why this document lives in the product repository
-under version control rather than on a website: its history, authorship, and
-effective date are independently checkable, and it is distributed with the
-source it governs.
+This document lives in the product repository
+under version control to document that cybersecurity policy.
 
-Article 24(2) requires us to supply this document to a market surveillance
+Article 24(2) requires the OPC Foundation to supply this document to a market surveillance
 authority on reasoned request, in a language they readily understand. This
 document is maintained in English for that purpose.
 
@@ -46,20 +44,17 @@ Article 24(3) reporting duties are operationalised separately in
 
 ## 1. Scope and the nature of this stewardship
 
-OPC Federation AISBL does not sell the LDS, does not license it commercially,
-and does not provide it under contract or with a warranty. It is published
-under the MIT License for use by the OPC UA community, including in commercial
-products built by third parties.
+The OPC Foundation publishes the LDS under the MIT License for use by the OPC UA community, 
+including in commercial products built by third parties.
 
-Our role is custodial: we maintain the repositories, review and merge
-contributions, operate the build and signing infrastructure, and publish
-releases. We do not control how downstream integrators configure, deploy, or
+The OPC Foundation maintains the repositories, reviews and merges
+contributions, operates the build and signing infrastructure, and publishes
+releases. The OPC Foundation does not control how downstream integrators configure, deploy, or
 redistribute the software.
 
-**This policy therefore commits us to process, not to outcomes in the field.**
-Where an obligation depends on a party we do not control — an upstream project,
-a downstream integrator, a deployment operator — this policy states what we
-will do, and names the boundary.
+This policy commits the OPC Foundation to follow a process and not to any outcomes in the field.
+Where an obligation depends on a party that the OPC Foundation does not control (such as an upstream project,
+a downstream integrator, a deployment operator) this policy states what the OPC Foundationwill do.
 
 ### Covered repositories
 
@@ -89,10 +84,10 @@ prevents each assessment from re-deriving the threat model.
 
 Consequences that follow, and that should not have to be re-argued each time:
 
-- Advisories against the two **network-facing** components, and against the
+- Advisories against the two network-facing components, and against the
   stack, OpenSSL 3.x, and the CRT behind them, are the ones that can be
   remotely triggered. These get priority.
-- The certificate generator's **local-only** exposure bounds the severity of
+- The certificate generator's local-only exposure bounds the severity of
   anything found in it: reaching its code presupposes local execution with
   sufficient privilege, at which point it is not an attacker's most direct
   route to anything. That reasoning is recorded as the `cra:exposure` property
@@ -105,7 +100,7 @@ reached — and published in every SBOM as the `cra:exposure` property.
 
 ### Boundary of responsibility
 
-Out of scope for remediation by us, in scope for routing and disclosure:
+Out of scope for remediation by the OPC Foundation, in scope for routing and disclosure:
 OpenSSL, Apple's upstream mDNSResponder, the Microsoft Visual C++ runtime, the
 Windows platform, the OPC UA specification, and any downstream product that
 embeds the LDS.
@@ -182,7 +177,7 @@ composes the others in at build time. Each repository is a public project that
 publishes its own SBOM, and a component declared in two places is a component
 that will eventually disagree with itself.
 
-Taken together they are the authoritative inventory of everything we ship. It
+Taken together they are the authoritative inventory of everything the OPC Foundation ship. It
 is rendered into a CycloneDX 1.6 SBOM per architecture at build time and
 published with each release.
 
@@ -192,7 +187,7 @@ there is no package manifest for a scanner to read, and automated tooling
 produces a near-empty SBOM for this build. A curated manifest that is actually
 correct is worth more than a generated one that silently omits OpenSSL.
 
-We record **transitive as well as top-level** dependencies. Annex I Part II(1)
+The OPC Foundation records transitive as well as top-level dependencies. Annex I Part II(1)
 requires only top-level, but the components that carry our real risk — OpenSSL,
 the vendored OPC UA stack, the static C runtime — sit below the top level.
 
@@ -206,7 +201,7 @@ the vendored OPC UA stack, the static C runtime — sit below the top level.
   manifest.
 - Statically linked components deserve explicit attention: the MSVC C runtime
   is linked with `/MT`, so a runtime vulnerability is **not** fixed by Windows
-  Update on the operator's machine. It requires us to rebuild and re-release.
+  Update on the operator's machine. It requires the OPC Foundation to rebuild and re-release.
   The same applies to OpenSSL, which is built `no-shared`.
 
 ### 3.3 Update policy
@@ -215,21 +210,21 @@ the vendored OPC UA stack, the static C runtime — sit below the top level.
 |---|---|
 | Known-exploited vulnerability in a shipped component | Rebuild and release as the top priority |
 | Critical or high severity, reachable in our build | Rebuild and release within 30 days |
-| Component reaches end-of-life upstream | Plan migration before EOL; record in §7 if we cannot |
+| Component reaches end-of-life upstream | Plan migration before EOL; record in §7 if the OPC Foundation cannot |
 | Routine upstream release | Adopt at the next scheduled release |
 
-"Reachable in our build" is a judgement we must make and record, not assume. It
+"Reachable in our build" is a judgement the OPC Foundation must make and record, not assume. It
 has two independent dimensions, and both must be answered:
 
 1. **Is the vulnerable code compiled in at all?** OpenSSL is configured
    `no-shared no-asm no-autoload-config`, so some advisories do not apply to the
-   code we actually build. Note this list shrank when `no-ec` was removed to
+   code the OPC Foundation actually builds. Note this list shrank when `no-ec` was removed to
    support the OPC UA ECC policies — elliptic-curve advisories now **do** apply.
 2. **Can an attacker reach it if it is?** See the exposure mapping in §1.1. A
    flaw in a local-only command-line utility and the same flaw in a
    network-facing service are not the same finding.
 
-Where we decide an advisory is not applicable, the reasoning is written into the
+Where the OPC Foundation decides an advisory is not applicable, the reasoning is written into the
 advisory record — an unexplained "not affected" is indistinguishable from an
 oversight.
 
@@ -241,20 +236,20 @@ oversight.
 
 `/SECURITY.md` is the public entry point. It provides a private channel
 separate from the public issue tracker, states response targets, defines
-scope, and commits to credit. We will not pursue anyone who reports in good
+scope, and commits to credit. The OPC Foundation will not pursue anyone who reports in good
 faith within that scope.
 
 ### 4.2 Triage and documentation
 
-Every report, including those we reject, gets a record containing: date of
+Every report, including those the OPC Foundation rejects, gets a record containing: date of
 receipt, reporter and preferred attribution, affected components and versions,
 a severity assessment with its reasoning, reachability analysis in our build
 configuration, the remediation decision, and the disclosure timeline.
 
 Severity uses CVSS v4.0, scored against a default installation as the installer
 provisions it, with attack vector taken from the component's exposure in §1.1.
-Where our score differs materially from an upstream score, we record why — a
-component we ship local-only may legitimately score below its upstream rating,
+Where our score differs materially from an upstream score, the OPC Foundation records why — a
+component the OPC Foundation ships local-only may legitimately score below its upstream rating,
 and that divergence needs its reasoning on the record rather than looking like
 a downgrade of convenience.
 
@@ -269,11 +264,11 @@ exploitation**, because that single determination starts the Article 14
   already public.
 - A security fix ships as a release with a version bump, never as a
   replacement binary under an existing version number.
-- Where we will not fix — unmaintained component, disproportionate effort,
-  disputed impact — we document the decision and publish a mitigation or
+- Where the OPC Foundation will not fix (due to a unmaintained component, disproportionate effort,
+  disputed impact) The OPC Foundation documents the decision and publish a mitigation or
   workaround instead. Silence is not an outcome.
-- Fixes belonging upstream are reported upstream, tracked, and adopted. We fork
-  only if upstream is unresponsive and the issue is serious, and we record that
+- Fixes belonging upstream are reported upstream, tracked, and adopted. The OPC Foundation fork
+  only if upstream is unresponsive and the issue is serious, and the OPC Foundation record that
   decision.
 
 ### 4.4 Advisories
@@ -292,7 +287,7 @@ OPC Foundation is GCVE Numbering Authority 105 and assigns
 identifier obtainable in a timeframe that disclosure can work to. Not being a
 CNA, the Foundation then requests a CVE from another CNA; that typically arrives
 well after publication, at which point the advisory is reissued carrying both.
-Where an upstream CVE already covers a component we ship, the advisory
+Where an upstream CVE already covers a component the OPC Foundation ships, the advisory
 references it instead of minting a new identifier.
 
 An advisory is never withheld for want of a CVE, and the Article 14 clock never
@@ -311,27 +306,27 @@ Reports reach the OPC Foundation security team at
 Article 24(1) requires us to promote the sharing of information about
 discovered vulnerabilities within the open-source community. In practice:
 
-- **Upstream first.** A vulnerability we find in a dependency is reported to
-  that project under its own disclosure policy, with our analysis and, where we
-  have one, a patch.
+- **Upstream first.** A vulnerability the OPC Foundation finds in a dependency is reported to
+  that project under its own disclosure policy, with our analysis and, where the OPC Foundation 
+  has one, a patch.
 - **Downstream pre-notification.** Integrators who ship the LDS inside their
   own products may join an embargo notification list, receiving advance notice
   under embargo so their own CRA obligations are not sprung on them at
-  publication. Downstream vendors inherit real obligations from what we ship;
+  publication. Downstream vendors inherit real obligations from what the OPC Foundation ships;
   giving them no warning would make our compliance their incident.
   Request access via the `/SECURITY.md` contact.
 - **Fork transparency.** Our mDNSResponder fork diverges from Apple's upstream.
-  Where we fix something that also affects upstream, we say so publicly even
-  though upstream may not act, so that others carrying the same fork can
+  Where the OPC Foundation fixes something that also affects upstream, the OPC Foundation 
+  say so publicly even  though upstream may not act, so that others carrying the same fork can
   assess themselves.
-- **Full advisories.** We publish enough technical detail for downstream
+- **Full advisories.** The OPC Foundation publishes enough technical detail for downstream
   consumers to assess their own exposure, after the embargo period.
 
 ---
 
 ## 6. Records, retention, and traceability
 
-### 6.1 What we keep
+### 6.1 What is Kept
 
 | Record | Retention |
 |---|---|
@@ -347,8 +342,8 @@ support period**, not merely produced once at release.
 ### 6.2 Release traceability
 
 Every release must be reconstructible and attributable, because Article 14
-notifications require us to state which versions are affected within 72 hours.
-For each release we record:
+notifications requires the OPC Foundation to state which versions are affected 
+within 72 hours. For each release the OPC Foundation records:
 
 - An annotated, signed git tag on this repository
 - The commit SHA of each submodule as built
@@ -400,8 +395,8 @@ That is the mapping doing its job, and the reason it is written down.
 
 ## 8. Cooperation with authorities
 
-Under Article 24(2) we will cooperate with market surveillance authorities on
-request to mitigate cybersecurity risks in the LDS, and will provide this
+Under Article 24(2) the OPC Foundation  will cooperate with market surveillance 
+authorities on request to mitigate cybersecurity risks in the LDS, and will provide this
 policy and supporting documentation on reasoned request, in English, in
 electronic form.
 
