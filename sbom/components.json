@@ -1,0 +1,152 @@
+{
+  "_comment": [
+    "Component inventory for the OPC UA Local Discovery Server INSTALLER.",
+    "",
+    "This manifest declares only what THIS repository produces and links.",
+    "Components belonging to the submodules are declared by the submodules",
+    "themselves and composed in at generation time - see 'subprojects' below.",
+    "Do not restate them here; a component listed twice is a component that",
+    "will eventually disagree with itself.",
+    "",
+    "Each subproject is a public GitHub repository that publishes its own",
+    "SBOM. New-Sbom.ps1 renders one BOM per subproject plus a composed BOM for",
+    "the installed product, which merges them and links back to each.",
+    "",
+    "RULE: adding or bumping any shipped component requires updating the",
+    "manifest of whichever project owns it, in the same pull request.",
+    "See docs/cra/cybersecurity-policy.md section 2.4.",
+    "",
+    "versionFrom.kind:",
+    "  literal   - use the 'version' field as written",
+    "  product   - the build version from version.txt + build.txt",
+    "  project   - this manifest's project.versionFrom (for a project's own artifacts)",
+    "  parameter - supplied by New-Sbom.ps1 (e.g. the MSVC toolset version)",
+    "  header    - read #define macros out of a C header and join with '.',",
+    "              so a component versioned in source is never restated here",
+    "",
+    "Paths in versionFrom.path and shaFrom are relative to the PROJECT ROOT of",
+    "the manifest that declares them, so each manifest stands alone.",
+    "",
+    "purl/cpe may contain {version} and {sha} placeholders.",
+    "cveMonitoring 'manual' means no usable CPE exists and the component must",
+    "be reviewed by hand against upstream release notes.",
+    "",
+    "exposure records how an attacker reaches the component, which bounds the",
+    "severity of any advisory against it. Emitted as the cra:exposure property",
+    "so downstream consumers get the reachability context with the inventory:",
+    "  network-facing    - listens on a socket; directly reachable",
+    "  network-reachable - no listener, but processes network-origin data",
+    "  install-time      - only runs during installation",
+    "  local-only        - requires pre-existing local execution with rights"
+  ],
+
+  "schemaVersion": 2,
+
+  "project": {
+    "id": "ua-lds-installers",
+    "name": "OPC UA Local Discovery Server",
+    "group": "org.opcfoundation",
+    "description": "OPC UA Local Discovery Server for Windows - installer and companion tools.",
+    "license": "MIT",
+    "repository": "https://github.com/OPCFoundation/UA-LDS-Installers",
+    "supplier": { "name": "OPC Federation AISBL", "url": "https://opcfoundation.org" },
+    "craRole": "open-source-steward",
+    "isProduct": true,
+    "versionFrom": { "kind": "product" }
+  },
+
+  "subprojects": [
+    {
+      "id": "ua-lds",
+      "manifest": "LDS/sbom/components.json",
+      "bomFile": "ua-lds-{version}-{arch}.cdx.json"
+    },
+    {
+      "id": "mdnsresponder",
+      "manifest": "mDNSResponder/sbom/components.json",
+      "bomFile": "mdnsresponder-{version}-{arch}.cdx.json"
+    }
+  ],
+
+  "buildTools": [
+    { "name": "WiX Toolset", "version": "4+", "supplier": "WiX Toolset Team" },
+    { "name": "CMake", "version": "3.20+", "supplier": "Kitware" },
+    { "name": "MSVC", "version": "v143", "supplier": "Microsoft" },
+    { "name": "Perl", "version": "unpinned", "supplier": "any Windows distribution (see build.ps1 Test-PerlForOpenSSL)" },
+    { "name": "AzureSignTool", "version": "unpinned", "supplier": "Vcsjones" }
+  ],
+
+  "components": [
+    {
+      "key": "ldsca",
+      "name": "ldsca.dll",
+      "type": "library",
+      "artifactFile": "ldsca.dll",
+      "versionFrom": { "kind": "product" },
+      "licenses": ["MIT"],
+      "supplier": "OPC Federation AISBL",
+      "purl": "pkg:github/OPCFoundation/UA-LDS-Installers@{sha}#ldsca.dll",
+      "shaFrom": ".",
+      "cveMonitoring": "manual",
+      "exposure": "install-time",
+      "notes": "MSI custom actions: INI migration and PKI store initialisation. Runs only during installation, inside the already-elevated custom-action context. Built from CustomActions/ in this repository."
+    },
+    {
+      "key": "certgen",
+      "name": "Opc.Ua.CertificateGenerator.exe",
+      "type": "application",
+      "artifactFile": "Opc.Ua.CertificateGenerator.exe",
+      "versionFrom": {
+        "kind": "header",
+        "path": "CertificateGenerator/src/version.h",
+        "macros": [
+          "CERTGEN_VERSION_MAJOR",
+          "CERTGEN_VERSION_MINOR",
+          "CERTGEN_VERSION_BUILD",
+          "CERTGEN_VERSION_REVISION"
+        ]
+      },
+      "version": "2.1.342.10",
+      "licenses": ["MIT"],
+      "supplier": "OPC Federation AISBL",
+      "purl": "pkg:github/OPCFoundation/UA-LDS-Installers@{sha}#Opc.Ua.CertificateGenerator.exe",
+      "shaFrom": ".",
+      "cveMonitoring": "manual",
+      "exposure": "local-only",
+      "notes": "NOT NETWORK-FACING. A command-line utility, invoked locally and only runnable by a program already executing on the machine. Versioned as its own product, independently of the LDS; the version is read from CertificateGenerator/src/version.h at generation time, which also feeds the binary's VERSIONINFO resource, so the two cannot drift."
+    },
+    {
+      "key": "openssl-3",
+      "name": "OpenSSL",
+      "type": "library",
+      "version": "3.5.7",
+      "versionFrom": { "kind": "literal" },
+      "licenses": ["Apache-2.0"],
+      "supplier": "OpenSSL Project",
+      "purl": "pkg:github/openssl/openssl@openssl-3.5.7",
+      "cpe": "cpe:2.3:a:openssl:openssl:3.5.7:*:*:*:*:*:*:*",
+      "cveMonitoring": "cpe",
+      "exposure": "network-reachable",
+      "notes": "Built from upstream tag openssl-3.5.7 by this repository's build.ps1 and linked statically ('no-shared no-asm no-autoload-config'), so a fix requires us to rebuild and re-release. 'no-ec' was REMOVED on 2026-10-05 to support the OPC UA ECC SecurityPolicies, so EC, ECDH, ECDSA and ECX are now compiled in and elliptic-curve advisories DO apply where they previously did not. The same install is consumed by the LDS submodule, which declares it in its own manifest; composition deduplicates the two entries on purl."
+    },
+    {
+      "key": "msvc-crt",
+      "name": "Microsoft Visual C++ Runtime Library",
+      "type": "library",
+      "versionFrom": { "kind": "parameter", "parameter": "CrtVersion" },
+      "licenses": [{ "name": "Microsoft Visual C++ Runtime Library - proprietary, redistributable" }],
+      "supplier": "Microsoft Corporation",
+      "cveMonitoring": "manual",
+      "exposure": "network-reachable",
+      "notes": "Linked into every shipped binary, including the two network-facing ones. STATICALLY LINKED via /MT (cmake/Hardening.cmake). Consequence: a CRT vulnerability is NOT remediated by Windows Update on the operator's machine - it requires us to rebuild and re-release."
+    }
+  ],
+
+  "dependencies": {
+    "product": ["ldsca", "certgen", "ua-lds/opcualds", "ua-lds/dnssd", "mdnsresponder/mdnsresponder"],
+    "ldsca": ["msvc-crt"],
+    "certgen": ["openssl-3", "msvc-crt"],
+    "openssl-3": [],
+    "msvc-crt": []
+  }
+}

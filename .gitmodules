@@ -4,6 +4,3 @@
 [submodule "LDS"]
 	path = LDS
 	url = https://github.com/OPCFoundation/UA-LDS.git
-[submodule "CertificateGenerator"]
-	path = CertificateGenerator
-	url = https://github.com/OPCFoundation/Misc-Tools.git
