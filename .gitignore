@@ -11,3 +11,4 @@ CertificateGenerator/.build*/
 *.log
 signing-key.secret.ps1
 .claude/
+.vs/

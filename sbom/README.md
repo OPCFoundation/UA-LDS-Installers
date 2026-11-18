@@ -1,6 +1,6 @@
 # Software Bill of Materials
 
-CRA Annex I Part II(1) requires us to "identify and document vulnerabilities and components contained in products with digital elements, including by drawing up a software bill of materials in a commonly used and machine-readable format covering at the very least the top-level dependencies of the products."
+> **SBOMs are not distributed with the MSI or the release ZIP.** The SBOMs `build.ps1` writes are examples only. If you need an SBOM, generate it from this repository with the tooling below. Generated SBOMs are provided as-is, and you are responsible for verifying that any SBOM you generate is accurate and complete for the build you ship. See [`SECURITY.md`](../SECURITY.md).
 
 ## SBOM per Project
 
@@ -14,7 +14,7 @@ The installed product is assembled from three repositories, and each is a public
 
 Nothing is declared twice across repositories. The installer manifest used to restate the submodules' components, which meant two places to update and an eventual disagreement; now it lists them as `subprojects` and composes.
 
-`build.ps1` therefore produces **three SBOMs per architecture**:
+`build.ps1` therefore produces **three example SBOMs per architecture**:
 
 ```
 out/<arch>/ua-lds-<version>-<arch>.cdx.json           # UA-LDS publishes this
@@ -22,7 +22,7 @@ out/<arch>/mdnsresponder-<version>-<arch>.cdx.json    # UA-LDS-mDNSResponder pub
 out/<arch>/OPC-UA-LDS-<version>-<arch>.cdx.json       # the installed product
 ```
 
-All three ship in the release ZIP.
+None of them ship in the release ZIP. SBOM generation is non-fatal in `build.ps1`: if it fails, the build warns and continues.
 
 ## Files
 
@@ -62,7 +62,7 @@ cd LDS
 ```
 ## Merge SBOMs
 
-CycloneDX can express composition either by linking (BOM-Link) or by merging. This merges, because a market surveillance authority asking for "the SBOM" should get one self-contained document, and most tooling does not follow BOM-Links. The composed document still records an `externalReferences` entry of type `bom`, with a SHA-256, against each subproject's primary component, so the authoritative source stays identifiable and tamper-evident.
+CycloneDX can express composition either by linking (BOM-Link) or by merging. This merges, because a market surveillance authority asking for "the SBOM" should get one self-contained document, and most tooling does not follow BOM-Links. The composed document still records an `externalReferences` entry of type `bom`, with a SHA-512, against each subproject's primary component, so the authoritative source stays identifiable and tamper-evident.
 
 Two properties make ownership legible after the merge:
 
@@ -83,6 +83,6 @@ Hard-coding versions in a manifest invites drift. These are derived from the act
 - **Product version** — from `version.txt` + `build.txt` via `build.ps1`.
 - **Component versions defined in source** — read straight out of the header that declares them (`versionFrom.kind: header`). The certificate generator is versioned independently of the LDS in `CertificateGenerator/src/version.h`, and that same header feeds its `VERSIONINFO` resource, so the SBOM and the binary's file properties cannot disagree. Restating the number in this manifest would have reintroduced exactly the three-way drift that header was written to end.
 - **MSVC runtime version** — read from the toolset's `Microsoft.VCToolsVersion.v143.default.txt`.
-- **SHA-256 digests** — computed over the staged, signed binaries, so the digests describe what actually ships. The certificate generator is staged separately from the per-arch `bin` directory, so `build.ps1` passes its location as `-ExtraBinDir`.
+- **SHA-512 digests** — computed over the staged, signed binaries, so the digests describe what actually ships. The certificate generator is staged separately from the per-arch `bin` directory, so `build.ps1` passes its location as `-ExtraBinDir`.
 
 If git provenance is unavailable (uninitialised submodules, or `safe.directory` refusing a repository owned by another user), the generator warns and **omits** the affected identifiers rather than emitting a placeholder. An SBOM with a missing field is recoverable; one with a confidently wrong commit SHA is worse than none. If you see those warnings in a release build, fix the environment and rebuild — do not publish.

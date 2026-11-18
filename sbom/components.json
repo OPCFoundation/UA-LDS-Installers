@@ -14,7 +14,6 @@
     "",
     "RULE: adding or bumping any shipped component requires updating the",
     "manifest of whichever project owns it, in the same pull request.",
-    "See docs/cra/cybersecurity-policy.md section 2.4.",
     "",
     "versionFrom.kind:",
     "  literal   - use the 'version' field as written",

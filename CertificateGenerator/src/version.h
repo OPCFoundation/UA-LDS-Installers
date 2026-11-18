@@ -65,7 +65,7 @@
 #define CERTGEN_FILE_DESCRIPTION  "A tool to generate UA application instance certificates."
 #define CERTGEN_INTERNAL_NAME     "Opc.Ua.CertificateGenerator.exe"
 #define CERTGEN_ORIGINAL_FILENAME "Opc.Ua.CertificateGenerator.exe"
-#define CERTGEN_LEGAL_COPYRIGHT   "Copyright (c) 2004-2026 OPC Foundation, Inc"
+#define CERTGEN_LEGAL_COPYRIGHT   "Copyright (c) 2005-2026 OPC Federation AISBL"
 #define CERTGEN_LEGAL_TRADEMARKS \
     "This product includes software developed by the OpenSSL Project " \
     "for use in the OpenSSL Toolkit (http://www.openssl.org/)"

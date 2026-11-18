@@ -1,6 +1,7 @@
 ## MIT License
 
 Copyright (c) 2005-2026, OPC Federation AISBL, All rights reserved.
+OPC FOUNDATION is a trade name of OPC Federation AISBL.
 
 OPC Foundation MIT License 1.00
 

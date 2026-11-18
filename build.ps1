@@ -31,10 +31,11 @@
       5b. Once: build Opc.Ua.CertificateGenerator.exe (shares the LDS's
           OpenSSL 3.5.7)
       6.  Per arch: stage binaries + sign
-      6b. Per arch: generate CycloneDX 1.6 SBOM (after signing, so the recorded
-          SHA-256 digests match the binaries we actually ship)
+      6b. Per arch: generate EXAMPLE CycloneDX 1.6 SBOMs into out\<arch>\
+          (after signing, so the recorded SHA-512 digests match the binaries).
+          These are examples only and are NOT shipped - see SECURITY.md.
       7.  Per arch: WiX merge module + installer + sign
-      8.  Bundle redistributable ZIP (MSI, MSM, changelog, SBOMs)
+      8.  Bundle redistributable ZIP (MSI, MSM, changelog, SECURITY.md)
 
     Step 5b builds CertificateGenerator\, a C re-implementation that links the
     same OpenSSL 3.5.7 as the LDS. The command line is unchanged;
@@ -656,14 +657,19 @@ function Stage-Arch {
 }
 
 # ---------------------------------------------------------------------------
-# Phase 6b: CycloneDX SBOM
+# Phase 6b: CycloneDX SBOM (example only)
 #
-# Required by CRA Annex I Part II(1).  Generated from the curated inventory in
+# The SBOMs written here are EXAMPLES. They are not bundled with the MSI or the
+# release ZIP; anyone who needs an SBOM generates one from the repository and
+# is responsible for verifying it (see SECURITY.md). A failure here therefore
+# warns rather than failing the release build.
+#
+# Generated from the curated inventory in
 # sbom\components.json - every third-party component in this build is vendored
 # C source or a pinned upstream git tag, so there is no package manifest for a
 # dependency scanner to read and off-the-shelf tooling yields a near-empty SBOM.
 #
-# Runs after Stage-Arch (and therefore after signing) so the recorded SHA-256
+# Runs after Stage-Arch (and therefore after signing) so the recorded SHA-512
 # digests are those of the shipped binaries.
 # ---------------------------------------------------------------------------
 function New-SbomForArch {
@@ -671,7 +677,7 @@ function New-SbomForArch {
 
     $sbomScript = Join-Path $ScriptDir 'sbom\New-Sbom.ps1'
     if (-not (Test-Path $sbomScript)) {
-        throw "SBOM generator not found at $sbomScript. The SBOM is a compliance deliverable; refusing to produce an unaccompanied release."
+        throw "SBOM generator not found at $sbomScript."
     }
 
     $sbomManifest = Join-Path $ScriptDir 'sbom\components.json'
@@ -683,7 +689,7 @@ function New-SbomForArch {
 
     # Each submodule is its own public GitHub project and publishes its own
     # SBOM, so render those first - the composed document links back to them by
-    # SHA-256 and the digests have to exist before it is written.
+    # SHA-512 and the digests have to exist before it is written.
     #
     # The subproject list and the BOM naming convention live in the manifest,
     # not here, so there is one place to change when a project is added.
@@ -880,7 +886,11 @@ try {
         # After all staging and signing, so the recorded digests are those of
         # the binaries that actually ship - including the certificate generator,
         # which Stage-Shared places outside the per-arch bin directory.
-        New-SbomForArch $arch
+        try {
+            New-SbomForArch $arch | Out-Null
+        } catch {
+            Write-Host "  SBOM ($arch): example SBOM not generated - $($_.Exception.Message)" -ForegroundColor Yellow
+        }
 
         if (-not $SkipWix) {
             Build-Wix $arch $staged
@@ -906,10 +916,9 @@ try {
             $changelog = Join-Path $UaLdsDir 'Changelog.txt'
             if (Test-Path $changelog) { $items += $changelog }
 
-            # SBOMs ship with the release: downstream integrators embedding the
-            # LDS need them for their own CRA obligations, and an SBOM nobody
-            # can find is not an SBOM.
-            $items += @(Get-ChildItem $OutDir -Recurse -Filter '*.cdx.json' | Select-Object -ExpandProperty FullName)
+            # SBOMs are deliberately NOT bundled: the ones the build produces
+            # are examples only. Users who need an SBOM generate it from the
+            # repository and verify it themselves (see SECURITY.md).
 
             # So the recipient knows where to report a vulnerability.
             $securityMd = Join-Path $ScriptDir 'SECURITY.md'
