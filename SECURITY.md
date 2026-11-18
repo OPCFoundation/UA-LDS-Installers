@@ -1,12 +1,115 @@
 # Security Policy
 
-## Supported Versions
+The OPC UA Local Discovery Server (LDS) is published as free and open-source software under the MIT License by OPC Federation AISBL, acting as an
+**open-source software steward** within the meaning of Article 24 of Regulation (EU) 2024/2847 (the Cyber Resilience Act, "CRA"). OPC FOUNDATION is a trade name of OPC Federation AISBL.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.4.420 | :white_check_mark: |
-| < 1.4.420 | :x:                |
+## Reporting a vulnerability
 
-## Reporting a Vulnerability
+Any vulnerabilities or security concerns should be reported by:
 
-How to report vulnerabilities found [here](https://github.com/OPCFoundation/OPC-SecurityAdvisories)
+1) Submitting a [private report](https://github.com/OPCFoundation/OPC-SecurityAdvisories/security) to GitHub;
+2) Email to ‘securityteam AT opcfoundation DOT org’. 
+
+A PGP key to encrypt any sensitive security report can be found [here](https://opcfoundation.org/SecurityBulletins/securityteam_public_key.txt). 
+
+Please include, as far as you are able:
+
+- The affected component (`opcualds.exe`, `mDNSResponder.exe`, `dnssd.dll`,  `ldsca.dll`, the MSI itself, or a bundled third-party library)
+- The product version — run `opcualds.exe -v`, or take the version from Add/Remove Programs
+- Platform and architecture (Windows version, x86 or x64)
+- Reproduction steps, a proof of concept, or a crash dump
+- Your assessment of impact, and whether you believe the issue is being  exploited in the wild
+
+If you have evidence that the issue is already being exploited, say so prominently in your first message. Actively exploited vulnerabilities are subject to short regulatory reporting deadlines under the CRA, so the OPC Foundation needs to know immediately.
+
+## What to expect
+
+| Stage | Target |
+|---|---|
+| Acknowledgement of your report | 3 working days |
+| Initial triage and severity assessment | 10 working days |
+| Status update cadence while open | Every 30 days |
+| Fix or documented mitigation, high/critical | 90 days from triage |
+| Fix or documented mitigation, medium/low | Next scheduled release |
+
+These are good-faith targets for a volunteer-supported open-source project, not a contractual service level. Where a fix depends on an upstream project (see *Scope* below), our target is to report upstream promptly and track their fix, not to fork.
+
+## Coordinated disclosure
+
+The OPC Foundation asks for **90 days** from acknowledgement before public disclosure, or until a fix ships. We will:
+
+- Agree a disclosure date with you rather than impose one
+- Credit you in the advisory unless you ask us not to
+- Tell you if we need longer, and why
+- Publish an advisory even where we decide not to fix, explaining why
+
+The OPC Foundation supports embargoed pre-notification to downstream redistributors who ship the LDS inside their own products. If that is you, contact `securityteam AT opcfoundation DOT org`.
+
+The OPC Foundation is a non-profit that provides standards and open source software to the OT community and does not operate a paid bug bounty.
+
+## Identifiers — GCVE with optional secondary CVE
+
+The OPC Foundation is [GCVE Numbering Authority 105](https://gcve.eu/gna/105/) and assigns identifiers of the form `GCVE-105-<YEAR>-<NNNN>`.
+
+The OPC Foundation will request a CVE from another CNA (for example GitHub, for code hosted there) as a secondary identifier. That request is often significantly delayed, so:
+
+- advisories may be published with only a GCVE;
+- the advisory is reissued with a CVE when one is assigned.
+
+Where an upstream CVE affects a component included in the LDS, such as OpenSSL, the advisory references that CVE instead of minting a new identifier. GCVE is interoperable rather than parallel: namespace 0 is reserved for the CVE program, so `CVE-2023-40224` is also `GCVE-0-2023-40224`. 
+
+Advisories are published as signed CSAF v2.0 documents at [opcfoundation.org/security/csaf](https://opcfoundation.org/security/csaf).
+
+## Scope
+
+**In scope**: this repository, which assembles and packages the installer:
+
+- The build pipeline (`build.ps1`), hardening flags (`cmake/Hardening.cmake`), and the WiX installer and merge module (`WiX/`)
+- The MSI custom actions (`CustomActions/` → `ldsca.dll`)
+- Insecure defaults in the shipped `ualds.ini` or the PKI store layout the installer provisions
+- The integrity of released artifacts and their code signatures
+
+**Report here, but fixed upstream**: the LDS is assembled from submodules that are separate projects:
+
+| Submodule | Repo |
+|---|---|
+| `LDS/` | [OPCFoundation/UA-LDS](https://github.com/OPCFoundation/UA-LDS) |
+| `mDNSResponder/` | [OPCFoundation/UA-LDS-mDNSResponder](https://github.com/OPCFoundation/UA-LDS-mDNSResponder) |
+
+
+**Out of scope:**
+
+- Vulnerabilities in OpenSSL, the Apple mDNSResponder upstream, or the Microsoft Visual C++ runtime as such need to be reported to their respective maintainers. If the OPC Foundation is informed of vulnerabilities in these components, the OPC Foundation will produce a new version of the LDS.
+- The OPC UA specification itself. Those are reported in [mantis](https://mantis.opcfoundation.org/my_view_page.php).
+- Findings from an automated scanner with no demonstrated impact on the LDS as shipped, including reports that a bundled library version "appears in a CVE database" without analysis of whether the affected code path is reachable in our build. Our builds use `no-shared no-asm no-autoload-config`, so some of OpenSSL is not compiled in at all.
+- Denial of service achieved only through resource exhaustion by an already privileged local user.
+
+## Attack surface
+
+So that reports arrive with calibrated severity, here is what is actually exposed:
+
+| Component | Exposure |
+|---|---|
+| `opcualds.exe` | **Network-facing.** The discovery service. Accepts OPC UA requests; runs as a Windows service. The primary attack surface. |
+| `mDNSResponder.exe` | **Network-facing.** Listens for and emits mDNS/DNS-SD traffic on the local network segment. |
+| `dnssd.dll` | Local API surface, consumed in-process by `opcualds.exe`; handles data that originated on the network. |
+| `ldsca.dll` | Install-time only. Runs inside the MSI custom-action context, which is already elevated. |
+| `Opc.Ua.CertificateGenerator.exe` | **Not network-facing.** Local command-line utility, invoked manually or by a local program that already holds the necessary rights. No socket, no service account, not used by the discovery service at runtime. |
+
+Findings against the two network-facing components are the ones most likely to be severe. For the rest, please include in your report how an attacker reaches the code, not only that the code is reachable in principle.
+
+## Supported versions
+
+Version 1.04.x (Current LTS)
+
+## Software Bill of Materials
+
+SBOMs are **not** distributed with the MSI or the release packages. Any SBOMs produced by this repository's build are examples only.
+
+If you need an SBOM, for example to meet your own CRA obligations when integrating the LDS into a product, you can generate a CycloneDX 1.6 SBOM from this repository with `sbom/New-Sbom.ps1`. See [`sbom/README.md`](sbom/README.md).
+
+Generated SBOMs are provided as-is, without warranty. You are responsible for verifying that any SBOM you generate is accurate and complete for the build you ship.
+
+## Our own reporting obligations
+
+As an open-source software steward, OPC Federation AISBL reports actively exploited vulnerabilities in this product, and severe incidents affecting the infrastructure it provides for its development, to the competent authorities as required by CRA Article 24(3). Such notifications do not identify you as the reporter unless you ask to be credited publicly.

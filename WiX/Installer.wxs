@@ -46,13 +46,51 @@
                 Message="[ProductName] requires administrator privileges.  Right-click the installer and choose 'Run as administrator'." />
 
         <!--
-            MajorUpgrade with the preserved UpgradeCode picks up every prior
+            Upgrade handling.  The preserved UpgradeCode picks up every prior
             InstallShield-built 1.04.x install and uninstalls it cleanly before
             laying down the new one.
+
+            Authored explicitly rather than with <MajorUpgrade> because Windows
+            Installer compares only the first THREE fields of ProductVersion -
+            the fourth is ignored.  Every build sharing MAJOR.MINOR.REVISION is
+            therefore the same version to MSI, and <MajorUpgrade> leaves a gap
+            at exact equality: such a build is neither upgraded nor blocked, so
+            it installs side by side with its predecessor.  Released versions
+            always bump REVISION, so only test builds can land in that gap -
+            they are blocked below with an explicit instruction.
         -->
-        <MajorUpgrade
-            DowngradeErrorMessage="A newer version of [ProductName] is already installed."
-            Schedule="afterInstallInitialize" />
+        <Upgrade Id="$(var.UpgradeCode)">
+            <!-- Genuinely older release: remove it, then install this one. -->
+            <UpgradeVersion Maximum="$(var.Version)"
+                            IncludeMaximum="no"
+                            MigrateFeatures="yes"
+                            Property="WIX_UPGRADE_DETECTED" />
+
+            <!-- Same MAJOR.MINOR.REVISION (a rebuild): detect only, block. -->
+            <UpgradeVersion Minimum="$(var.Version)"
+                            IncludeMinimum="yes"
+                            Maximum="$(var.Version)"
+                            IncludeMaximum="yes"
+                            OnlyDetect="yes"
+                            Property="LDS_SAMEVERSION_DETECTED" />
+
+            <!-- Newer release: detect only, block as a downgrade. -->
+            <UpgradeVersion Minimum="$(var.Version)"
+                            IncludeMinimum="no"
+                            OnlyDetect="yes"
+                            Property="WIX_DOWNGRADE_DETECTED" />
+        </Upgrade>
+
+        <!-- Matches the previous MajorUpgrade Schedule="afterInstallInitialize". -->
+        <InstallExecuteSequence>
+            <RemoveExistingProducts After="InstallInitialize" />
+        </InstallExecuteSequence>
+
+        <Launch Condition="NOT LDS_SAMEVERSION_DETECTED"
+                Message="A build of [ProductName] with this same version number is already installed.  Please uninstall it before installing this build." />
+
+        <Launch Condition="NOT WIX_DOWNGRADE_DETECTED"
+                Message="A newer version of [ProductName] is already installed." />
 
         <MediaTemplate EmbedCab="yes" />
 
