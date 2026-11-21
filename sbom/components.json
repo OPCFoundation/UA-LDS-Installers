@@ -118,15 +118,15 @@
       "key": "openssl-3",
       "name": "OpenSSL",
       "type": "library",
-      "version": "3.5.7",
+      "version": "3.6.5",
       "versionFrom": { "kind": "literal" },
       "licenses": ["Apache-2.0"],
       "supplier": "OpenSSL Project",
-      "purl": "pkg:github/openssl/openssl@openssl-3.5.7",
-      "cpe": "cpe:2.3:a:openssl:openssl:3.5.7:*:*:*:*:*:*:*",
+      "purl": "pkg:github/openssl/openssl@openssl-3.6.5",
+      "cpe": "cpe:2.3:a:openssl:openssl:3.6.5:*:*:*:*:*:*:*",
       "cveMonitoring": "cpe",
       "exposure": "network-reachable",
-      "notes": "Built from upstream tag openssl-3.5.7 by this repository's build.ps1 and linked statically ('no-shared no-asm no-autoload-config'), so a fix requires us to rebuild and re-release. 'no-ec' was REMOVED on 2026-10-05 to support the OPC UA ECC SecurityPolicies, so EC, ECDH, ECDSA and ECX are now compiled in and elliptic-curve advisories DO apply where they previously did not. The same install is consumed by the LDS submodule, which declares it in its own manifest; composition deduplicates the two entries on purl."
+      "notes": "Built from upstream tag openssl-3.6.5 by this repository's build.ps1 and linked statically ('no-shared no-asm no-autoload-config'), so a fix requires us to rebuild and re-release. 'no-ec' was REMOVED on 2026-10-05 to support the OPC UA ECC SecurityPolicies, so EC, ECDH, ECDSA and ECX are now compiled in and elliptic-curve advisories DO apply where they previously did not. The same install is consumed by the LDS submodule, which declares it in its own manifest; composition deduplicates the two entries on purl."
     },
     {
       "key": "msvc-crt",

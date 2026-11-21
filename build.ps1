@@ -24,12 +24,15 @@
 
     Phases:
       1.  Bump version, generate buildversion.h
-      2.  Per arch: build OpenSSL 3.5.7 from upstream source (if not already built)
+      1b. Read the OpenSSL version from openssl-version.txt and rewrite the
+          OpenSSL version references in the submodules (LDS fetch scripts,
+          SBOM manifests, README) to match
+      2.  Per arch: build OpenSSL (version from openssl-version.txt) from upstream source (if not already built)
       3.  Per arch: build UA-LDS (opcualds.exe + dnssd.dll) via CMake
       4.  Per arch: build mDNSResponder.exe via msbuild (legacy .sln, v143)
       5.  Per arch: build ldsca.dll (MSI custom actions)
       5b. Once: build Opc.Ua.CertificateGenerator.exe (shares the LDS's
-          OpenSSL 3.5.7)
+          OpenSSL)
       6.  Per arch: stage binaries + sign
       6b. Per arch: generate EXAMPLE CycloneDX 1.6 SBOMs into out\<arch>\
           (after signing, so the recorded SHA-512 digests match the binaries).
@@ -38,7 +41,7 @@
       8.  Bundle redistributable ZIP (MSI, MSM, changelog, SECURITY.md)
 
     Step 5b builds CertificateGenerator\, a C re-implementation that links the
-    same OpenSSL 3.5.7 as the LDS. The command line is unchanged;
+    same OpenSSL as the LDS. The command line is unchanged;
     CertificateGenerator\README.md lists the deviations and the commands still
     to be ported. The binary is shipped under the CertGenerator MSI feature.
 
@@ -346,6 +349,70 @@ Write-Host "Building UA-LDS version $Version"
 Write-Host ''
 
 # ---------------------------------------------------------------------------
+# Phase 1b: OpenSSL version - read from openssl-version.txt (the single place
+# it is set) and push it into every file in the submodules (and the in-tree
+# SBOM manifest) that names it, so nothing can drift from what is built.
+# ---------------------------------------------------------------------------
+$OpenSslVersionFile = Join-Path $ScriptDir 'openssl-version.txt'
+if (-not (Test-Path $OpenSslVersionFile)) { throw "Missing $OpenSslVersionFile" }
+$OpenSslVersion = @(Get-Content $OpenSslVersionFile |
+    ForEach-Object { $_.Trim() } |
+    Where-Object { $_ -and -not $_.StartsWith('#') }) | Select-Object -First 1
+if ($OpenSslVersion -notmatch '^\d+\.\d+\.\d+$') {
+    throw "$OpenSslVersionFile must contain an OpenSSL version such as 3.6.5 (got '$OpenSslVersion')."
+}
+$OpenSslTag = "openssl-$OpenSslVersion"
+
+function Sync-OpenSSLVersion {
+    # Each entry: file (relative to $ScriptDir) and regex -> replacement pairs.
+    # Replacements use a script block so the version is never misread as a
+    # regex group reference ($1 followed by a digit).
+    $v = $OpenSslVersion
+    $sbomEdits = @(
+        @('("key"\s*:\s*"openssl[^"]*"[^}]*?"version"\s*:\s*")[^"]*(")', { $args[0].Groups[1].Value + $v + $args[0].Groups[2].Value }),
+        @('pkg:github/openssl/openssl@openssl-\d+\.\d+\.\d+',            { "pkg:github/openssl/openssl@openssl-$v" }),
+        @('cpe:2\.3:a:openssl:openssl:\d+\.\d+\.\d+:',                   { "cpe:2.3:a:openssl:openssl:${v}:" }),
+        @('upstream tag openssl-\d+\.\d+\.\d+',                          { "upstream tag openssl-$v" })
+    )
+    # Leading comma: keep this a list of one pair (@(@(a,b)) would flatten).
+    $fetchEdits = @(
+        ,@('(?m)^(set\s+(?:SRCDIR|GITTAG)=)openssl-\S+', { $args[0].Groups[1].Value + "openssl-$v" })
+    )
+    $targets = @(
+        @{ Path = 'LDS\fetch_openssl.bat';       Edits = $fetchEdits },
+        @{ Path = 'LDS\fetch_openssl_win64.bat'; Edits = $fetchEdits },
+        @{ Path = 'LDS\sbom\components.json';    Edits = $sbomEdits },
+        @{ Path = 'sbom\components.json';        Edits = $sbomEdits },
+        @{ Path = 'LDS\README.md';               Edits = @(
+            @('OpenSSL v\d+\.\d+\.\d+ was used in development', { "OpenSSL v$v was used in development" }),
+            @('\| OpenSSL \d+\.\d+\.\d+ \|',                    { "| OpenSSL $v |" })
+        ) }
+    )
+
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    foreach ($t in $targets) {
+        $path = Join-Path $ScriptDir $t.Path
+        if (-not (Test-Path $path)) {
+            Write-Host "  OpenSSL version sync: $($t.Path) not found - skipped" -ForegroundColor Yellow
+            continue
+        }
+        $orig = [System.IO.File]::ReadAllText($path)
+        $text = $orig
+        foreach ($e in $t.Edits) {
+            $text = [regex]::Replace($text, $e[0], [System.Text.RegularExpressions.MatchEvaluator]$e[1])
+        }
+        if ($text -cne $orig) {
+            [System.IO.File]::WriteAllText($path, $text, $utf8NoBom)
+            Write-Host "  OpenSSL version sync: updated $($t.Path) to $v"
+        }
+    }
+}
+
+Write-Host "OpenSSL version: $OpenSslVersion (from openssl-version.txt)"
+Sync-OpenSSLVersion
+Write-Host ''
+
+# ---------------------------------------------------------------------------
 # Phase 2: OpenSSL - fetch upstream source + build for each requested arch
 # Outputs into UA-LDS\stack\openssl-$arch\.  Static libs (no-shared).
 # ---------------------------------------------------------------------------
@@ -360,16 +427,33 @@ function Build-OpenSSL {
         Write-Host "  Cleaning $sslPrefix"
         Remove-Item $sslPrefix -Recurse -Force
     }
+
+    # A cached install is only reused if it is the version openssl-version.txt
+    # asks for; otherwise a version bump would silently keep linking the old one.
     if (Test-Path $sslMarker) {
-        Write-Host "OpenSSL ($Arch): already built at $sslPrefix - skipping"
-        return
+        $installed = Get-OpenSSLInstalledVersion $sslPrefix
+        if ($installed -eq $OpenSslVersion) {
+            Write-Host "OpenSSL ($Arch): $installed already built at $sslPrefix - skipping"
+            return
+        }
+        Write-Host "OpenSSL ($Arch): cached build is '$installed', want $OpenSslVersion - rebuilding" -ForegroundColor Yellow
+        Remove-Item $sslPrefix -Recurse -Force
+    }
+
+    # Same for the source tree: discard a clone of a different version.
+    if (Test-Path (Join-Path $sslSource 'Configure')) {
+        $srcVersion = Get-OpenSSLSourceVersion $sslSource
+        if ($srcVersion -ne $OpenSslVersion) {
+            Write-Host "OpenSSL: source tree is '$srcVersion', want $OpenSslVersion - re-cloning" -ForegroundColor Yellow
+            Remove-Item $sslSource -Recurse -Force
+        }
     }
 
     # Clone upstream OpenSSL at the pinned tag if not present
     if (-not (Test-Path (Join-Path $sslSource 'Configure'))) {
-        Write-Host "OpenSSL: cloning upstream source (tag openssl-3.5.7)..."
-        & git clone --branch openssl-3.5.7 --depth 1 https://github.com/openssl/openssl.git $sslSource | Out-Host
-        if ($LASTEXITCODE -ne 0) { throw "git clone of OpenSSL failed." }
+        Write-Host "OpenSSL: cloning upstream source (tag $OpenSslTag)..."
+        & git clone --branch $OpenSslTag --depth 1 https://github.com/openssl/openssl.git $sslSource | Out-Host
+        if ($LASTEXITCODE -ne 0) { throw "git clone of OpenSSL failed (tag $OpenSslTag)." }
     }
 
     $vcArg  = if ($Arch -eq 'x86') { 'x86' } else { 'x64' }
@@ -400,7 +484,7 @@ function Build-OpenSSL {
     )
     $tmp = [System.IO.Path]::ChangeExtension([System.IO.Path]::GetTempFileName(), '.cmd')
     Set-Content -Path $tmp -Value $opensslLines -Encoding ASCII
-    Write-Host "Building OpenSSL 3.5.7 ($Arch) - this takes 10-20 min the first time..."
+    Write-Host "Building OpenSSL $OpenSslVersion ($Arch) - this takes 10-20 min the first time..."
     & cmd.exe /c $tmp | Out-Host
     $code = $LASTEXITCODE
     Remove-Item $tmp -Force -ErrorAction SilentlyContinue
@@ -411,7 +495,34 @@ function Build-OpenSSL {
     if (-not (Test-Path $sslMarker)) {
         throw "OpenSSL install did not produce $sslMarker."
     }
-    Write-Host "OpenSSL ($Arch): built into $sslPrefix"
+    $built = Get-OpenSSLInstalledVersion $sslPrefix
+    if ($built -ne $OpenSslVersion) {
+        throw "OpenSSL ($Arch): built '$built' but openssl-version.txt asks for $OpenSslVersion."
+    }
+    Write-Host "OpenSSL ($Arch): $built built into $sslPrefix"
+}
+
+# Version of an installed OpenSSL 3.x, from include\openssl\opensslv.h.
+function Get-OpenSSLInstalledVersion {
+    param([string]$Prefix)
+    $h = Join-Path $Prefix 'include\openssl\opensslv.h'
+    if (-not (Test-Path $h)) { return $null }
+    $m = Select-String -Path $h -Pattern '#\s*define\s+OPENSSL_VERSION_STR\s+"([^"]+)"' | Select-Object -First 1
+    if ($m) { return $m.Matches[0].Groups[1].Value }
+    return $null
+}
+
+# Version of an OpenSSL 3.x source tree, from VERSION.dat.
+function Get-OpenSSLSourceVersion {
+    param([string]$Source)
+    $f = Join-Path $Source 'VERSION.dat'
+    if (-not (Test-Path $f)) { return $null }
+    $parts = @{}
+    foreach ($line in (Get-Content $f)) {
+        if ($line -match '^\s*(MAJOR|MINOR|PATCH)\s*=\s*(\d+)') { $parts[$Matches[1]] = $Matches[2] }
+    }
+    if ($parts.Count -ne 3) { return $null }
+    return "$($parts.MAJOR).$($parts.MINOR).$($parts.PATCH)"
 }
 
 # ---------------------------------------------------------------------------
@@ -568,7 +679,7 @@ function Build-CustomActions {
 # Phase 5b: Opc.Ua.CertificateGenerator.exe
 #
 # Built from the in-tree CertificateGenerator\ project, which links the SAME
-# per-arch OpenSSL the LDS uses (LDS\stack\openssl-$arch, currently 3.5.7).
+# per-arch OpenSSL the LDS uses (LDS\stack\openssl-$arch, version from openssl-version.txt).
 #
 # This replaces the former CertificateGenerator submodule build, which pinned
 # OpenSSL 1.1.1w - end of life since 2023-09-11 - and cloned and compiled an
@@ -875,7 +986,7 @@ try {
 
         if (-not $SkipWix -and $arch -eq $certGenArch) {
             Write-Host ''
-            Write-Host "  CertificateGenerator ($arch, OpenSSL 3.5.7 - shared with the LDS)"
+            Write-Host "  CertificateGenerator ($arch, OpenSSL $OpenSslVersion - shared with the LDS)"
             $certGenExe = Build-CertGen $arch
         }
 

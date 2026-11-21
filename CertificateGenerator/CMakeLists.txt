@@ -3,7 +3,7 @@
 #
 # A C re-implementation of the legacy Misc-Tools CertificateGenerator, built
 # against the SAME OpenSSL distribution the LDS uses (LDS/stack/openssl-<arch>,
-# currently 3.5.7) instead of the end-of-life OpenSSL 1.1.1w the original
+# version set in openssl-version.txt) instead of the end-of-life OpenSSL 1.1.1w the original
 # pinned.
 #
 # The command line is contract: see src/cmdline.c.  Any deviation from the

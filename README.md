@@ -77,7 +77,7 @@ from source for each architecture; the result is cached and reused.
 `build.ps1` runs these phases:
 
 1. Bump `build.txt`, generate `LDS\buildversion.h`, and patch the version defines in `LDS\config.h`.
-2. Per arch — build **OpenSSL 3.5.7** from upstream source (static, cached).
+2. Per arch — build **OpenSSL** at the version in `openssl-version.txt` from upstream source (static, cached; rebuilt automatically when the version changes).
 3. Per arch — build UA-LDS (`opcualds.exe`, `dnssd.dll`) via CMake.
 4. Per arch — build `mDNSResponder.exe` via msbuild against its legacy solution.
 5. Per arch — build `ldsca.dll` (the MSI custom actions).
@@ -99,7 +99,7 @@ SigningTenantId  SigningCertName  SigningURL
 ## Notes
 
 - **`CertificateGenerator` is pinned to OpenSSL 1.1.1w** and is built with its own bundled copy,
-  separately from the 3.5.7 build used by everything else. This is a stopgap: the tool cannot be
+  separately from the main OpenSSL build used by everything else. This is a stopgap: the tool cannot be
   moved to a current OpenSSL without a rewrite that preserves its command-line interface, and the
   binary is still shipped under the CertGenerator MSI feature.
 - **Do not regenerate the `UpgradeCode` GUID** in `build.ps1`. It is carried over from the original

@@ -2,7 +2,7 @@
 
 A C re-implementation of the OPC UA certificate generator, built against **the
 same OpenSSL distribution the LDS uses** (`LDS/stack/openssl-<arch>`, currently
-3.5.7) instead of the end-of-life OpenSSL 1.1.1w the legacy tool pinned.
+version set in `openssl-version.txt`).
 
 This directory used to be a git submodule pointing at
 [OPCFoundation/Misc-Tools](https://github.com/OPCFoundation/Misc-Tools). The
@@ -59,16 +59,6 @@ cmake --build CertificateGenerator/.build --config Release
 
 Output: `Opc.Ua.CertificateGenerator.exe`. Both x64 and Win32 build clean at
 `/W4` with no warnings.
-
-## What this removes
-
-The legacy build cloned and compiled **an entire second OpenSSL tree** (1.1.1w,
-~15 minutes) solely for this one binary, then aliased `libcrypto.lib` to
-`libeay32.lib` because the `.vcxproj` still referenced OpenSSL 1.0 library
-names. All of that is gone. It also no longer links the OPC UA ANSI C stack:
-the legacy code pulled in a vendored copy of the whole stack for status-code
-constants, UTF-8/UTF-16 conversion and heap wrappers, which are a few dozen
-lines of plain C in `src/util.c`.
 
 ## ECC support
 
