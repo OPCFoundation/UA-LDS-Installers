@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: Checkout (with submodules)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
           fetch-depth: 1
@@ -49,20 +49,19 @@ jobs:
         shell: pwsh
         run: ./build.ps1 -Platform ${{ inputs.platform }}
 
-      - name: Upload installers
-        uses: actions/upload-artifact@v4
-        with:
-          name: lds-installers-unsigned
-          path: |
-            out/wix/*.msi
-            out/wix/*.msm
-            dist/*.zip
-          if-no-files-found: error
-
-      - name: Upload example SBOMs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: lds-sbom-examples
-          path: out/*/*.cdx.json
-          if-no-files-found: ignore
+      # Deliberately NO upload-artifact step. Artifacts inherit repository
+      # visibility, so on a public repo anyone signed in to GitHub could
+      # download unsigned binaries. This workflow only proves the build works;
+      # the summary below records what was produced, without publishing it.
+      - name: Verify outputs and write summary
+        shell: pwsh
+        run: |
+          $files = @(Get-ChildItem out/wix/*.msi, out/wix/*.msm, dist/*.zip -ErrorAction SilentlyContinue)
+          if ($files.Count -eq 0) { throw 'Build produced no installers.' }
+          $summary = @('## Build outputs (not published)', '', '| File | Size | SHA-256 |', '| --- | ---: | --- |')
+          foreach ($f in $files) {
+              $hash = (Get-FileHash $f.FullName -Algorithm SHA256).Hash
+              $summary += "| $($f.Name) | $('{0:N0}' -f $f.Length) | ``$hash`` |"
+          }
+          $summary -join "`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          $files | Format-Table Name, Length -AutoSize | Out-String | Write-Host
