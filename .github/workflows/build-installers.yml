@@ -1,0 +1,68 @@
+# Manually-triggered, unsigned build of the LDS installers on a clean
+# GitHub-hosted runner. Purpose: verify the build works from a fresh checkout,
+# with nothing cached from a developer machine. No signing secrets are
+# configured, so build.ps1 skips code signing automatically.
+
+name: Build installers (unsigned)
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Architectures to build
+        type: choice
+        options: [both, x64, x86]
+        default: both
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # windows-2022 ships VS 2022 with the C++ workload and MSVC v143, which
+    # build.ps1 hard-codes (-T v143). It also has CMake and Strawberry Perl.
+    runs-on: windows-2022
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Install WiX
+        shell: pwsh
+        run: |
+          # Pinned to the WiX version the installer authoring is built with.
+          dotnet tool install --global wix --version 4.0.6
+          "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+
+      - name: Show toolchain
+        shell: pwsh
+        run: |
+          cmake --version
+          wix --version
+          Get-Command perl -All | Select-Object -ExpandProperty Source
+
+      - name: Build
+        shell: pwsh
+        run: ./build.ps1 -Platform ${{ inputs.platform }}
+
+      - name: Upload installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: lds-installers-unsigned
+          path: |
+            out/wix/*.msi
+            out/wix/*.msm
+            dist/*.zip
+          if-no-files-found: error
+
+      - name: Upload example SBOMs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lds-sbom-examples
+          path: out/*/*.cdx.json
+          if-no-files-found: ignore
