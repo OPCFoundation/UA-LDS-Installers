@@ -1,4 +1,4 @@
 # OpenSSL version built by build.ps1 and linked into every binary.
 # The only place the version is set. build.ps1 rewrites the version references
 # in the submodules (fetch scripts, SBOM manifests, README) to match on every run.
-3.6.5
+3.5.9
